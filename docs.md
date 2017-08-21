@@ -153,8 +153,6 @@ See [Errors](https://github.com/nspragg/http-transport-to-error)
 
 See [Response validation](https://github.com/DaMouse404/http-transport-response-validator)
 
-See [Circuit-breaker](https://github.com/nspragg/breaker)
-
 See [Stats](https://github.com/nspragg/stats)
 
 See [Logging](https://github.com/nspragg/logger)

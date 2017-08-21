@@ -55,7 +55,6 @@ describe('Request HTTP transport', () => {
         .get(path)
         .reply(200, simpleResponseBody);
 
-
       const ctx = createContext(url);
       ctx.req.addHeader('test', 'qui curat');
 

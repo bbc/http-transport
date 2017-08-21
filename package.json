@@ -19,18 +19,37 @@
   "engines": {
     "node": ">=4.0.0"
   },
-  "homepage": "https://github.com/bbc/http-transport",
+  "scripts": {
+    "test": "mocha",
+    "jsdoc": "jsdoc -c ./docconfig/jsdoc.json",
+    "lint": "eslint ./src ./test",
+    "coverage": "istanbul cover _mocha -- -R dot",
+    "posttest": "npm run lint"
+  },
+  "keywords": [
+    "https",
+    "rest client",
+    "http-transport",
+    "cache",
+    "circuit",
+    "breaker",
+    "rest",
+    "http",
+    "json",
+    "client"
+  ],
   "devDependencies": {
     "chai": "^3.5.0",
     "codeclimate-test-reporter": "^0.4.0",
     "coveralls": "^2.11.9",
-    "eslint": "^3.11.1",
+    "eslint": "^2.10.2",
     "istanbul": "^0.4.2",
     "jsdoc": "^3.4.3",
-    "lodash": "^4.17.4",
     "mocha": "^3.0.2",
     "nock": "^9.0.4",
-    "sinon": "^1.15.3"
+    "sinon": "^1.15.3",
+    "eslint-config-iplayer-es6": "^2.0.0",
+    "eslint-plugin-mocha": "^2.2.0"
   },
   "dependencies": {
     "bluebird": "^3.5.0",

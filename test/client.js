@@ -22,13 +22,13 @@ const requestBody = {
 };
 const responseBody = requestBody;
 
-const toUpperCase = () => {
+function toUpperCase() {
   return (ctx, next) => {
     return next().then(() => {
       ctx.res.body = ctx.res.body.toUpperCase();
     });
   };
-};
+}
 
 function assertFailure(promise, message) {
   return promise
@@ -312,7 +312,7 @@ describe('HttpTransport', () => {
         .query({
           'a': 1,
           'b': 2,
-          'c': 3,
+          'c': 3
         })
         .asBody()
         .then((body) => {
@@ -356,16 +356,16 @@ describe('HttpTransport', () => {
       nock.cleanAll();
       api.get(path).reply(200, simpleResponseBody);
 
-      const appendTagGlobally = () => {
+      function appendTagGlobally() {
         return (ctx, next) => {
           return next()
             .then(() => {
               ctx.res.body = 'global ' + ctx.res.body;
             });
         };
-      };
+      }
 
-      const appendTagPerRequestTag = () => {
+      function appendTagPerRequestTag() {
         return (ctx, next) => {
 
           return next()
@@ -373,7 +373,8 @@ describe('HttpTransport', () => {
               ctx.res.body = 'request';
             });
         };
-      };
+      }
+
       const client = HttpTransport.createClient();
       client.useGlobal(appendTagGlobally());
 
