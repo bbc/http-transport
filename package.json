@@ -1,0 +1,44 @@
+{
+  "name": "@bbc/http-transport",
+  "version": "1.0.0",
+  "description": "A flexible, modular REST client built for ease-of-use and resilience.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint .",
+    "coverage": "istanbul cover _mocha -- -R dot"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bbc/http-transport.git"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/bbc/http-transport/issues"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "homepage": "https://github.com/bbc/http-transport",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "codeclimate-test-reporter": "^0.4.0",
+    "coveralls": "^2.11.9",
+    "eslint": "^3.11.1",
+    "istanbul": "^0.4.2",
+    "jsdoc": "^3.4.3",
+    "lodash": "^4.17.4",
+    "mocha": "^3.0.2",
+    "nock": "^9.0.4",
+    "sinon": "^1.15.3"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "koa-compose": "^4.0.0",
+    "lodash": "^4.17.4",
+    "request": "2.78.0"
+  },
+  "eslintConfig": {
+    "extends": "iplayer-es6"
+  }
+}
