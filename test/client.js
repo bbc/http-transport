@@ -66,7 +66,9 @@ describe('HttpTransport', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.cleanAll();
-    api.get(path).reply(200, simpleResponseBody);
+    api.get(path).reply(200, simpleResponseBody).defaultReplyHeaders({
+      'Content-Type': 'text/html'
+    });
   });
 
   afterEach(() => {
@@ -418,7 +420,11 @@ describe('HttpTransport', () => {
     describe('toJson', () => {
       it('returns body of a JSON response', () => {
         nock.cleanAll();
-        api.get(path).reply(200, responseBody);
+        api.defaultReplyHeaders({
+            'Content-Type': 'application/json'
+          })
+          .get(path)
+          .reply(200, responseBody);
 
         const client = HttpTransport.createClient();
         client.useGlobal(toJson());
@@ -428,6 +434,57 @@ describe('HttpTransport', () => {
           .asBody()
           .then((body) => {
             assert.equal(body.foo, 'bar');
+          });
+      });
+
+      it('ignores non-json content types.', () => {
+        nock.cleanAll();
+        api.get(path).reply(200, simpleResponseBody);
+
+        const client = HttpTransport.createClient();
+        client.useGlobal(toJson());
+
+        return client
+          .get(url)
+          .asBody()
+          .then((results) => {
+            assert.equal(results, simpleResponseBody);
+          });
+      });
+
+      it('throws an error when throw property is set true', () => {
+        nock.cleanAll();
+        api.get(path).reply(200, simpleResponseBody);
+
+        const client = HttpTransport.createClient();
+        client.useGlobal(toJson({
+          throwOnConflict: true
+        }));
+
+        return client
+          .get(url)
+          .asBody()
+          .then(assert.fail)
+          .catch((err) => {
+            assert.equal(err.message, 'expected a json content type got text/html');
+          });
+      });
+
+      it('always parses response when force is set true', () => {
+        nock.cleanAll();
+        api.get(path).reply(200, simpleResponseBody);
+
+        const client = HttpTransport.createClient();
+        client.useGlobal(toJson({
+          force: true
+        }));
+
+        return client
+          .get(url)
+          .asBody()
+          .then(assert.fail)
+          .catch((err) => {
+            assert.match(err.message, /JSON parsing failure:.*/);
           });
       });
     });
