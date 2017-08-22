@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "lint": "eslint .",
-    "coverage": "istanbul cover _mocha -- -R dot"
+    "jsdoc": "jsdoc -c ./docconfig/jsdoc.json",
+    "lint": "eslint ./src ./test",
+    "coverage": "istanbul cover _mocha -- -R dot",
+    "posttest": "npm run lint"
   },
   "repository": {
     "type": "git",
@@ -18,13 +20,6 @@
   },
   "engines": {
     "node": ">=4.0.0"
-  },
-  "scripts": {
-    "test": "mocha",
-    "jsdoc": "jsdoc -c ./docconfig/jsdoc.json",
-    "lint": "eslint ./src ./test",
-    "coverage": "istanbul cover _mocha -- -R dot",
-    "posttest": "npm run lint"
   },
   "keywords": [
     "https",

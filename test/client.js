@@ -5,7 +5,6 @@ const sinon = require('sinon');
 
 const HttpTransport = require('..');
 const toJson = require('../lib/plugins/asJson');
-const toError = require('../lib/plugins/toError');
 const log = require('../lib/plugins/logger');
 const packageInfo = require('../package');
 
@@ -48,6 +47,19 @@ function nockRetries(retry, opts) {
   nock.cleanAll();
   api[httpMethod](path).times(retry).reply(500);
   api[httpMethod](path).reply(successCode);
+}
+
+function toError() {
+  return (ctx, next) => {
+    return next().then(() => {
+      if (ctx.res.statusCode >= 400) {
+        const err = new Error('something bad happend.');
+        err.statusCode = ctx.res.statusCode;
+        err.headers = ctx.res.headers;
+        throw err;
+      }
+    });
+  };
 }
 
 describe('HttpTransport', () => {
@@ -115,8 +127,7 @@ describe('HttpTransport', () => {
     it('tracks retry attempts', () => {
       nockRetries(2);
 
-      const client = HttpTransport.createClient()
-        .useGlobal(toError());
+      const client = HttpTransport.createClient().useGlobal(toError());
 
       return client.get(url)
         .retry(2)
@@ -126,7 +137,7 @@ describe('HttpTransport', () => {
           const retries = res.retries;
           assert.equal(retries.length, 2);
           assert.equal(retries[0].statusCode, 500);
-          assert.match(retries[0].reason, /Request failed for GET http:\/\/www.example.com.*/);
+          assert.match(retries[0].reason, /something bad/);
         });
     });
   });
@@ -469,57 +480,6 @@ describe('HttpTransport', () => {
             /*eslint no-console: ["error", { allow: ["info"] }] */
             const message = console.info.getCall(0).args[0];
             assert.match(message, /GET http:\/\/www.example.com\/ 200 \d+ ms/);
-          });
-      });
-    });
-
-    describe('toError', () => {
-      it('returns an error for a non 200 response', () => {
-        nock.cleanAll();
-        api.get(path).reply(500);
-
-        const client = HttpTransport.createClient();
-        const response = client
-          .useGlobal(toError())
-          .get(url)
-          .asBody();
-
-        return assertFailure(response, 'Request failed for GET http://www.example.com/');
-      });
-
-      it('includes the status code in the error for a non 200 response', () => {
-        nock.cleanAll();
-        api.get(path).reply(500);
-
-        const client = HttpTransport.createClient();
-        return client
-          .get(url)
-          .asBody()
-          .catch((err) => {
-            assert(err);
-            assert.equal(err.statusCode, 500);
-          });
-      });
-
-      it('includes the headers in the error for a non 200 response', () => {
-        nock.cleanAll();
-        api.get(path).reply(500, {
-          error: 'this is the body of the error'
-        }, {
-          'www-authenticate': 'Bearer realm="/"'
-        });
-
-        const client = HttpTransport.createClient();
-        const response = client
-          .useGlobal(toError())
-          .get(url)
-          .asBody();
-
-        return response
-          .then(() => assert.ok(false, 'Promise should have failed'))
-          .catch((err) => {
-            assert(err);
-            assert.equal(err.headers['www-authenticate'], 'Bearer realm="/"');
           });
       });
     });
