@@ -437,6 +437,44 @@ describe('HttpTransport', () => {
           });
       });
 
+      it('parses json responses', () => {
+        nock.cleanAll();
+        api.defaultReplyHeaders({
+            'Content-Type': 'application/json'
+          })
+          .get(path)
+          .reply(200, responseBody);
+
+        const client = HttpTransport.createClient();
+        client.useGlobal(toJson());
+
+        return client
+          .get(url)
+          .asBody()
+          .then((body) => {
+            assert.equal(body.foo, 'bar');
+          });
+      });
+
+      it('supports alternative json content types', () => {
+        nock.cleanAll();
+        api.defaultReplyHeaders({
+            'Content-Type': 'application/json-patch+json'
+          })
+          .get(path)
+          .reply(200, responseBody);
+
+        const client = HttpTransport.createClient();
+        client.useGlobal(toJson());
+
+        return client
+          .get(url)
+          .asBody()
+          .then((body) => {
+            assert.equal(body.foo, 'bar');
+          });
+      });
+
       it('ignores non-json content types.', () => {
         nock.cleanAll();
         api.get(path).reply(200, simpleResponseBody);
