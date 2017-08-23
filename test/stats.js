@@ -1,3 +1,6 @@
+'use strict';
+
+const _ = require('lodash');
 const sinon = require('sinon');
 const nock = require('nock');
 const assert = require('chai').assert;
@@ -9,10 +12,7 @@ const stats = require('../lib/plugins/stats');
 const host = 'http://www.example.com';
 const url = 'http://www.example.com/';
 const api = nock(host);
-const stubbedStats = {
-  increment: sandbox.stub(),
-  timing: sandbox.stub()
-};
+const path = '/';
 
 function toError() {
   return (ctx, next) => {
@@ -27,7 +27,34 @@ function toError() {
   };
 }
 
-describe.only('stats', () => {
+function nockRetries(retry, opts) {
+  const httpMethod = _.get(opts, 'httpMethod') || 'get';
+  const successCode = _.get(opts, 'successCode') || 200;
+
+  nock.cleanAll();
+  api[httpMethod](path).times(retry).reply(500);
+  api[httpMethod](path).reply(successCode);
+}
+
+function getCallsWith(spy, arg) {
+  return spy.getCalls()
+    .filter((call) => {
+      return call.args[0] === arg;
+    }).length;
+}
+
+describe('stats', () => {
+  let stubbedStats;
+
+  beforeEach(() => {
+    stubbedStats = sandbox.stub();
+    stubbedStats.increment = sandbox.stub();
+    stubbedStats.timing = sandbox.stub();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
 
   it('increments counter http.requests for each request', () => {
     api.get('/').reply(200);
@@ -85,13 +112,53 @@ describe.only('stats', () => {
     api.get('/').reply(400);
 
     return Blackadder.createClient()
+      .use(stats(stubbedStats, 'my-client', 'feedName'))
       .use(toError())
       .get(url)
-      .use(stats(stubbedStats, 'my-client', 'feedName'))
       .asBody()
       .then(assert.fail)
       .catch(() => {
         sinon.assert.calledWith(stubbedStats.increment, 'my-client.feedName.request_errors');
+        sinon.assert.calledOnce(stubbedStats.increment);
+      });
+  });
+
+  it('increments .retries', () => {
+    const retries = 2;
+
+    nockRetries(retries);
+    stubbedStats.increment = sinon.spy();
+
+    return Blackadder.createClient()
+      .use(stats(stubbedStats, 'my-client', 'feedName'))
+      .use(toError())
+      .retry(retries)
+      .get(url)
+      .asBody()
+      .then(assert.fail)
+      .catch(() => {
+        const calls = getCallsWith(stubbedStats.increment, 'my-client.feedName.retries');
+        assert.equal(calls, retries);
+      });
+  });
+
+  it('increments .attempts', () => {
+    const retries = 2;
+
+    nockRetries(retries);
+    stubbedStats.timing = sinon.spy();
+
+    return Blackadder.createClient()
+      .use(stats(stubbedStats, 'my-client', 'feedName'))
+      .use(toError())
+      .retry(retries)
+      .get(url)
+      .asBody()
+      .then(assert.fail)
+      .catch(() => {
+        sinon.assert.calledWith(stubbedStats.timing, 'my-client.feedName.attempts', 1);
+        sinon.assert.calledWith(stubbedStats.timing, 'my-client.feedName.attempts', 2);
+        sinon.assert.calledWith(stubbedStats.timing, 'my-client.feedName.attempts', 3);
       });
   });
 });
