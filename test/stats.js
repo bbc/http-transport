@@ -14,7 +14,20 @@ const stubbedStats = {
   timing: sandbox.stub()
 };
 
-describe('stats', () => {
+function toError() {
+  return (ctx, next) => {
+    return next().then(() => {
+      if (ctx.res.statusCode >= 400) {
+        const err = new Error('something bad happend.');
+        err.statusCode = ctx.res.statusCode;
+        err.headers = ctx.res.headers;
+        throw err;
+      }
+    });
+  };
+}
+
+describe.only('stats', () => {
 
   it('increments counter http.requests for each request', () => {
     api.get('/').reply(200);
@@ -65,6 +78,20 @@ describe('stats', () => {
       .catch(assert.ifError)
       .then(() => {
         sinon.assert.calledWith(stubbedStats.increment, 'my-client.feedName.responses.200');
+      });
+  });
+
+  it('increments counter for errors', () => {
+    api.get('/').reply(400);
+
+    return Blackadder.createClient()
+      .use(toError())
+      .get(url)
+      .use(stats(stubbedStats, 'my-client', 'feedName'))
+      .asBody()
+      .then(assert.fail)
+      .catch(() => {
+        sinon.assert.calledWith(stubbedStats.increment, 'my-client.feedName.request_errors');
       });
   });
 });
