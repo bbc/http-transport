@@ -142,6 +142,24 @@ describe('HttpTransport', () => {
           assert.match(retries[0].reason, /something bad/);
         });
     });
+
+    it('does not retry 4XX errors', () => {
+      nock.cleanAll();
+      api.get(path).once().reply(400);
+
+      const client = HttpTransport.createClient()
+        .useGlobal(toError());
+
+      return client.get(url)
+        .retry(1)
+        .asResponse()
+        .then(() => {
+          assert.fail();
+        })
+        .catch((err) => {
+          assert.equal(err.statusCode, 400);
+        });
+    });
   });
 
   describe('.post', () => {
