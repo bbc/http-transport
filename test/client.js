@@ -302,20 +302,14 @@ describe('HttpTransport', () => {
         });
     });
 
-    it('asserts for a missing header', () => {
-      assert.throws(() => {
-        HttpTransport.createClient()
-          .get(url)
-          .headers();
-      }, Error, 'missing headers');
-    });
-
-    it('asserts an empty header object', () => {
-      assert.throws(() => {
-        HttpTransport.createClient()
-          .get(url)
-          .headers({});
-      }, Error, 'missing headers');
+    it('ignores an empty header object', () => {
+      return HttpTransport.createClient()
+        .headers({})
+        .get(url)
+        .asResponse()
+        .then((res) => {
+          assert.equal(res.body, simpleResponseBody);
+        });
     });
   });
 
@@ -351,12 +345,14 @@ describe('HttpTransport', () => {
         });
     });
 
-    it('asserts empty query strings object', () => {
-      assert.throws(() => {
-        HttpTransport.createClient()
-          .get(url)
-          .query({});
-      }, Error, 'missing query strings');
+    it('ignores empty query objects', () => {
+      return HttpTransport.createClient()
+        .query({})
+        .get(url)
+        .asResponse()
+        .then((res) => {
+          assert.equal(res.body, simpleResponseBody);
+        });
     });
   });
 
