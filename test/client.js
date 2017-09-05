@@ -90,10 +90,10 @@ describe('HttpTransport', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-        reqheaders: {
-          'User-Agent': HeaderValue
-        }
-      })
+          reqheaders: {
+            'User-Agent': HeaderValue
+          }
+        })
         .get(path)
         .reply(200, responseBody);
 
@@ -279,11 +279,11 @@ describe('HttpTransport', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-        reqheaders: {
-          'User-Agent': HeaderValue,
-          foo: 'bar'
-        }
-      })
+          reqheaders: {
+            'User-Agent': HeaderValue,
+            foo: 'bar'
+          }
+        })
         .get(path)
         .reply(200, responseBody);
 
@@ -435,8 +435,8 @@ describe('HttpTransport', () => {
       it('returns body of a JSON response', () => {
         nock.cleanAll();
         api.defaultReplyHeaders({
-          'Content-Type': 'application/json'
-        })
+            'Content-Type': 'application/json'
+          })
           .get(path)
           .reply(200, responseBody);
 

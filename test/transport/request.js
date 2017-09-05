@@ -156,6 +156,58 @@ describe('Request HTTP transport', () => {
         });
     });
 
+    it('sets a default timeout', () => {
+      nock.cleanAll();
+      api.get('/')
+        .socketDelay(1500)
+        .reply(200, simpleResponseBody);
+
+      const ctx = createContext(url);
+
+      return new RequestTransport()
+        .execute(ctx)
+        .then(() => {
+          assert.fail('Expected request to timeout');
+        })
+        .catch((e) => {
+          assert.ok(e);
+          assert.equal(e.message, 'Request failed for get http://www.example.com/: ESOCKETTIMEDOUT');
+        });
+    });
+
+    it('disables timing a request', () => {
+      nock.cleanAll();
+      api.get('/')
+        .reply(200, simpleResponseBody);
+
+      const ctx = createContext(url);
+      ctx.req.time = false;
+
+      return new RequestTransport()
+        .execute(ctx)
+        .then((ctx) => {
+          const timeTaken = ctx.res.elapsedTime;
+          assert.isNotNumber(timeTaken);
+        })
+        .catch(assert.ifError);
+    });
+
+    it('enables timing request by default', () => {
+      nock.cleanAll();
+      api.get('/')
+        .reply(200, simpleResponseBody);
+
+      const ctx = createContext(url);
+
+      return new RequestTransport()
+        .execute(ctx)
+        .then((ctx) => {
+          const timeTaken = ctx.res.elapsedTime;
+          assert.isNumber(timeTaken);
+        })
+        .catch(assert.ifError);
+    });
+
     it('override default request', () => {
       nock.cleanAll();
       api.get('/')
