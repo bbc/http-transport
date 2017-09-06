@@ -5,6 +5,7 @@ const sinon = require('sinon');
 
 const HttpTransport = require('..');
 const toJson = require('../lib/plugins/asJson');
+const setContextProperty = require('../lib/plugins/setContextProperty');
 const log = require('../lib/plugins/logger');
 const packageInfo = require('../package');
 
@@ -429,6 +430,44 @@ describe('HttpTransport', () => {
           .use('bad plugin')
           .get(url);
       }, TypeError, 'Plugin is not a function');
+    });
+
+    describe('setContextProperty', () => {
+      it('sets an option in the context', () => {
+        nock.cleanAll();
+        api.get(path).reply(200, responseBody);
+
+        const client = HttpTransport.createClient();
+        client.useGlobal(toJson());
+
+        return client
+          .use(setContextProperty({
+            time: false
+          }, 'opts'))
+          .get(url)
+          .asResponse()
+          .then((res) => {
+            assert.isUndefined(res.elapsedTime);
+          });
+      });
+
+      it('sets an explict key on the context', () => {
+        nock.cleanAll();
+        api
+          .get(path)
+          .socketDelay(1000)
+          .reply(200, responseBody);
+
+        const client = HttpTransport.createClient();
+        client.useGlobal(toJson());
+
+        const response = client
+          .use(setContextProperty(20, 'req._timeout'))
+          .get(url)
+          .asResponse();
+
+        return assertFailure(response, 'Request failed for GET http://www.example.com/: ESOCKETTIMEDOUT');
+      });
     });
 
     describe('toJson', () => {
