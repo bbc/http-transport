@@ -159,7 +159,7 @@ describe('Request HTTP transport', () => {
     it('sets a default timeout', () => {
       nock.cleanAll();
       api.get('/')
-        .socketDelay(1500)
+        .socketDelay(2500)
         .reply(200, simpleResponseBody);
 
       const ctx = createContext(url);
