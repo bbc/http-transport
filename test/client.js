@@ -541,6 +541,24 @@ describe('HttpTransport', () => {
             assert.match(message, /GET http:\/\/www.example.com\/ 200 \d+ ms/);
           });
       });
+
+      it('doesnt log responseTime when undefined', () => {
+        sandbox.stub(console, 'info');
+        return HttpTransport.createClient()
+          .use(setContextProperty({
+            time: false
+          }, 'opts'))
+          .get(url)
+          .useGlobal(log())
+          .asBody()
+          .catch(assert.ifError)
+          .then(() => {
+            /*eslint no-console: ["error", { allow: ["info"] }] */
+            const message = console.info.getCall(0).args[0];
+            assert.match(message, /GET http:\/\/www.example.com\/ 200$/);
+          });
+      });
+
     });
   });
 });
