@@ -357,6 +357,23 @@ describe('HttpTransport', () => {
     });
   });
 
+  describe('timeout', () => {
+    it('sets the a timeout', () => {
+      nock.cleanAll();
+      api.get('/')
+        .socketDelay(1000)
+        .reply(200, simpleResponseBody);
+
+      const client = HttpTransport.createClient();
+      const response = client
+        .get(url)
+        .timeout(20)
+        .asBody();
+
+      return assertFailure(response, 'Request failed for GET http://www.example.com/: ESOCKETTIMEDOUT');
+    });
+  });
+
   describe('plugins', () => {
     it('supports a per request plugin', () => {
       nock.cleanAll();
@@ -488,23 +505,6 @@ describe('HttpTransport', () => {
           .then((body) => {
             assert.equal(body.foo, 'bar');
           });
-      });
-    });
-
-    describe('timeout', () => {
-      it('sets the a timeout', () => {
-        nock.cleanAll();
-        api.get('/')
-          .socketDelay(1000)
-          .reply(200, simpleResponseBody);
-
-        const client = HttpTransport.createClient();
-        const response = client
-          .get(url)
-          .timeout(20)
-          .asBody();
-
-        return assertFailure(response, 'Request failed for GET http://www.example.com/: ESOCKETTIMEDOUT');
       });
     });
 
