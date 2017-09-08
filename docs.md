@@ -1,6 +1,6 @@
 # HttpTranport
 
-[![Build Status](https://travis-ci.org/nspragg/http-transport.svg)](https://travis-ci.org/nspragg/http-transport) [![Coverage Status](https://coveralls.io/repos/github/nspragg/http-transport/badge.svg?branch=master)](https://coveralls.io/github/nspragg/http-transport?branch=master)
+[![Build Status](https://travis-ci.org/bbc/http-transport.svg)](https://travis-ci.org/bbc/http-transport) [![Coverage Status](https://coveralls.io/repos/github/bbc/http-transport/badge.svg?branch=master)](https://coveralls.io/github/bbc/http-transport?branch=master)
 
 > A flexible rest client that can be easy extended using plugins
 
@@ -141,18 +141,13 @@ HttpTransport.createClient(Wreck)
 
 #### Offical plugins
 
-See [Callbacks](https://github.com/nspragg/http-transport-callbacks)
+See [Callbacks](https://github.com/bbc/http-transport-callbacks)
 
-See [Wreck](https://github.com/nspragg/http-transport-wreck)
+See [Ratelimiting](https://github.com/bbc/http-transport-rate-limiter)
 
-See [Ratelimiting](https://github.com/niklasR/http-transport-simple-rate-limiter)
+See [Caching](https://github.com/bbc/http-transport-cache)
 
-See [Caching](https://github.com/DaMouse404/http-transport-cache)
+See [Errors](https://github.com/bbc/http-transport-to-error)
 
-See [Errors](https://github.com/nspragg/http-transport-to-error)
+See [Stats](https://github.com/bbc/http-transport-statsd)
 
-See [Response validation](https://github.com/DaMouse404/http-transport-response-validator)
-
-See [Stats](https://github.com/nspragg/stats)
-
-See [Logging](https://github.com/nspragg/logger)
