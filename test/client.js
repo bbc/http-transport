@@ -50,6 +50,15 @@ function nockRetries(retry, opts) {
   api[httpMethod](path).reply(successCode);
 }
 
+function nockTimeouts(number, opts) {
+  const httpMethod = _.get(opts, 'httpMethod') || 'get';
+  const successCode = _.get(opts, 'successCode') || 200;
+
+  nock.cleanAll();
+  api[httpMethod](path).times(number).socketDelay(10000).reply(200);
+  api[httpMethod](path).reply(successCode);
+}
+
 function toError() {
   return (ctx, next) => {
     return next().then(() => {
@@ -119,6 +128,21 @@ describe('HttpTransport', () => {
       return HttpTransport.createClient()
         .useGlobal(toError())
         .get(url)
+        .retry(2)
+        .asResponse()
+        .catch(assert.ifError)
+        .then((res) => {
+          assert.equal(res.statusCode, 200);
+        });
+    });
+
+    it('retries a given number of times for requests that timed out', () => {
+      nockTimeouts(2);
+
+      return HttpTransport.createClient()
+        .useGlobal(toError())
+        .get(url)
+        .timeout(2000)
         .retry(2)
         .asResponse()
         .catch(assert.ifError)
