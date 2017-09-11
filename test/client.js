@@ -518,8 +518,8 @@ describe('HttpTransport', () => {
         };
 
         return HttpTransport.createClient()
-          .get(url)
           .useGlobal(log(stubbedLogger))
+          .get(url)
           .asBody()
           .catch(assert.ifError)
           .then(() => {
@@ -559,6 +559,30 @@ describe('HttpTransport', () => {
           });
       });
 
+      it('logs retry attempts as warnings', () => {
+        sandbox.stub(console, 'info');
+        sandbox.stub(console, 'warn');
+        nockRetries(2);
+
+        const client = HttpTransport.createClient()
+          .useGlobal(toError())
+          .useGlobal(log());
+
+        return client
+          .retry(2)
+          .get(url)
+          .asBody()
+          .catch(assert.ifError)
+          .then(() => {
+            /*eslint no-console: ["error", { allow: ["info", "warn"] }] */
+            const intial = console.info.getCall(0).args[0];
+            const attempt1 = console.warn.getCall(0).args[0];
+            const attempt2 = console.warn.getCall(1).args[0];
+            assert.match(intial, /GET http:\/\/www.example.com\/ 500 \d+ ms/);
+            assert.match(attempt1, /Attempt 1 GET http:\/\/www.example.com\/ 500 \d+ ms/);
+            assert.match(attempt2, /Attempt 2 GET http:\/\/www.example.com\/ 200 \d+ ms/);
+          });
+      });
     });
   });
 });
