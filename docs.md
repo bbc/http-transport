@@ -100,7 +100,7 @@ Add multiple headers:
 Convert `Internal Server` responses (500) to errors:
 
 ```js
-    const toError = require('http-transport-to-errors');
+    const toError = require('http-transport-to-error');
 
     const url = 'http://example.com/';
     const client = HttpTransport.createClient();
@@ -121,7 +121,7 @@ The default transport is `request`, which does not convert errors.
 Make a HTTP GET and retry twice on error `.retry`
 
 ```js
-const toError = require('http-transport-to-errors');
+const toError = require('http-transport-to-error');
 
 return HttpTransport.createClient()
         .useGlobal(toError())

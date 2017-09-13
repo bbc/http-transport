@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li><li><a href="global.html#useGlobal">useGlobal</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#patch">patch</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#retryDelay">retryDelay</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li><li><a href="global.html#useGlobal">useGlobal</a></li></ul>
 </nav>
 
 <div id="main">
@@ -69,9 +69,9 @@ class HttpTransport {
    * @param {function} fn - a global plugin
    * @return a HttpTransport instance
    * @example
-   * const toError = require('http-transport-errors'); 
+   * const toError = require('http-transport-errors');
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const client = httpTransport.createClient();
    * client.useGlobal(toError(404));
    */
@@ -89,9 +89,9 @@ class HttpTransport {
    * @return a HttpTransport instance
    * @param {function} fn - per request plugin
    * @example
-   * const toError = require('http-transport-errors'); 
+   * const toError = require('http-transport-errors');
    * const httpTransport = require('http-transport');
-   *  
+   *
    * httpTransport.createClient()
    *    .use(toError(404));
    */
@@ -110,7 +110,7 @@ class HttpTransport {
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const response = httpTransport.createClient()
    *    .get(url)
    *    .asResponse();
@@ -132,7 +132,7 @@ class HttpTransport {
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const response = httpTransport.createClient()
    *    .post(url, requestBody)
    *    .asResponse();
@@ -149,13 +149,13 @@ class HttpTransport {
    * Make a HTTP PUT request
    *
    * @method
-   * post
+   * put
    * @param {string} url
    * @param {object} request body
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const response = httpTransport.createClient()
    *    .put(url, requestBody)
    *    .asResponse();
@@ -172,13 +172,13 @@ class HttpTransport {
    * Make a HTTP DELETE request
    *
    * @method
-   * post
+   * delete
    * @param {string} url
    * @param {object} request body
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const response = httpTransport.createClient()
    *    .delete(url)
    *    .asResponse();
@@ -194,13 +194,13 @@ class HttpTransport {
    * Make a HTTP PATCH request
    *
    * @method
-   * post
+   * patch
    * @param {string} url
    * @param {object} request body
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const response = httpTransport.createClient()
    *    .put(url, requestBody)
    *    .asResponse();
@@ -222,7 +222,7 @@ class HttpTransport {
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const response = httpTransport.createClient()
    *    .head(url)
    *    .asResponse();
@@ -244,10 +244,10 @@ class HttpTransport {
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('http-transport');
-   * 
+   *
    * const response = httpTransport.createClient()
    *    .headers({
-   *      'User-Agent' : 'someUserAgent' 
+   *      'User-Agent' : 'someUserAgent'
    *    })
    *    .asResponse();
    */
@@ -269,10 +269,10 @@ class HttpTransport {
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const response = httpTransport.createClient()
    *    .query({
-   *      'perPage' : 1 
+   *      'perPage' : 1
    *    })
    *    .asResponse();
    */
@@ -293,7 +293,7 @@ class HttpTransport {
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const response = httpTransport.createClient()
    *    .timeout(1)
    *    .asResponse();
@@ -312,7 +312,7 @@ class HttpTransport {
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const response = httpTransport.createClient()
    *    .retry(5)
    *    .asResponse();
@@ -323,15 +323,35 @@ class HttpTransport {
   }
 
   /**
-   * Initiates the request, returning the response body, if successful. 
+   * Set the delay between retries in ms
+   *
+   * @method
+   * retryDelay
+   * @param {integer} timeout - number of ms to wait between retries (default: 100)
+   * @return a HttpTransport instance
+   * @example
+   * const httpTransport = require('http-transport');
+   *
+   * const response = httpTransport.createClient()
+   *    .retry(2)
+   *    .retryDelay(200)
+   *    .asResponse();
+   */
+  retryDelay(ms) {
+    this._retryDelay = ms;
+    return this;
+  }
+
+  /**
+   * Initiates the request, returning the response body, if successful.
    *
    * @method
    * asBody
    * @return a Promise. If the Promise fulfils,
-   * the fulfilment value is the response body, as a string by default. 
+   * the fulfilment value is the response body, as a string by default.
    * @example
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const response = httpTransport.createClient()
    *    .asBody()
    *    .then((body) => {
@@ -343,15 +363,15 @@ class HttpTransport {
   }
 
   /**
-   * Initiates the request, returning a http transport response object, if successful. 
+   * Initiates the request, returning a http transport response object, if successful.
    *
    * @method
    * asResponse
    * @return a Promise. If the Promise fulfils,
-   * the fulfilment value is response object. 
+   * the fulfilment value is response object.
    * @example
    * const httpTransport = require('http-transport');
-   *  
+   *
    * const response = httpTransport.createClient()
    *    .asResponse()
    *    .then((body) => {
@@ -361,8 +381,11 @@ class HttpTransport {
   asResponse() {
     const requestContext = this._ctx;
     this._ctx = context.create();
-
-    return retry(this._executeRequest, requestContext, this._retries).then((ctx) => ctx.res);
+    const retries = {
+      count: this._retries,
+      delay: this._retryDelay >= 0 ? this._retryDelay : RETRY_DELAY
+    };
+    return retry(this._executeRequest, requestContext, retries).then((ctx) => ctx.res);
   }
 
   _getPlugins(ctx) {
@@ -384,10 +407,10 @@ class HttpTransport {
 }
 
 function isCriticalError(err) {
-  if (err &amp;&amp; err.statusCode >= 500) {
-    return true;
+  if (err &amp;&amp; err.statusCode &lt; 500) {
+    return false;
   }
-  return false;
+  return true;
 }
 
 function toRetry(err) {
@@ -397,16 +420,16 @@ function toRetry(err) {
   };
 }
 
-function retry(fn, ctx, times) {
+function retry(fn, ctx, retries) {
   ctx.res.retries = [];
-  ctx.res.maxAttempts = times;
+  ctx.res.maxAttempts = retries.count;
   const request = fn.bind(this, ctx);
 
   const attempt = (i) => {
     return request()
-      .catch(delayBy(RETRY_DELAY))
+      .catch(delayBy(retries.delay))
       .catch((err) => {
-        if (i &lt; times &amp;&amp; isCriticalError(err)) {
+        if (i &lt; retries.count &amp;&amp; isCriticalError(err)) {
           ctx.res.retries.push(toRetry(err));
           return attempt(++i);
         }
@@ -453,7 +476,7 @@ module.exports = HttpTransport;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Fri Sep 08 2017 17:45:26 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Wed Sep 13 2017 14:05:42 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

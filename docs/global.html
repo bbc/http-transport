@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li><li><a href="global.html#useGlobal">useGlobal</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#patch">patch</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#retryDelay">retryDelay</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li><li><a href="global.html#useGlobal">useGlobal</a></li></ul>
 </nav>
 
 <div id="main">
@@ -128,7 +128,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line285">line 285</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line305">line 305</a>
     </li></ul></dd>
     
 
@@ -182,7 +182,7 @@
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>const httpTransport = require('http-transport');
- 
+
 const response = httpTransport.createClient()
    .asBody()
    .then((body) => {
@@ -234,7 +234,7 @@ the fulfilment value is the response body, as a string by default.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line305">line 305</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line325">line 325</a>
     </li></ul></dd>
     
 
@@ -288,7 +288,7 @@ the fulfilment value is the response body, as a string by default.</p>
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>const httpTransport = require('http-transport');
- 
+
 const response = httpTransport.createClient()
    .asResponse()
    .then((body) => {
@@ -316,6 +316,181 @@ const response = httpTransport.createClient()
 <div class="param-desc">
     <p>a Promise. If the Promise fulfils,
 the fulfilment value is response object.</p>
+</div>
+
+
+
+    
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="delete"><span class="type-signature"></span>delete<span class="signature">(url, request)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line131">line 131</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Make a HTTP DELETE request</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+
+const response = httpTransport.createClient()
+   .delete(url)
+   .asResponse();</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>body</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>a HttpTransport instance</p>
 </div>
 
 
@@ -394,7 +569,7 @@ the fulfilment value is response object.</p>
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>const httpTransport = require('http-transport');
- 
+
 const response = httpTransport.createClient()
    .get(url)
    .asResponse();</code></pre>
@@ -546,7 +721,7 @@ const response = httpTransport.createClient()
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>const httpTransport = require('http-transport');
- 
+
 const response = httpTransport.createClient()
    .head(url)
    .asResponse();</code></pre>
@@ -701,7 +876,7 @@ const response = httpTransport.createClient()
 
 const response = httpTransport.createClient()
    .headers({
-     'User-Agent' : 'someUserAgent' 
+     'User-Agent' : 'someUserAgent'
    })
    .asResponse();</code></pre>
 
@@ -815,182 +990,7 @@ const response = httpTransport.createClient()
 
     
 
-    <h4 class="name" id="post"><span class="type-signature"></span>post<span class="signature">(url, request)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line131">line 131</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>Make a HTTP DELETE request</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
- 
-const response = httpTransport.createClient()
-   .delete(url)
-   .asResponse();</code></pre>
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>url</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>request</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>body</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>a HttpTransport instance</p>
-</div>
-
-
-
-    
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="post"><span class="type-signature"></span>post<span class="signature">(url, request)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="patch"><span class="type-signature"></span>patch<span class="signature">(url, request)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1056,182 +1056,7 @@ const response = httpTransport.createClient()
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>const httpTransport = require('http-transport');
- 
-const response = httpTransport.createClient()
-   .put(url, requestBody)
-   .asResponse();</code></pre>
 
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>url</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>request</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>body</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    <p>a HttpTransport instance</p>
-</div>
-
-
-
-    
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="post"><span class="type-signature"></span>post<span class="signature">(url, request)</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line108">line 108</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>Make a HTTP PUT request</p>
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
- 
 const response = httpTransport.createClient()
    .put(url, requestBody)
    .asResponse();</code></pre>
@@ -1406,9 +1231,184 @@ const response = httpTransport.createClient()
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>const httpTransport = require('http-transport');
- 
+
 const response = httpTransport.createClient()
    .post(url, requestBody)
+   .asResponse();</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>url</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>request</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>body</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>a HttpTransport instance</p>
+</div>
+
+
+
+    
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="put"><span class="type-signature"></span>put<span class="signature">(url, request)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line108">line 108</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Make a HTTP PUT request</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+
+const response = httpTransport.createClient()
+   .put(url, requestBody)
    .asResponse();</code></pre>
 
 
@@ -1581,10 +1581,10 @@ const response = httpTransport.createClient()
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>const httpTransport = require('http-transport');
- 
+
 const response = httpTransport.createClient()
    .query({
-     'perPage' : 1 
+     'perPage' : 1
    })
    .asResponse();</code></pre>
 
@@ -1764,7 +1764,7 @@ const response = httpTransport.createClient()
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>const httpTransport = require('http-transport');
- 
+
 const response = httpTransport.createClient()
    .retry(5)
    .asResponse();</code></pre>
@@ -1814,6 +1814,159 @@ const response = httpTransport.createClient()
             
 
             <td class="description last"><p>number of times to retry a failed request</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>a HttpTransport instance</p>
+</div>
+
+
+
+    
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="retryDelay"><span class="type-signature"></span>retryDelay<span class="signature">(timeout)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line285">line 285</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Set the delay between retries in ms</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+
+const response = httpTransport.createClient()
+   .retry(2)
+   .retryDelay(200)
+   .asResponse();</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>timeout</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>number of ms to wait between retries (default: 100)</p></td>
         </tr>
 
     
@@ -1916,7 +2069,7 @@ const response = httpTransport.createClient()
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>const httpTransport = require('http-transport');
- 
+
 const response = httpTransport.createClient()
    .timeout(1)
    .asResponse();</code></pre>
@@ -2067,9 +2220,9 @@ const response = httpTransport.createClient()
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const toError = require('http-transport-errors'); 
+    <pre class="prettyprint"><code>const toError = require('http-transport-errors');
 const httpTransport = require('http-transport');
- 
+
 httpTransport.createClient()
    .use(toError(404));</code></pre>
 
@@ -2219,9 +2372,9 @@ httpTransport.createClient()
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const toError = require('http-transport-errors'); 
+    <pre class="prettyprint"><code>const toError = require('http-transport-errors');
 const httpTransport = require('http-transport');
- 
+
 const client = httpTransport.createClient();
 client.useGlobal(toError(404));</code></pre>
 
@@ -2319,7 +2472,7 @@ client.useGlobal(toError(404));</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Fri Sep 08 2017 17:45:26 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Wed Sep 13 2017 14:05:42 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
