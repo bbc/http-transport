@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li><li><a href="global.html#useGlobal">useGlobal</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#patch">patch</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#retryDelay">retryDelay</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li><li><a href="global.html#useGlobal">useGlobal</a></li></ul>
 </nav>
 
 <div id="main">
@@ -51,8 +51,7 @@
 <blockquote>
 <p>A flexible rest client that can be easy extended using plugins</p>
 </blockquote>
-<h2>Common examples</h2><p>The example below prints all of the files in a directory that have the <code>.json</code> file extension:</p>
-<pre class="prettyprint source lang-js"><code>const httpTransport = require('http-transport');</code></pre><h4>Supported HTTP methods</h4><p>Make a HTTP GET request using <code>.get</code></p>
+<h2>Common examples</h2><h4>Supported HTTP methods</h4><p>Make a HTTP GET request using <code>.get</code></p>
 <pre class="prettyprint source lang-js"><code>    const url = 'http://example.com/';
     HttpTransport.createClient()
         .get(url)
@@ -66,7 +65,9 @@
         .asResponse()
         .then((res) => {
           console.log(res);
-        });</code></pre><h4>Query strings</h4><p>Make a HTTP GET request specifiying query strings using <code>.query</code></p>
+        });</code></pre><p>PATCH, DELETE, HEAD are also supported. </p>
+<h4>Query strings</h4><p>Make a HTTP GET request specifiying query strings using <code>.query</code></p>
+<p>Single query string</p>
 <pre class="prettyprint source lang-js"><code>    const url = 'http://example.com/';
     HttpTransport.createClient()
         .get(url)
@@ -74,7 +75,26 @@
         .asResponse()
         .then((res) => {
           console.log(res);
+        });</code></pre><p>Multiple query strings:</p>
+<pre class="prettyprint source lang-js"><code>    const url = 'http://example.com/';
+    HttpTransport.createClient()
+        .get(url)
+        .query({
+          example1: true
+          example2: false
+        })
+        .asResponse()
+        .then((res) => {
+          console.log(res);
         });</code></pre><h4>Headers</h4><p>Make a HTTP GET request specifiying request headers using <code>.headers</code></p>
+<p>Add a single header:</p>
+<pre class="prettyprint source lang-js"><code>    HttpTransport.createClient()
+        .get(url)
+        .headers('someHeader1', 'someValue1')
+        .asResponse()
+        .then((res) => {
+            console.log(res);
+        });</code></pre><p>Add multiple headers:</p>
 <pre class="prettyprint source lang-js"><code>    HttpTransport.createClient()
         .get(url)
         .headers({
@@ -85,7 +105,7 @@
         .then((res) => {
             console.log(res);
         });</code></pre><h4>Handling errors</h4><p>Convert <code>Internal Server</code> responses (500) to errors:</p>
-<pre class="prettyprint source lang-js"><code>    const toError = require('http-transport-to-errors');
+<pre class="prettyprint source lang-js"><code>    const toError = require('http-transport-to-error');
 
     const url = 'http://example.com/';
     const client = HttpTransport.createClient();
@@ -95,8 +115,10 @@
         .asResponse()
         .catch((err) => {
           console.error(err);
-        });</code></pre><h4>Retries</h4><p>Make a HTTP GET and retry twice on error <code>.retry</code></p>
-<pre class="prettyprint source lang-js"><code>const toError = require('http-transport-to-errors');
+        });</code></pre><p><code>toError</code> is only required if the underlying client does not support HTTP error conversion. 
+The default transport is <code>request</code>, which does not convert errors. </p>
+<h4>Retries</h4><p>Make a HTTP GET and retry twice on error <code>.retry</code></p>
+<pre class="prettyprint source lang-js"><code>const toError = require('http-transport-to-error');
 
 return HttpTransport.createClient()
         .useGlobal(toError())
@@ -140,7 +162,7 @@ HttpTransport.createClient(Wreck)
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Fri Sep 08 2017 17:45:26 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.4</a> on Wed Sep 13 2017 14:05:42 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
