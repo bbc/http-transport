@@ -1,3 +1,5 @@
+'use strict';
+
 const _ = require('lodash');
 const assert = require('chai').assert;
 const nock = require('nock');
@@ -147,6 +149,42 @@ describe('HttpTransport', () => {
         .asResponse()
         .catch(assert.ifError)
         .then((res) => {
+          assert.equal(res.statusCode, 200);
+        });
+    });
+
+    it('waits a minimum of 100ms between retries by default', () => {
+      nockRetries(1);
+      const startTime = Date.now();
+
+      return HttpTransport.createClient()
+        .useGlobal(toError())
+        .get(url)
+        .retry(2)
+        .asResponse()
+        .catch(assert.ifError)
+        .then((res) => {
+          const timeTaken = Date.now() - startTime;
+          assert(timeTaken > 100);
+          assert.equal(res.statusCode, 200);
+        });
+    });
+
+    it('overrides the minimum wait time between retries', () => {
+      nockRetries(1);
+      const retryDelay = 200;
+      const startTime = Date.now();
+
+      return HttpTransport.createClient()
+        .useGlobal(toError())
+        .get(url)
+        .retry(1)
+        .retryDelay(retryDelay)
+        .asResponse()
+        .catch(assert.ifError)
+        .then((res) => {
+          const timeTaken = Date.now() - startTime;
+          assert(timeTaken > retryDelay);
           assert.equal(res.statusCode, 200);
         });
     });
