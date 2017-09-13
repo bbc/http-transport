@@ -6,14 +6,6 @@
 
 ## Common examples
 
-The example below prints all of the files in a directory that have the `.json` file extension:
-
-```js
-const httpTransport = require('http-transport');
-
-
-```
-
 #### Supported HTTP methods
 
 Make a HTTP GET request using `.get`
@@ -40,10 +32,13 @@ Make a HTTP POST request using `.post`
         });
 ```
 
+PATCH, DELETE, HEAD are also supported. 
+
 #### Query strings
 
 Make a HTTP GET request specifiying query strings using `.query`
 
+Single query string
 ```js
     const url = 'http://example.com/';
     HttpTransport.createClient()
@@ -55,10 +50,38 @@ Make a HTTP GET request specifiying query strings using `.query`
         });
 ```
 
+Multiple query strings:
+```js
+    const url = 'http://example.com/';
+    HttpTransport.createClient()
+        .get(url)
+        .query({
+          example1: true
+          example2: false
+        })
+        .asResponse()
+        .then((res) => {
+          console.log(res);
+        });
+```
+
+
 #### Headers
 
 Make a HTTP GET request specifiying request headers using `.headers`
 
+Add a single header:
+```js
+    HttpTransport.createClient()
+        .get(url)
+        .headers('someHeader1', 'someValue1')
+        .asResponse()
+        .then((res) => {
+            console.log(res);
+        });
+```
+
+Add multiple headers:
 ```js
     HttpTransport.createClient()
         .get(url)
@@ -89,6 +112,9 @@ Convert `Internal Server` responses (500) to errors:
           console.error(err);
         });
 ```
+
+`toError` is only required if the underlying client does not support HTTP error conversion. 
+The default transport is `request`, which does not convert errors. 
 
 #### Retries
 
