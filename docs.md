@@ -100,7 +100,7 @@ Add multiple headers:
 Convert `Internal Server` responses (500) to errors:
 
 ```js
-    const toError = require('http-transport-to-error');
+    const toError = require('@bbc/http-transport-to-error');
 
     const url = 'http://example.com/';
     const client = HttpTransport.createClient();
@@ -121,7 +121,7 @@ The default transport is `request`, which does not convert errors.
 Make a HTTP GET and retry twice on error `.retry`
 
 ```js
-const toError = require('http-transport-to-error');
+const toError = require('@bbc/http-transport-to-error');
 
 return HttpTransport.createClient()
         .useGlobal(toError())
@@ -151,10 +151,10 @@ Make a HTTP GET request and supply a alternative HTTP transport via `.createClie
 
 ```js
 const url = 'http://example.com/';
-const HttpTransport = require('http-transport');
-const Wreck = require('http-transport-wreck');
+const HttpTransport = require('@bbc/http-transport');
+const OtherTranport = require('some-other-transport');
 
-HttpTransport.createClient(Wreck)
+HttpTransport.createClient(OtherTranport)
    .get(url)
    .asResponse()
    .then((res) => {

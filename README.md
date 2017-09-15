@@ -7,14 +7,14 @@
 ## Installation
 
 ```
-npm install --save http-transport
+npm install @bbc/http-transport --save
 ```
 
 ## Usage
 
 ```js
 const url = 'http://example.com/';
-const client = require('http-transport').createClient();
+const client = require('@bbc/http-transport').createClient();
 
 client
    .get(url)
@@ -24,7 +24,6 @@ client
        console.log(res.body);
      }
    });
-});
 ```
 
 ## Documentation
