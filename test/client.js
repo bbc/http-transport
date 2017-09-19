@@ -97,7 +97,7 @@ describe('HttpTransport', () => {
         });
     });
 
-    it('sets a default User-agent', () => {
+    it('sets a default User-agent for every request', () => {
       nock.cleanAll();
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
@@ -107,11 +107,19 @@ describe('HttpTransport', () => {
           }
         })
         .get(path)
+        .times(2)
         .reply(200, responseBody);
 
-      return HttpTransport.createClient()
+      const client = HttpTransport.createClient();
+      const pending1 = client
         .get(url)
         .asResponse();
+
+      const pending2 = client
+        .get(url)
+        .asResponse();
+
+      return Promise.all([pending1, pending2]);
     });
 
     it('throws if a plugin is not a function', () => {
@@ -167,6 +175,22 @@ describe('HttpTransport', () => {
           const timeTaken = Date.now() - startTime;
           assert(timeTaken > 100);
           assert.equal(res.statusCode, 200);
+        });
+    });
+
+    it('disables retryDelay if retries if set to zero', () => {
+      nock.cleanAll();
+      api.get(path).reply(500);
+
+      return HttpTransport.createClient()
+        .useGlobal(toError())
+        .get(url)
+        .retry(0)
+        .retryDelay(10000)
+        .asResponse()
+        .then(() => assert.ok(false, 'Promise should have failed'))
+        .catch((e) => {
+          assert.equal(e.message, 'something bad happend.');
         });
     });
 
