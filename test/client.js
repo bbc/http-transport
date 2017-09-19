@@ -170,6 +170,22 @@ describe('HttpTransport', () => {
         });
     });
 
+    it('disables retryDelay if retries if set to zero', () => {
+      nock.cleanAll();
+      api.get(path).reply(500);
+
+      return HttpTransport.createClient()
+        .useGlobal(toError())
+        .get(url)
+        .retry(0)
+        .retryDelay(10000)
+        .asResponse()
+        .then(() => assert.ok(false, 'Promise should have failed'))
+        .catch((e) => {
+          assert.equal(e.message, 'something bad happend.');
+        });
+    });
+
     it('overrides the minimum wait time between retries', () => {
       nockRetries(1);
       const retryDelay = 200;
