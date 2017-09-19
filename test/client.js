@@ -97,7 +97,7 @@ describe('HttpTransport', () => {
         });
     });
 
-    it('sets a default User-agent', () => {
+    it('sets a default User-agent for every request', () => {
       nock.cleanAll();
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
@@ -107,11 +107,19 @@ describe('HttpTransport', () => {
           }
         })
         .get(path)
+        .times(2)
         .reply(200, responseBody);
 
-      return HttpTransport.createClient()
+      const client = HttpTransport.createClient();
+      const pending1 = client
         .get(url)
         .asResponse();
+
+      const pending2 = client
+        .get(url)
+        .asResponse();
+
+      return Promise.all([pending1, pending2]);
     });
 
     it('throws if a plugin is not a function', () => {
