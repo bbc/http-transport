@@ -2,6 +2,7 @@ const assert = require('chai').assert;
 const nock = require('nock');
 const context = require('../../lib/context');
 const sinon = require('sinon');
+const sandbox = sinon.sandbox.create();
 
 const RequestTransport = require('../../lib/transport/request');
 
@@ -31,6 +32,10 @@ describe('Request HTTP transport', () => {
     nock.disableNetConnect();
     nock.cleanAll();
     api.get(path).reply(200, simpleResponseBody);
+  });
+
+  afterEach(() => {
+    sandbox.restore();
   });
 
   describe('.createRequest', () => {
@@ -79,6 +84,32 @@ describe('Request HTTP transport', () => {
         .then((ctx) => {
           assert.equal(ctx.res.statusCode, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
+        });
+    });
+
+    it('does not allow adding an empty query string', () => {
+      const ctx = createContext(url);
+      ctx.req.addQuery();
+      const request = new RequestTransport();
+
+      return request.execute(ctx)
+        .catch(assert.ifError)
+        .then((ctx) => {
+          const keys = Object.keys(ctx.req.getQueries()).length;
+          assert.equal(keys, 0);
+        });
+    });
+
+    it('does not allow adding an empty header', () => {
+      const ctx = createContext(url);
+      ctx.req.addHeader();
+      const request = new RequestTransport();
+
+      return request.execute(ctx)
+        .catch(assert.ifError)
+        .then((ctx) => {
+          const keys = Object.keys(ctx.req.getHeaders()).length;
+          assert.equal(keys, 0);
         });
     });
 
@@ -223,14 +254,14 @@ describe('Request HTTP transport', () => {
       };
 
       const ctx = createContext(url);
-      const customeRequest = {
-        getAsync: sinon.stub().returns(Promise.resolve(res))
+      const customRequest = {
+        getAsync: sandbox.stub().returns(Promise.resolve(res))
       };
 
-      return new RequestTransport(customeRequest)
+      return new RequestTransport(customRequest)
         .execute(ctx)
         .then(() => {
-          sinon.assert.calledOnce(customeRequest.getAsync);
+          sinon.assert.calledOnce(customRequest.getAsync);
         })
         .catch(assert.ifError);
     });
