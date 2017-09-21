@@ -102,10 +102,10 @@ describe('HttpTransport', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-          reqheaders: {
-            'User-Agent': HeaderValue
-          }
-        })
+        reqheaders: {
+          'User-Agent': HeaderValue
+        }
+      })
         .get(path)
         .times(2)
         .reply(200, responseBody);
@@ -366,11 +366,11 @@ describe('HttpTransport', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-          reqheaders: {
-            'User-Agent': HeaderValue,
-            foo: 'bar'
-          }
-        })
+        reqheaders: {
+          'User-Agent': HeaderValue,
+          foo: 'bar'
+        }
+      })
         .get(path)
         .reply(200, responseBody);
 
@@ -577,8 +577,8 @@ describe('HttpTransport', () => {
       it('returns body of a JSON response', () => {
         nock.cleanAll();
         api.defaultReplyHeaders({
-            'Content-Type': 'application/json'
-          })
+          'Content-Type': 'application/json'
+        })
           .get(path)
           .reply(200, responseBody);
 
@@ -645,7 +645,7 @@ describe('HttpTransport', () => {
           });
       });
 
-      it('logs retry attempts as warnings', () => {
+      it('logs retry attempts as warnings when they return a critical error', () => {
         sandbox.stub(console, 'info');
         sandbox.stub(console, 'warn');
         nockRetries(2);
@@ -661,12 +661,11 @@ describe('HttpTransport', () => {
           .catch(assert.ifError)
           .then(() => {
             /*eslint no-console: ["error", { allow: ["info", "warn"] }] */
+            sinon.assert.calledOnce(console.warn);
             const intial = console.info.getCall(0).args[0];
             const attempt1 = console.warn.getCall(0).args[0];
-            const attempt2 = console.warn.getCall(1).args[0];
             assert.match(intial, /GET http:\/\/www.example.com\/ 500 \d+ ms/);
             assert.match(attempt1, /Attempt 1 GET http:\/\/www.example.com\/ 500 \d+ ms/);
-            assert.match(attempt2, /Attempt 2 GET http:\/\/www.example.com\/ 200 \d+ ms/);
           });
       });
     });
