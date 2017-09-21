@@ -53,10 +53,10 @@ describe('Request HTTP transport', () => {
     it('makes a GET request with headers', () => {
       nock.cleanAll();
       nock(host, {
-          reqheaders: {
-            test: 'qui curat'
-          }
-        })
+        reqheaders: {
+          test: 'qui curat'
+        }
+      })
         .get(path)
         .reply(200, simpleResponseBody);
 
@@ -175,25 +175,6 @@ describe('Request HTTP transport', () => {
 
       const ctx = createContext(url);
       ctx.req.timeout(20);
-
-      return new RequestTransport()
-        .execute(ctx)
-        .then(() => {
-          assert.fail('Expected request to timeout');
-        })
-        .catch((e) => {
-          assert.ok(e);
-          assert.equal(e.message, 'Request failed for get http://www.example.com/: ESOCKETTIMEDOUT');
-        });
-    });
-
-    it('sets a default timeout', () => {
-      nock.cleanAll();
-      api.get('/')
-        .socketDelay(2500)
-        .reply(200, simpleResponseBody);
-
-      const ctx = createContext(url);
 
       return new RequestTransport()
         .execute(ctx)
