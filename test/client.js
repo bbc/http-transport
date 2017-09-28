@@ -125,12 +125,11 @@ describe('HttpTransport', () => {
   });
 
   describe('default', () => {
-    it('sets default values in the context', () => {
+    it('sets default retry values in the context', () => {
       const transport = new Transport();
       sandbox.stub(transport, 'execute').returns(Promise.resolve());
 
       const client = HttpTransport.createBuilder(transport)
-        .timeout(1000)
         .retries(50)
         .retryDelay(2000)
         .createClient();
@@ -139,7 +138,6 @@ describe('HttpTransport', () => {
         .asResponse()
         .then(() => {
           const ctx = transport.execute.getCall(0).args[0];
-          assert.equal(ctx.req.getTimeout(), 1000);
           assert.equal(ctx.retries, 50);
           assert.equal(ctx.retryDelay, 2000);
         });
