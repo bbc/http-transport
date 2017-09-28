@@ -542,7 +542,7 @@ describe('HttpTransport', () => {
           assert.equal(body, 'global request');
         });
     });
-    // TODO?
+
     it('throws if a global plugin is not a function', () => {
       assert.throws(() => {
         HttpTransport.createBuilder()
