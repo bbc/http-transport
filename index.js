@@ -1,6 +1,5 @@
 'use strict';
 
-const HttpTransportClient = require('./lib/client');
 const HttpTransportBuilder = require('./lib/builder');
 const DefaultTransport = require('./lib/transport/request');
 
@@ -12,7 +11,7 @@ module.exports.logger = require('./lib/plugins/logger');
 module.exports.setContextProperty = require('./lib/plugins/setContextProperty');
 
 module.exports.createClient = () => {
-  return new HttpTransportClient(new DefaultTransport());
+  return new HttpTransportBuilder(new DefaultTransport()).createClient();
 };
 
 module.exports.createBuilder = (transport) => {
