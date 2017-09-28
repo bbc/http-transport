@@ -122,6 +122,33 @@ describe('HttpTransport', () => {
 
       return Promise.all([pending1, pending2]);
     });
+
+    it('overrides the default User-agent for every request', () => {
+      nock.cleanAll();
+
+      nock(host, {
+          reqheaders: {
+            'User-Agent': 'some-new-user-agent'
+          }
+        })
+        .get(path)
+        .times(2)
+        .reply(200, responseBody);
+
+      const client = HttpTransport.createBuilder()
+        .userAgent('some-new-user-agent')
+        .createClient();
+
+      const pending1 = client
+        .get(url)
+        .asResponse();
+
+      const pending2 = client
+        .get(url)
+        .asResponse();
+
+      return Promise.all([pending1, pending2]);
+    });
   });
 
   describe('default', () => {
