@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#patch">patch</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#retryDelay">retryDelay</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li><li><a href="global.html#useGlobal">useGlobal</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#createClient">createClient</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#patch">patch</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retries">retries</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#retryDelay">retryDelay</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li></ul>
 </nav>
 
 <div id="main">
@@ -128,7 +128,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line305">line 305</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line271">line 271</a>
     </li></ul></dd>
     
 
@@ -234,7 +234,7 @@ the fulfilment value is the response body, as a string by default.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line325">line 325</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line290">line 290</a>
     </li></ul></dd>
     
 
@@ -328,6 +328,154 @@ the fulfilment value is response object.</p>
 
     
 
+    <h4 class="name" id="createClient"><span class="type-signature"></span>createClient<span class="signature">(fn)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="builder.js.html">builder.js</a>, <a href="builder.js.html#line72">line 72</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Instantiates a HttpTransport</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const client = httpTransport.createClient();</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>fn</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>a global plugin</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>a HttpTransport instance</p>
+</div>
+
+
+
+    
+
+
+        
+            
+
+    
+
     <h4 class="name" id="delete"><span class="type-signature"></span>delete<span class="signature">(url, request)</span><span class="type-signature"></span></h4>
 
     
@@ -340,7 +488,7 @@ the fulfilment value is response object.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line131">line 131</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line105">line 105</a>
     </li></ul></dd>
     
 
@@ -515,7 +663,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line64">line 64</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line41">line 41</a>
     </li></ul></dd>
     
 
@@ -667,7 +815,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line176">line 176</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line148">line 148</a>
     </li></ul></dd>
     
 
@@ -819,7 +967,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line197">line 197</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line168">line 168</a>
     </li></ul></dd>
     
 
@@ -1002,7 +1150,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line153">line 153</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line126">line 126</a>
     </li></ul></dd>
     
 
@@ -1177,7 +1325,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line85">line 85</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line61">line 61</a>
     </li></ul></dd>
     
 
@@ -1352,7 +1500,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line108">line 108</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line83">line 83</a>
     </li></ul></dd>
     
 
@@ -1527,7 +1675,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line222">line 222</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line192">line 192</a>
     </li></ul></dd>
     
 
@@ -1698,6 +1846,157 @@ const response = httpTransport.createClient()
 
     
 
+    <h4 class="name" id="retries"><span class="type-signature"></span>retries<span class="signature">(retries)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="builder.js.html">builder.js</a>, <a href="builder.js.html#line19">line 19</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Set the default number of retries</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+
+const builder = httpTransport.createBuilder();
+builder.retries(5);</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>retries</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>number of retry attempts</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>a HttpTransportBuilder instance</p>
+</div>
+
+
+
+    
+
+
+        
+            
+
+    
+
     <h4 class="name" id="retry"><span class="type-signature"></span>retry<span class="signature">(timeout)</span><span class="type-signature"></span></h4>
 
     
@@ -1710,7 +2009,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line266">line 266</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line234">line 234</a>
     </li></ul></dd>
     
 
@@ -1850,6 +2149,157 @@ const response = httpTransport.createClient()
 
     
 
+    <h4 class="name" id="retryDelay"><span class="type-signature"></span>retryDelay<span class="signature">(time)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="builder.js.html">builder.js</a>, <a href="builder.js.html#line36">line 36</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Set the default time between delays</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+
+const builder = httpTransport.createBuilder();
+builder.retryDelay(1000);</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>time</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">integer</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>delay time in ms</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>a HttpTransportBuilder instance</p>
+</div>
+
+
+
+    
+
+
+        
+            
+
+    
+
     <h4 class="name" id="retryDelay"><span class="type-signature"></span>retryDelay<span class="signature">(timeout)</span><span class="type-signature"></span></h4>
 
     
@@ -1862,7 +2312,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line285">line 285</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line252">line 252</a>
     </li></ul></dd>
     
 
@@ -2015,7 +2465,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line247">line 247</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line216">line 216</a>
     </li></ul></dd>
     
 
@@ -2167,7 +2617,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line44">line 44</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -2307,7 +2757,7 @@ httpTransport.createClient()
 
     
 
-    <h4 class="name" id="useGlobal"><span class="type-signature"></span>useGlobal<span class="signature">(fn)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="use"><span class="type-signature"></span>use<span class="signature">(fn)</span><span class="type-signature"></span></h4>
 
     
 
@@ -2319,7 +2769,7 @@ httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line24">line 24</a>
+        <a href="builder.js.html">builder.js</a>, <a href="builder.js.html#line53">line 53</a>
     </li></ul></dd>
     
 
@@ -2446,7 +2896,7 @@ client.useGlobal(toError(404));</code></pre>
 
         
 <div class="param-desc">
-    <p>a HttpTransport instance</p>
+    <p>a HttpTransportBuilder instance</p>
 </div>
 
 
@@ -2472,7 +2922,7 @@ client.useGlobal(toError(404));</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 15 2017 10:25:54 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 28 2017 10:25:09 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

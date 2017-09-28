@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#patch">patch</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#retryDelay">retryDelay</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li><li><a href="global.html#useGlobal">useGlobal</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#createClient">createClient</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#patch">patch</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retries">retries</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#retryDelay">retryDelay</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li></ul>
 </nav>
 
 <div id="main">
@@ -40,9 +40,10 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
+const _ = require('lodash');
 const compose = require('koa-compose');
 const context = require('./context');
-const delayBy = require('./delayedPromise');
+const rejectedPromise = require('./rejectedPromise');
 const packageInfo = require('../package');
 const bind = require('./bind');
 
@@ -50,42 +51,18 @@ const RETRY_DELAY = 100;
 
 /** @class */
 class HttpTransport {
-  constructor(httpTransport) {
+  constructor(httpTransport, defaults) {
     this._httpTransport = httpTransport;
-    this._ctx = context.create();
-    this._instancePlugins = [];
-    this._defaultHeaders = {
-      'User-Agent': `${packageInfo.name}/${packageInfo.version}`
-    };
-    this.headers(this._defaultHeaders);
+    this._instancePlugins = _.get(defaults, 'plugins', []);
+    this._defaults = defaults;
+    this._initContext();
     bind(this);
-  }
-
-  /**
-   * Registers a global plugin, which is used for all requests
-   *
-   * @method
-   * useGlobal
-   * @param {function} fn - a global plugin
-   * @return a HttpTransport instance
-   * @example
-   * const toError = require('http-transport-errors');
-   * const httpTransport = require('http-transport');
-   *
-   * const client = httpTransport.createClient();
-   * client.useGlobal(toError(404));
-   */
-  useGlobal(plugin) {
-    validatePlugin(plugin);
-    this._instancePlugins.push(plugin);
-    return this;
   }
 
   /**
    * Registers a per request plugin
    *
-   * @method
-   * use
+   * @method use
    * @return a HttpTransport instance
    * @param {function} fn - per request plugin
    * @example
@@ -104,8 +81,7 @@ class HttpTransport {
   /**
    * Make a HTTP GET request
    *
-   * @method
-   * get
+   * @method get
    * @param {string} url
    * @return a HttpTransport instance
    * @example
@@ -125,8 +101,7 @@ class HttpTransport {
   /**
    * Make a HTTP POST request
    *
-   * @method
-   * post
+   * @method post
    * @param {string} url
    * @param {object} request body
    * @return a HttpTransport instance
@@ -148,8 +123,7 @@ class HttpTransport {
   /**
    * Make a HTTP PUT request
    *
-   * @method
-   * put
+   * @method put
    * @param {string} url
    * @param {object} request body
    * @return a HttpTransport instance
@@ -171,8 +145,7 @@ class HttpTransport {
   /**
    * Make a HTTP DELETE request
    *
-   * @method
-   * delete
+   * @method delete
    * @param {string} url
    * @param {object} request body
    * @return a HttpTransport instance
@@ -193,8 +166,7 @@ class HttpTransport {
   /**
    * Make a HTTP PATCH request
    *
-   * @method
-   * patch
+   * @method patch
    * @param {string} url
    * @param {object} request body
    * @return a HttpTransport instance
@@ -216,8 +188,7 @@ class HttpTransport {
   /**
    * Make a HTTP HEAD request
    *
-   * @method
-   * head
+   * @method head
    * @param {string} url
    * @return a HttpTransport instance
    * @example
@@ -237,8 +208,7 @@ class HttpTransport {
   /**
    * Sets the request headers
    *
-   * @method
-   * headers
+   * @method headers
    * @param {string|object} name - header name or headers object
    * @param {string|object} value - header value
    * @return a HttpTransport instance
@@ -262,8 +232,7 @@ class HttpTransport {
   /**
    * Sets the query strings
    *
-   * @method
-   * query
+   * @method query
    * @param {string|object} name - query name or query object
    * @param {string|object} value - query value
    * @return a HttpTransport instance
@@ -287,8 +256,7 @@ class HttpTransport {
   /**
    * Sets a request timeout
    *
-   * @method
-   * timeout
+   * @method timeout
    * @param {integer} timeout - timeout in seconds
    * @return a HttpTransport instance
    * @example
@@ -306,8 +274,7 @@ class HttpTransport {
   /**
    * Set the number of retries on failure
    *
-   * @method
-   * retry
+   * @method retry
    * @param {integer} timeout - number of times to retry a failed request
    * @return a HttpTransport instance
    * @example
@@ -325,8 +292,7 @@ class HttpTransport {
   /**
    * Set the delay between retries in ms
    *
-   * @method
-   * retryDelay
+   * @method retryDelay
    * @param {integer} timeout - number of ms to wait between retries (default: 100)
    * @return a HttpTransport instance
    * @example
@@ -345,8 +311,7 @@ class HttpTransport {
   /**
    * Initiates the request, returning the response body, if successful.
    *
-   * @method
-   * asBody
+   * @method asBody
    * @return a Promise. If the Promise fulfils,
    * the fulfilment value is the response body, as a string by default.
    * @example
@@ -365,8 +330,7 @@ class HttpTransport {
   /**
    * Initiates the request, returning a http transport response object, if successful.
    *
-   * @method
-   * asResponse
+   * @method asResponse
    * @return a Promise. If the Promise fulfils,
    * the fulfilment value is response object.
    * @example
@@ -379,13 +343,14 @@ class HttpTransport {
    *    });
    */
   asResponse() {
-    const requestContext = this._ctx;
-    this._ctx = context.create();
-    const retries = {
-      count: this._retries,
-      delay: this._retryDelay >= 0 ? this._retryDelay : RETRY_DELAY
-    };
-    return retry(this._executeRequest, requestContext, retries).then((ctx) => ctx.res);
+    const currentContext = this._ctx;
+    if (this._retries >= 0) {
+      currentContext.retries = this._retries;
+    }
+    currentContext.retryDelay = this._retryDelay >= 0 ? this._retryDelay : (currentContext.retryDelay || RETRY_DELAY);
+    this._initContext();
+
+    return retry(this._executeRequest, currentContext).then((ctx) => ctx.res);
   }
 
   _getPlugins(ctx) {
@@ -404,6 +369,14 @@ class HttpTransport {
   _handleRequest(ctx, next) {
     return this._httpTransport.execute(ctx).then(() => next());
   }
+
+  _initContext() {
+    this._ctx = context.create(this._defaults);
+    this._defaultHeaders = {
+      'User-Agent': `${packageInfo.name}/${packageInfo.version}`
+    };
+    this.headers(this._defaultHeaders);
+  }
 }
 
 function isCriticalError(err) {
@@ -420,22 +393,28 @@ function toRetry(err) {
   };
 }
 
-function retry(fn, ctx, retries) {
+function retry(fn, ctx) {
   ctx.res.retries = [];
-  ctx.res.maxAttempts = retries.count;
+  ctx.res.maxAttempts = ctx.retries;
   const request = fn.bind(this, ctx);
 
-  const attempt = (i) => {
+  function attempt(i) {
     return request()
-      .catch(delayBy(retries.delay))
       .catch((err) => {
-        if (i &lt; retries.count &amp;&amp; isCriticalError(err)) {
+        if (ctx.retries > 0) {
+          const delayBy = rejectedPromise(ctx.retryDelay);
+          return delayBy(err);
+        }
+        throw err;
+      })
+      .catch((err) => {
+        if (i &lt; ctx.retries &amp;&amp; isCriticalError(err)) {
           ctx.res.retries.push(toRetry(err));
           return attempt(++i);
         }
         throw err;
       });
-  };
+  }
   return attempt(0);
 }
 
@@ -476,7 +455,7 @@ module.exports = HttpTransport;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 15 2017 10:25:54 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 28 2017 10:25:08 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
