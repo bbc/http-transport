@@ -21,9 +21,7 @@ function createContext(url, method) {
   method = method || 'get';
 
   const ctx = context.create();
-  ctx.req
-    .method(method)
-    .url(url);
+  ctx.req.method(method).baseUrl(url);
   return ctx;
 }
 
@@ -42,9 +40,10 @@ describe('Request HTTP transport', () => {
     it('makes a GET request', () => {
       const ctx = createContext(url);
       const request = new RequestTransport();
-      return request.execute(ctx)
+      return request
+        .execute(ctx)
         .catch(assert.ifError)
-        .then((ctx) => {
+        .then(ctx => {
           assert.equal(ctx.res.statusCode, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
@@ -64,9 +63,10 @@ describe('Request HTTP transport', () => {
       ctx.req.addHeader('test', 'qui curat');
 
       const request = new RequestTransport();
-      return request.execute(ctx)
+      return request
+        .execute(ctx)
         .catch(assert.ifError)
-        .then((ctx) => {
+        .then(ctx => {
           assert.equal(ctx.res.statusCode, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
@@ -79,9 +79,10 @@ describe('Request HTTP transport', () => {
       ctx.req.addQuery('a', 1);
 
       const request = new RequestTransport();
-      return request.execute(ctx)
+      return request
+        .execute(ctx)
         .catch(assert.ifError)
-        .then((ctx) => {
+        .then(ctx => {
           assert.equal(ctx.res.statusCode, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
@@ -92,9 +93,10 @@ describe('Request HTTP transport', () => {
       ctx.req.addQuery();
       const request = new RequestTransport();
 
-      return request.execute(ctx)
+      return request
+        .execute(ctx)
         .catch(assert.ifError)
-        .then((ctx) => {
+        .then(ctx => {
           const keys = Object.keys(ctx.req.getQueries()).length;
           assert.equal(keys, 0);
         });
@@ -105,9 +107,10 @@ describe('Request HTTP transport', () => {
       ctx.req.addHeader();
       const request = new RequestTransport();
 
-      return request.execute(ctx)
+      return request
+        .execute(ctx)
         .catch(assert.ifError)
-        .then((ctx) => {
+        .then(ctx => {
           const keys = Object.keys(ctx.req.getHeaders()).length;
           assert.equal(keys, 0);
         });
@@ -121,7 +124,7 @@ describe('Request HTTP transport', () => {
       return new RequestTransport()
         .execute(ctx)
         .catch(assert.ifError)
-        .then((ctx) => {
+        .then(ctx => {
           assert.equal(ctx.res.statusCode, 201);
           assert.deepEqual(ctx.res.body, responseBody);
         });
@@ -135,7 +138,7 @@ describe('Request HTTP transport', () => {
       return new RequestTransport()
         .execute(ctx)
         .catch(assert.ifError)
-        .then((ctx) => {
+        .then(ctx => {
           assert.equal(ctx.res.statusCode, 201);
           assert.deepEqual(ctx.res.body, responseBody);
         });
@@ -149,7 +152,7 @@ describe('Request HTTP transport', () => {
       return new RequestTransport()
         .execute(ctx)
         .catch(assert.ifError)
-        .then((ctx) => {
+        .then(ctx => {
           assert.equal(ctx.res.statusCode, 204);
         });
     });
@@ -162,14 +165,15 @@ describe('Request HTTP transport', () => {
       return new RequestTransport()
         .execute(ctx)
         .catch(assert.ifError)
-        .then((ctx) => {
+        .then(ctx => {
           assert.equal(ctx.res.statusCode, 204);
         });
     });
 
     it('sets a timeout', () => {
       nock.cleanAll();
-      api.get('/')
+      api
+        .get('/')
         .socketDelay(500)
         .reply(200, simpleResponseBody);
 
@@ -181,23 +185,25 @@ describe('Request HTTP transport', () => {
         .then(() => {
           assert.fail('Expected request to timeout');
         })
-        .catch((e) => {
+        .catch(e => {
           assert.ok(e);
-          assert.equal(e.message, 'Request failed for get http://www.example.com/: ESOCKETTIMEDOUT');
+          assert.equal(
+            e.message,
+            'Request failed for get http://www.example.com/: ESOCKETTIMEDOUT'
+          );
         });
     });
 
     it('disables timing a request', () => {
       nock.cleanAll();
-      api.get('/')
-        .reply(200, simpleResponseBody);
+      api.get('/').reply(200, simpleResponseBody);
 
       const ctx = createContext(url);
       ctx.req.time = false;
 
       return new RequestTransport()
         .execute(ctx)
-        .then((ctx) => {
+        .then(ctx => {
           const timeTaken = ctx.res.elapsedTime;
           assert.isNotNumber(timeTaken);
         })
@@ -206,14 +212,13 @@ describe('Request HTTP transport', () => {
 
     it('enables timing request by default', () => {
       nock.cleanAll();
-      api.get('/')
-        .reply(200, simpleResponseBody);
+      api.get('/').reply(200, simpleResponseBody);
 
       const ctx = createContext(url);
 
       return new RequestTransport()
         .execute(ctx)
-        .then((ctx) => {
+        .then(ctx => {
           const timeTaken = ctx.res.elapsedTime;
           assert.isNumber(timeTaken);
         })
@@ -222,7 +227,8 @@ describe('Request HTTP transport', () => {
 
     it('override default request', () => {
       nock.cleanAll();
-      api.get('/')
+      api
+        .get('/')
         .socketDelay(500)
         .reply(200, simpleResponseBody);
 

@@ -34,14 +34,12 @@ function toUpperCase() {
 }
 
 function assertFailure(promise, message) {
-  return promise
-    .then(() => assert.ok(false, 'Promise should have failed'))
-    .catch((e) => {
-      assert.ok(e);
-      if (message) {
-        assert.equal(e.message, message);
-      }
-    });
+  return promise.then(() => assert.ok(false, 'Promise should have failed')).catch((e) => {
+    assert.ok(e);
+    if (message) {
+      assert.equal(e.message, message);
+    }
+  });
 }
 
 function nockRetries(retry, opts) {
@@ -49,7 +47,9 @@ function nockRetries(retry, opts) {
   const successCode = _.get(opts, 'successCode') || 200;
 
   nock.cleanAll();
-  api[httpMethod](path).times(retry).reply(500);
+  api[httpMethod](path)
+    .times(retry)
+    .reply(500);
   api[httpMethod](path).reply(successCode);
 }
 
@@ -58,7 +58,10 @@ function nockTimeouts(number, opts) {
   const successCode = _.get(opts, 'successCode') || 200;
 
   nock.cleanAll();
-  api[httpMethod](path).times(number).socketDelay(10000).reply(200);
+  api[httpMethod](path)
+    .times(number)
+    .socketDelay(10000)
+    .reply(200);
   api[httpMethod](path).reply(successCode);
 }
 
@@ -79,9 +82,12 @@ describe('HttpTransport', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.cleanAll();
-    api.get(path).reply(200, simpleResponseBody).defaultReplyHeaders({
-      'Content-Type': 'text/html'
-    });
+    api
+      .get(path)
+      .reply(200, simpleResponseBody)
+      .defaultReplyHeaders({
+        'Content-Type': 'text/html'
+      });
   });
 
   afterEach(() => {
@@ -103,22 +109,18 @@ describe('HttpTransport', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-          reqheaders: {
-            'User-Agent': HeaderValue
-          }
-        })
+        reqheaders: {
+          'User-Agent': HeaderValue
+        }
+      })
         .get(path)
         .times(2)
         .reply(200, responseBody);
 
       const client = HttpTransport.createClient();
-      const pending1 = client
-        .get(url)
-        .asResponse();
+      const pending1 = client.get(url).asResponse();
 
-      const pending2 = client
-        .get(url)
-        .asResponse();
+      const pending2 = client.get(url).asResponse();
 
       return Promise.all([pending1, pending2]);
     });
@@ -127,10 +129,10 @@ describe('HttpTransport', () => {
       nock.cleanAll();
 
       nock(host, {
-          reqheaders: {
-            'User-Agent': 'some-new-user-agent'
-          }
-        })
+        reqheaders: {
+          'User-Agent': 'some-new-user-agent'
+        }
+      })
         .get(path)
         .times(2)
         .reply(200, responseBody);
@@ -139,13 +141,8 @@ describe('HttpTransport', () => {
         .userAgent('some-new-user-agent')
         .createClient();
 
-      const pending1 = client
-        .get(url)
-        .asResponse();
-
-      const pending2 = client
-        .get(url)
-        .asResponse();
+      const pending1 = client.get(url).asResponse();
+      const pending2 = client.get(url).asResponse();
 
       return Promise.all([pending1, pending2]);
     });
@@ -161,7 +158,8 @@ describe('HttpTransport', () => {
         .retryDelay(2000)
         .createClient();
 
-      return client.get(url)
+      return client
+        .get(url)
         .asResponse()
         .then(() => {
           const ctx = transport.execute.getCall(0).args[0];
@@ -179,7 +177,8 @@ describe('HttpTransport', () => {
         .use(toError())
         .createClient();
 
-      return client.get(url)
+      return client
+        .get(url)
         .retry(2)
         .asResponse()
         .catch(assert.ifError)
@@ -195,7 +194,8 @@ describe('HttpTransport', () => {
         .use(toError())
         .createClient();
 
-      return client.get(url)
+      return client
+        .get(url)
         .timeout(2000)
         .retry(2)
         .asResponse()
@@ -213,7 +213,8 @@ describe('HttpTransport', () => {
         .use(toError())
         .createClient();
 
-      return client.get(url)
+      return client
+        .get(url)
         .retry(2)
         .asResponse()
         .catch(assert.ifError)
@@ -232,7 +233,8 @@ describe('HttpTransport', () => {
         .use(toError())
         .createClient();
 
-      return client.get(url)
+      return client
+        .get(url)
         .retry(0)
         .retryDelay(10000)
         .asResponse()
@@ -251,7 +253,8 @@ describe('HttpTransport', () => {
         .use(toError())
         .createClient();
 
-      return client.get(url)
+      return client
+        .get(url)
         .retry(1)
         .retryDelay(retryDelay)
         .asResponse()
@@ -268,7 +271,8 @@ describe('HttpTransport', () => {
 
       const client = HttpTransport.createClient();
 
-      return client.get(url)
+      return client
+        .get(url)
         .use(toError())
         .retry(2)
         .asResponse()
@@ -283,13 +287,17 @@ describe('HttpTransport', () => {
 
     it('does not retry 4XX errors', () => {
       nock.cleanAll();
-      api.get(path).once().reply(400);
+      api
+        .get(path)
+        .once()
+        .reply(400);
 
       const client = HttpTransport.createBuilder()
         .use(toError())
         .createClient();
 
-      return client.get(url)
+      return client
+        .get(url)
         .retry(1)
         .asResponse()
         .then(() => {
@@ -318,9 +326,7 @@ describe('HttpTransport', () => {
       api.post(path, requestBody).reply(500);
 
       const client = HttpTransport.createClient();
-      const response = client
-        .post(url, requestBody)
-        .asResponse();
+      const response = client.post(url, requestBody).asResponse();
 
       return assertFailure(response);
     });
@@ -343,9 +349,7 @@ describe('HttpTransport', () => {
       api.put(path, requestBody).reply(500);
 
       const client = HttpTransport.createClient();
-      const response = client
-        .put(url, requestBody)
-        .asResponse();
+      const response = client.put(url, requestBody).asResponse();
 
       return assertFailure(response);
     });
@@ -361,9 +365,7 @@ describe('HttpTransport', () => {
       api.delete(path, requestBody).reply(500);
 
       const client = HttpTransport.createClient();
-      const response = client
-        .delete(url, requestBody)
-        .asResponse();
+      const response = client.delete(url, requestBody).asResponse();
 
       return assertFailure(response);
     });
@@ -379,9 +381,7 @@ describe('HttpTransport', () => {
       api.patch(path, requestBody).reply(500);
 
       const client = HttpTransport.createClient();
-      const response = client
-        .patch(url, requestBody)
-        .asResponse();
+      const response = client.patch(url, requestBody).asResponse();
 
       return assertFailure(response);
     });
@@ -403,9 +403,7 @@ describe('HttpTransport', () => {
       api.head(path, requestBody).reply(500);
 
       const client = HttpTransport.createClient();
-      const response = client
-        .head(url, requestBody)
-        .asResponse();
+      const response = client.head(url, requestBody).asResponse();
 
       return assertFailure(response);
     });
@@ -417,11 +415,11 @@ describe('HttpTransport', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-          reqheaders: {
-            'User-Agent': HeaderValue,
-            foo: 'bar'
-          }
-        })
+        reqheaders: {
+          'User-Agent': HeaderValue,
+          foo: 'bar'
+        }
+      })
         .get(path)
         .reply(200, responseBody);
 
@@ -433,11 +431,9 @@ describe('HttpTransport', () => {
         })
         .asResponse();
 
-      return response
-        .catch(assert.ifError)
-        .then((res) => {
-          assert.equal(res.statusCode, 200);
-        });
+      return response.catch(assert.ifError).then((res) => {
+        assert.equal(res.statusCode, 200);
+      });
     });
 
     it('ignores an empty header object', () => {
@@ -473,9 +469,9 @@ describe('HttpTransport', () => {
       return client
         .get(url)
         .query({
-          'a': 1,
-          'b': 2,
-          'c': 3
+          a: 1,
+          b: 2,
+          c: 3
         })
         .asBody()
         .then((body) => {
@@ -497,7 +493,8 @@ describe('HttpTransport', () => {
   describe('timeout', () => {
     it('sets the a timeout', () => {
       nock.cleanAll();
-      api.get('/')
+      api
+        .get('/')
         .socketDelay(1000)
         .reply(200, simpleResponseBody);
 
@@ -514,7 +511,10 @@ describe('HttpTransport', () => {
   describe('plugins', () => {
     it('supports a per request plugin', () => {
       nock.cleanAll();
-      api.get(path).times(2).reply(200, simpleResponseBody);
+      api
+        .get(path)
+        .times(2)
+        .reply(200, simpleResponseBody);
 
       const client = HttpTransport.createClient();
 
@@ -523,15 +523,12 @@ describe('HttpTransport', () => {
         .get(url)
         .asBody();
 
-      const lowerCaseResponse = client
-        .get(url)
-        .asBody();
+      const lowerCaseResponse = client.get(url).asBody();
 
-      return Promise.all([upperCaseResponse, lowerCaseResponse])
-        .then((results) => {
-          assert.equal(results[0], simpleResponseBody.toUpperCase());
-          assert.equal(results[1], simpleResponseBody);
-        });
+      return Promise.all([upperCaseResponse, lowerCaseResponse]).then((results) => {
+        assert.equal(results[0], simpleResponseBody.toUpperCase());
+        assert.equal(results[1], simpleResponseBody);
+      });
     });
 
     it('executes global and per request plugins', () => {
@@ -540,20 +537,17 @@ describe('HttpTransport', () => {
 
       function appendTagGlobally() {
         return (ctx, next) => {
-          return next()
-            .then(() => {
-              ctx.res.body = 'global ' + ctx.res.body;
-            });
+          return next().then(() => {
+            ctx.res.body = 'global ' + ctx.res.body;
+          });
         };
       }
 
       function appendTagPerRequestTag() {
         return (ctx, next) => {
-
-          return next()
-            .then(() => {
-              ctx.res.body = 'request';
-            });
+          return next().then(() => {
+            ctx.res.body = 'request';
+          });
         };
       }
 
@@ -571,19 +565,24 @@ describe('HttpTransport', () => {
     });
 
     it('throws if a global plugin is not a function', () => {
-      assert.throws(() => {
-        HttpTransport.createBuilder()
-          .use('bad plugin');
-      }, TypeError, 'Plugin is not a function');
+      assert.throws(
+        () => {
+          HttpTransport.createBuilder().use('bad plugin');
+        },
+        TypeError,
+        'Plugin is not a function'
+      );
     });
 
     it('throws if a per request plugin is not a function', () => {
-      assert.throws(() => {
-        const client = HttpTransport.createClient();
-        client
-          .use('bad plugin')
-          .get(url);
-      }, TypeError, 'Plugin is not a function');
+      assert.throws(
+        () => {
+          const client = HttpTransport.createClient();
+          client.use('bad plugin').get(url);
+        },
+        TypeError,
+        'Plugin is not a function'
+      );
     });
 
     describe('setContextProperty', () => {
@@ -596,9 +595,14 @@ describe('HttpTransport', () => {
           .createClient();
 
         return client
-          .use(setContextProperty({
-            time: false
-          }, 'opts'))
+          .use(
+            setContextProperty(
+              {
+                time: false
+              },
+              'opts'
+            )
+          )
           .get(url)
           .asResponse()
           .then((res) => {
@@ -629,7 +633,8 @@ describe('HttpTransport', () => {
     describe('toJson', () => {
       it('returns body of a JSON response', () => {
         nock.cleanAll();
-        api.defaultReplyHeaders({
+        api
+          .defaultReplyHeaders({
             'Content-Type': 'application/json'
           })
           .get(path)
@@ -649,7 +654,6 @@ describe('HttpTransport', () => {
     });
 
     describe('logging', () => {
-
       it('logs each request at info level when a logger is passed in', () => {
         api.get(path).reply(200);
 
@@ -662,7 +666,8 @@ describe('HttpTransport', () => {
           .use(log(stubbedLogger))
           .createClient();
 
-        client.get(url)
+        client
+          .get(url)
           .asBody()
           .catch(assert.ifError)
           .then(() => {
@@ -678,7 +683,8 @@ describe('HttpTransport', () => {
           .use(log())
           .createClient();
 
-        return client.get(url)
+        return client
+          .get(url)
           .asBody()
           .catch(assert.ifError)
           .then(() => {
@@ -695,9 +701,14 @@ describe('HttpTransport', () => {
           .createClient();
 
         return client
-          .use(setContextProperty({
-            time: false
-          }, 'opts'))
+          .use(
+            setContextProperty(
+              {
+                time: false
+              },
+              'opts'
+            )
+          )
           .get(url)
           .asBody()
           .catch(assert.ifError)

@@ -7,7 +7,7 @@
     "test": "mocha",
     "jsdoc": "jsdoc -c ./docconfig/jsdoc.json",
     "lint": "eslint ./src ./test",
-    "coverage": "istanbul cover _mocha -- -R dot",
+    "coverage": "nyc mocha && nyc report --reporter=html && nyc report --reporter=json-summary",
     "posttest": "npm run lint"
   },
   "repository": {
@@ -37,14 +37,14 @@
     "chai": "^3.5.0",
     "codeclimate-test-reporter": "^0.4.0",
     "coveralls": "^2.11.9",
-    "eslint": "^2.10.2",
-    "istanbul": "^0.4.2",
+    "eslint": "^4.1.1",
     "jsdoc": "^3.4.3",
     "mocha": "^3.0.2",
     "nock": "^9.0.4",
     "sinon": "^1.15.3",
-    "eslint-config-iplayer-es6": "^2.0.0",
-    "eslint-plugin-mocha": "^2.2.0"
+    "eslint-config-iplayer-es6": "^3.1.0",
+    "eslint-plugin-mocha": "^4.11.0",
+    "nyc": "^11.2.1"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
@@ -53,6 +53,12 @@
     "request": "2.78.0"
   },
   "eslintConfig": {
-    "extends": "iplayer-es6"
+    "extends": "iplayer-es6",
+    "parserOptions": {
+      "ecmaVersion": 2017
+    },
+    "rules": {
+      "space-before-function-paren": 0
+    }
   }
 }
