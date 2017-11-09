@@ -1,3 +1,5 @@
+'use strict';
+
 const assert = require('chai').assert;
 const nock = require('nock');
 const context = require('../../lib/context');
@@ -43,7 +45,7 @@ describe('Request HTTP transport', () => {
       return request
         .execute(ctx)
         .catch(assert.ifError)
-        .then(ctx => {
+        .then((ctx) => {
           assert.equal(ctx.res.statusCode, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
@@ -66,7 +68,7 @@ describe('Request HTTP transport', () => {
       return request
         .execute(ctx)
         .catch(assert.ifError)
-        .then(ctx => {
+        .then((ctx) => {
           assert.equal(ctx.res.statusCode, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
@@ -82,7 +84,7 @@ describe('Request HTTP transport', () => {
       return request
         .execute(ctx)
         .catch(assert.ifError)
-        .then(ctx => {
+        .then((ctx) => {
           assert.equal(ctx.res.statusCode, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
@@ -96,7 +98,7 @@ describe('Request HTTP transport', () => {
       return request
         .execute(ctx)
         .catch(assert.ifError)
-        .then(ctx => {
+        .then((ctx) => {
           const keys = Object.keys(ctx.req.getQueries()).length;
           assert.equal(keys, 0);
         });
@@ -110,7 +112,7 @@ describe('Request HTTP transport', () => {
       return request
         .execute(ctx)
         .catch(assert.ifError)
-        .then(ctx => {
+        .then((ctx) => {
           const keys = Object.keys(ctx.req.getHeaders()).length;
           assert.equal(keys, 0);
         });
@@ -124,7 +126,7 @@ describe('Request HTTP transport', () => {
       return new RequestTransport()
         .execute(ctx)
         .catch(assert.ifError)
-        .then(ctx => {
+        .then((ctx) => {
           assert.equal(ctx.res.statusCode, 201);
           assert.deepEqual(ctx.res.body, responseBody);
         });
@@ -138,7 +140,7 @@ describe('Request HTTP transport', () => {
       return new RequestTransport()
         .execute(ctx)
         .catch(assert.ifError)
-        .then(ctx => {
+        .then((ctx) => {
           assert.equal(ctx.res.statusCode, 201);
           assert.deepEqual(ctx.res.body, responseBody);
         });
@@ -152,7 +154,7 @@ describe('Request HTTP transport', () => {
       return new RequestTransport()
         .execute(ctx)
         .catch(assert.ifError)
-        .then(ctx => {
+        .then((ctx) => {
           assert.equal(ctx.res.statusCode, 204);
         });
     });
@@ -165,7 +167,7 @@ describe('Request HTTP transport', () => {
       return new RequestTransport()
         .execute(ctx)
         .catch(assert.ifError)
-        .then(ctx => {
+        .then((ctx) => {
           assert.equal(ctx.res.statusCode, 204);
         });
     });
@@ -185,12 +187,9 @@ describe('Request HTTP transport', () => {
         .then(() => {
           assert.fail('Expected request to timeout');
         })
-        .catch(e => {
+        .catch((e) => {
           assert.ok(e);
-          assert.equal(
-            e.message,
-            'Request failed for get http://www.example.com/: ESOCKETTIMEDOUT'
-          );
+          assert.equal(e.message, 'Request failed for get http://www.example.com/: ESOCKETTIMEDOUT');
         });
     });
 
@@ -203,7 +202,7 @@ describe('Request HTTP transport', () => {
 
       return new RequestTransport()
         .execute(ctx)
-        .then(ctx => {
+        .then((ctx) => {
           const timeTaken = ctx.res.elapsedTime;
           assert.isNotNumber(timeTaken);
         })
@@ -218,7 +217,7 @@ describe('Request HTTP transport', () => {
 
       return new RequestTransport()
         .execute(ctx)
-        .then(ctx => {
+        .then((ctx) => {
           const timeTaken = ctx.res.elapsedTime;
           assert.isNumber(timeTaken);
         })
