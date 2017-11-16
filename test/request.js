@@ -13,34 +13,10 @@ describe('Request', () => {
       assert.equal(request._baseUrl, HOST);
     });
 
-    it('sets the base query strings', () => {
+    it('sets the base with queries', () => {
       const request = Request.create();
-      request.baseUrl(HOST + '?a=1&b=2');
-      assert.equal(request._baseUrl, HOST);
-      assert.deepEqual(request._queries, {
-        a: 1,
-        b: 2
-      });
-    });
-
-    it('parses the query strings', () => {
-      const request = Request.create();
-      request.baseUrl(HOST + '?a=1&b=2&c=cem?whatevs');
-      assert.equal(request._baseUrl, HOST);
-      assert.deepEqual(request._queries, {
-        a: 1,
-        b: 2,
-        c: 'cem?whatevs'
-      });
-    });
-
-    it('parses multi-parameter queries', () => {
-      const request = Request.create();
-      request.baseUrl(HOST + '?a[0]=1&a[1]=2');
-      assert.equal(request._baseUrl, HOST);
-      assert.deepEqual(request._queries, {
-        a: [1, 2]
-      });
+      request.baseUrl(HOST + '?a=1&n=2');
+      assert.equal(request._baseUrl, HOST + '?a=1&n=2');
     });
   });
 
@@ -62,20 +38,27 @@ describe('Request', () => {
       assert.equal(request.getUrl(), HOST + '?a=1&b=2');
     });
 
-    it('query object takes precedence of url queries', () => {
+    it('query object gets appended to url queries', () => {
       const request = Request.create();
       request
         .baseUrl(HOST + '?a=1&b=2')
         .addQuery('a', 10)
         .addQuery('b', 20);
 
-      assert.equal(request.getUrl(), HOST + '?a=10&b=20');
+      assert.equal(request.getUrl(), HOST + '?a=1&b=2&a=10&b=20');
+    });
+
+    it('supports multiple queries', () => {
+      const request = Request.create();
+      request.baseUrl(HOST + '?a=1&a=2').addQuery('a', 3);
+
+      assert.equal(request.getUrl(), HOST + '?a=1&a=2&a=3');
     });
 
     it('uri-encodes query string parameters', () => {
       const request = Request.create();
       request
-        .baseUrl(HOST + '?a=1&b=2')
+        .baseUrl(HOST)
         .addQuery('a', 10)
         .addQuery('b', '#?& !');
 
