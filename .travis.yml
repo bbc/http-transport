@@ -3,6 +3,5 @@ os:
   - linux
 node_js:
   - "8"
-  - "6"
 after_script:
   - npm run coverage
