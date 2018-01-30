@@ -499,6 +499,7 @@ describe('HttpTransport', () => {
       } catch (err) {
         assert.equal(err.message, 'Request failed for GET http://www.example.com/: ESOCKETTIMEDOUT');
       }
+      assert.fail('Should have thrown');
     });
   });
 
