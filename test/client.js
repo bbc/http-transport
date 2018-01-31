@@ -483,7 +483,7 @@ describe('HttpTransport', () => {
     });
   });
 
-  describe('timeout', () => {
+  describe('.timeout', () => {
     it('sets the a timeout', async () => {
       nock.cleanAll();
       api
@@ -497,7 +497,7 @@ describe('HttpTransport', () => {
           .timeout(20)
           .asBody();
       } catch (err) {
-        assert.equal(err.message, 'Request failed for GET http://www.example.com/: ESOCKETTIMEDOUT');
+        return assert.equal(err.message, 'Request failed for GET http://www.example.com/: ESOCKETTIMEDOUT');
       }
       assert.fail('Should have thrown');
     });
