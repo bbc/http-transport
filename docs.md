@@ -1,7 +1,5 @@
 # HttpTranport
 
-[![Build Status](https://travis-ci.org/bbc/http-transport.svg)](https://travis-ci.org/bbc/http-transport) [![Coverage Status](https://coveralls.io/repos/github/bbc/http-transport/badge.svg?branch=master)](https://coveralls.io/github/bbc/http-transport?branch=master)
-
 > A flexible rest client that can be easy extended using plugins
 
 ## Common examples
@@ -12,24 +10,22 @@ Make a HTTP GET request using `.get`
 
 ```js
     const url = 'http://example.com/';
-    HttpTransport.createClient()
+    await HttpTransport.createClient()
         .get(url)
         .asResponse()
-        .then((res) => {
-          console.log(res);
-        });
+      
+    console.log(res);
 ```
 
 Make a HTTP POST request using `.post`
 
 ```js
    const url = 'http://example.com/';
-   HttpTransport.createClient()
+   await HttpTransport.createClient()
         .post(url, requestBody)
         .asResponse()
-        .then((res) => {
-          console.log(res);
-        });
+        
+   console.log(res);  
 ```
 
 PATCH, DELETE, HEAD are also supported. 
@@ -41,28 +37,26 @@ Make a HTTP GET request specifiying query strings using `.query`
 Single query string
 ```js
     const url = 'http://example.com/';
-    HttpTransport.createClient()
+    const res = await HttpTransport.createClient()
         .get(url)
         .query('example', 'true')
-        .asResponse()
-        .then((res) => {
-          console.log(res);
-        });
+        .asResponse();
+
+    console.log(res);
 ```
 
 Multiple query strings:
 ```js
     const url = 'http://example.com/';
-    HttpTransport.createClient()
+    const res = await HttpTransport.createClient()
         .get(url)
         .query({
           example1: true
           example2: false
         })
-        .asResponse()
-        .then((res) => {
-          console.log(res);
-        });
+        .asResponse();
+
+    console.log(res);
 ```
 
 
@@ -72,27 +66,25 @@ Make a HTTP GET request specifiying request headers using `.headers`
 
 Add a single header:
 ```js
-    HttpTransport.createClient()
+    await HttpTransport.createClient()
         .get(url)
         .headers('someHeader1', 'someValue1')
-        .asResponse()
-        .then((res) => {
-            console.log(res);
-        });
+        .asResponse();
+
+    console.log(res);
 ```
 
 Add multiple headers:
 ```js
-    HttpTransport.createClient()
+    await HttpTransport.createClient()
         .get(url)
         .headers({
           'someHeader1' : 'someValue1'
           'someHeader2' : 'someValue2'
         })
-        .asResponse()
-        .then((res) => {
-            console.log(res);
-        });
+        .asResponse();
+
+    console.log(res);
 ```
 
 #### Handling errors
@@ -103,14 +95,14 @@ Convert `Internal Server` responses (500) to errors:
     const toError = require('@bbc/http-transport-to-error');
 
     const url = 'http://example.com/';
-    const client = HttpTransport.createClient();
-    client.useGlobal(toError()); // for all requests
+    const client = HttpTransport.createBuilder()
+      .use(toError())
+      .createClient();  // for all requests
 
-    client.get(url)
-        .asResponse()
-        .catch((err) => {
-          console.error(err);
-        });
+    await client.get(url)
+        .asResponse();
+
+    console.error(err);
 ```
 
 `toError` is only required if the underlying client does not support HTTP error conversion. 
@@ -123,15 +115,15 @@ Make a HTTP GET and retry twice on error `.retry`
 ```js
 const toError = require('@bbc/http-transport-to-error');
 
-return HttpTransport.createClient()
-        .useGlobal(toError())
-        .get('http://example.com/')
+const client = HttpTransport.createBuilder()
+        .use(toError())
+        .createClient();
+
+        const res = await client.get('http://example.com/')
         .retry(2)
-        .asResponse()
-        .catch(assert.ifError)
-        .then((res) => {
-          assert.equal(res.statusCode, 200);
-        });
+        .asResponse();
+
+        console.log(res);
 ```
 
 #### Timeouts
@@ -139,7 +131,7 @@ return HttpTransport.createClient()
 Make a HTTP GET and timeout after 50ms `.query`
 
 ```js
-HttpTransport.createClient()
+const body = await HttpTransport.createClient()
       .get(url)
       .timeout(50)
       .asBody();
@@ -154,26 +146,26 @@ const url = 'http://example.com/';
 const HttpTransport = require('@bbc/http-transport');
 const OtherTranport = require('some-other-transport');
 
-HttpTransport.createClient(OtherTranport)
+const res = await HttpTransport.createClient(OtherTranport)
    .get(url)
-   .asResponse()
-   .then((res) => {
-     if (res.statusCode === 200) {
-       console.log(res.body);
-     }
-   });
+   .asResponse();
+
+  if (res.statusCode === 200) {
+    console.log(res.body);
+  }
 });
 ```
 
 #### Offical plugins
-
-See [Callbacks](https://github.com/bbc/http-transport-callbacks)
-
-See [Ratelimiting](https://github.com/bbc/http-transport-rate-limiter)
-
 See [Caching](https://github.com/bbc/http-transport-cache)
+
+See [Collapsing](https://github.com/bbc/http-transport-request-collapse)
 
 See [Errors](https://github.com/bbc/http-transport-to-error)
 
 See [Stats](https://github.com/bbc/http-transport-statsd)
 
+See [Ratelimiting](https://github.com/bbc/http-transport-rate-limiter)
+
+#### Offical transport decorators 
+See [Callbacks](https://github.com/bbc/http-transport-callbacks)
