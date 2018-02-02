@@ -1,6 +1,6 @@
 # HttpTranport
 
-> A flexible rest client that can be easy extended using plugins
+> A flexible, modular REST client built for ease-of-use and resilience
 
 ## Common examples
 
@@ -87,6 +87,48 @@ Add multiple headers:
     console.log(res);
 ```
 
+#### Middleware
+
+Middleware are functions that can be executed with before and after a request. Middleware is typically used to: 
+
+* Modify the request object e.g set headers 
+* Terminate a request early e.g for caching purposes
+* Modify the response object e.g format the response body 
+
+Middlware can be executed **per request** using the `.use` method:
+```js
+    const exampleMiddleware = require('exampleMiddleware');
+
+    const url = 'http://example.com/';
+    const client = HttpTransport.createClient();
+
+    const res = await client
+        .use(exampleMiddleware()) // only for this request         
+        .get(url)
+        .asResponse();
+
+    console.error(err);
+```
+
+Middlware can also be executed **for every request** using the `.use` of the client builder. The client builder is created using the `createBuilder` method:
+
+```js
+    const exampleMiddleware = require('exampleMiddleware');
+
+    const url = 'http://example.com/';
+    const client = HttpTransport.createBuilder()
+      .use(exampleMiddleware()) // for all requests
+      .createClient();  
+
+    await client
+        .get(url)
+        .asResponse();
+
+    console.error(err);
+```
+
+For more information on offical HttpTransport middlware see [offical middlware](#offical-middleware)
+
 #### Handling errors
 
 Convert `Internal Server` responses (500) to errors:
@@ -105,8 +147,8 @@ Convert `Internal Server` responses (500) to errors:
     console.error(err);
 ```
 
-`toError` is only required if the underlying client does not support HTTP error conversion. 
-The default transport is `request`, which does not convert errors. 
+`toError` is **only** required if the underlying client does not support HTTP error conversion. 
+The default transport is `request`, which does **not** convert errors. 
 
 #### Retries
 
@@ -137,7 +179,7 @@ const body = await HttpTransport.createClient()
       .asBody();
 ```
 
-#### Using alternative HTTP clients
+#### Using alternative HTTP clients via transport decorators
 
 Make a HTTP GET request and supply a alternative HTTP transport via `.createClient`
 
@@ -156,7 +198,9 @@ const res = await HttpTransport.createClient(OtherTranport)
 });
 ```
 
-#### Offical plugins
+For more information see [writing custom transports](./transports.md)
+
+#### Offical middleware
 See [Caching](https://github.com/bbc/http-transport-cache)
 
 See [Collapsing](https://github.com/bbc/http-transport-request-collapse)
