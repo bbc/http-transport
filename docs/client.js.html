@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#createClient">createClient</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#patch">patch</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retries">retries</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#retryDelay">retryDelay</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li><li><a href="global.html#userAgent">userAgent</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a></li><li><a href="HttpTransportClient.html">HttpTransportClient</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#createClient">createClient</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#patch">patch</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retries">retries</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#retryDelay">retryDelay</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li><li><a href="global.html#userAgent">userAgent</a></li></ul>
 </nav>
 
 <div id="main">
@@ -47,7 +47,7 @@ const rejectedPromise = require('./rejectedPromise');
 const bind = require('./bind');
 
 /** @class */
-class HttpTransport {
+class HttpTransportClient {
   constructor(httpTransport, defaults) {
     this._httpTransport = httpTransport;
     this._instancePlugins = _.get(defaults, 'plugins', []);
@@ -88,10 +88,8 @@ class HttpTransport {
    *    .get(url)
    *    .asResponse();
    */
-  get(url) {
-    this._ctx.req
-      .method('GET')
-      .url(url);
+  get(baseUrl) {
+    this._ctx.req.method('GET').baseUrl(baseUrl);
     return this;
   }
 
@@ -113,7 +111,7 @@ class HttpTransport {
     this._ctx.req
       .method('POST')
       .body(body)
-      .url(url);
+      .baseUrl(url);
     return this;
   }
 
@@ -135,7 +133,7 @@ class HttpTransport {
     this._ctx.req
       .method('PUT')
       .body(body)
-      .url(url);
+      .baseUrl(url);
     return this;
   }
 
@@ -154,9 +152,7 @@ class HttpTransport {
    *    .asResponse();
    */
   delete(url) {
-    this._ctx.req
-      .method('DELETE')
-      .url(url);
+    this._ctx.req.method('DELETE').baseUrl(url);
     return this;
   }
 
@@ -178,7 +174,7 @@ class HttpTransport {
     this._ctx.req
       .method('PATCH')
       .body(body)
-      .url(url);
+      .baseUrl(url);
     return this;
   }
 
@@ -196,9 +192,7 @@ class HttpTransport {
    *    .asResponse();
    */
   head(url) {
-    this._ctx.req
-      .method('HEAD')
-      .url(url);
+    this._ctx.req.method('HEAD').baseUrl(url);
     return this;
   }
 
@@ -320,8 +314,9 @@ class HttpTransport {
    *      console.log(body);
    *    });
    */
-  asBody() {
-    return this.asResponse().then((res) => res.body);
+  async asBody() {
+    const res = await this.asResponse();
+    return res.body;
   }
 
   /**
@@ -339,11 +334,12 @@ class HttpTransport {
    *      console.log(body);
    *    });
    */
-  asResponse() {
+  async asResponse() {
     const currentContext = this._ctx;
     this._initContext();
 
-    return retry(this._executeRequest, currentContext).then((ctx) => ctx.res);
+    const ctx = await retry(this._executeRequest, currentContext);
+    return ctx.res;
   }
 
   _getPlugins(ctx) {
@@ -355,12 +351,14 @@ class HttpTransport {
     return fn(ctx, next);
   }
 
-  _executeRequest(ctx) {
-    return this._applyPlugins(ctx, this._handleRequest.bind(this)).then(() => ctx);
+  async _executeRequest(ctx) {
+    await this._applyPlugins(ctx, this._handleRequest);
+    return ctx;
   }
 
-  _handleRequest(ctx, next) {
-    return this._httpTransport.execute(ctx).then(() => next());
+  async _handleRequest(ctx, next) {
+    await this._httpTransport.execute(ctx);
+    return next();
   }
 
   _initContext() {
@@ -432,7 +430,7 @@ function validatePlugin(plugin) {
   if (typeof plugin !== 'function') throw new TypeError('Plugin is not a function');
 }
 
-module.exports = HttpTransport;
+module.exports = HttpTransportClient;
 </code></pre>
         </article>
     </section>
@@ -445,7 +443,7 @@ module.exports = HttpTransport;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 28 2017 14:57:38 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Feb 02 2018 14:37:34 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
