@@ -27,26 +27,24 @@ describe('asJson', () => {
     sandbox.restore();
   });
 
-  it('parses json responses', () => {
+  it('parses json responses', async () => {
     const asJson = asJsonPlugin();
 
-    return asJson(ctx, stubPromise()).then(() => {
-      assert.deepEqual(ctx.res.body, {});
-    });
+    await asJson(ctx, stubPromise());
+    assert.deepEqual(ctx.res.body, {});
   });
 
-  it('supports alternative json content types', () => {
+  it('supports alternative json content types', async () => {
     const asJson = asJsonPlugin();
 
     const ctxAlternativeContentType = Object.assign({}, ctx);
     ctxAlternativeContentType.res.headers['content-type'] = 'application/other+json';
 
-    return asJson(ctxAlternativeContentType, stubPromise()).then(() => {
-      assert.deepEqual(ctxAlternativeContentType.res.body, {});
-    });
+    await asJson(ctxAlternativeContentType, stubPromise());
+    assert.deepEqual(ctxAlternativeContentType.res.body, {});
   });
 
-  it('always parses response when force is set true', () => {
+  it('always parses response when force is set true', async () => {
     const asJson = asJsonPlugin({
       force: true
     });
@@ -58,12 +56,15 @@ describe('asJson', () => {
       }
     };
 
-    return asJson(ctxSimpleBody, stubPromise()).then(assert.fail).catch((err) => {
-      assert.match(err.message, /JSON parsing failure:.*/);
-    });
+    try {
+      await asJson(ctxSimpleBody, stubPromise());
+    } catch (e) {
+      return assert.match(e.message, /JSON parsing failure:.*/);
+    }
+    assert.fail('Expected to throw!');
   });
 
-  it('ignores non-json content types.', () => {
+  it('ignores non-json content types.', async () => {
     const asJson = asJsonPlugin();
 
     const ctxSimpleBody = {
@@ -73,12 +74,11 @@ describe('asJson', () => {
       }
     };
 
-    return asJson(ctxSimpleBody, stubPromise()).then(() => {
-      assert.deepEqual(ctxSimpleBody.res.body, 'a simple string');
-    });
+    await asJson(ctxSimpleBody, stubPromise());
+    assert.deepEqual(ctxSimpleBody.res.body, 'a simple string');
   });
 
-  it('does not parse the response if the body is already an object', () => {
+  it('does not parse the response if the body is already an object', async () => {
     sandbox.stub(JSON, 'parse').returns({});
 
     const asJson = asJsonPlugin();
@@ -90,13 +90,12 @@ describe('asJson', () => {
       }
     };
 
-    return asJson(ctxWithJsonBody, stubPromise()).then(() => {
-      sinon.assert.notCalled(JSON.parse);
-      assert.deepEqual(ctxWithJsonBody.res.body, {});
-    });
+    await asJson(ctxWithJsonBody, stubPromise());
+    sinon.assert.notCalled(JSON.parse);
+    assert.deepEqual(ctxWithJsonBody.res.body, {});
   });
 
-  it('throws an error when throw property is set true', () => {
+  it('throws an error when throw property is set true', async () => {
     const asJson = asJsonPlugin({
       throwOnConflict: true
     });
@@ -110,9 +109,11 @@ describe('asJson', () => {
       }
     };
 
-    return asJson(ctxWithSimpleBody, stubPromise()).then(assert.fail)
-      .catch((err) => {
-        assert.equal(err.message, 'expected a json content type got text/html');
-      });
+    try {
+      await asJson(ctxWithSimpleBody, stubPromise());
+    } catch (err) {
+      return assert.equal(err.message, 'expected a json content type got text/html');
+    }
+    assert.fail('Expected to throw!');
   });
 });
