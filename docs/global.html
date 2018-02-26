@@ -128,7 +128,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line268">line 268</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line262">line 262</a>
     </li></ul></dd>
     
 
@@ -181,13 +181,12 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
-   .asBody()
-   .then((body) => {
-     console.log(body);
-   });</code></pre>
+const body = await httpTransport.createClient()
+   .asBody();
+
+   console.log(body);</code></pre>
 
 
 
@@ -234,7 +233,7 @@ the fulfilment value is the response body, as a string by default.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line287">line 287</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line281">line 281</a>
     </li></ul></dd>
     
 
@@ -287,13 +286,12 @@ the fulfilment value is the response body, as a string by default.</p>
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .asResponse()
-   .then((body) => {
-     console.log(body);
-   });</code></pre>
+
+   console.log(response);</code></pre>
 
 
 
@@ -488,7 +486,7 @@ the fulfilment value is response object.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line102">line 102</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line100">line 100</a>
     </li></ul></dd>
     
 
@@ -541,9 +539,9 @@ the fulfilment value is response object.</p>
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .delete(url)
    .asResponse();</code></pre>
 
@@ -716,9 +714,9 @@ const response = httpTransport.createClient()
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .get(url)
    .asResponse();</code></pre>
 
@@ -815,7 +813,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line145">line 145</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line141">line 141</a>
     </li></ul></dd>
     
 
@@ -868,9 +866,9 @@ const response = httpTransport.createClient()
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .head(url)
    .asResponse();</code></pre>
 
@@ -967,7 +965,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line165">line 165</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line159">line 159</a>
     </li></ul></dd>
     
 
@@ -1020,9 +1018,9 @@ const response = httpTransport.createClient()
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .headers({
      'User-Agent' : 'someUserAgent'
    })
@@ -1150,7 +1148,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line123">line 123</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line119">line 119</a>
     </li></ul></dd>
     
 
@@ -1203,9 +1201,9 @@ const response = httpTransport.createClient()
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .put(url, requestBody)
    .asResponse();</code></pre>
 
@@ -1325,7 +1323,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line58">line 58</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line56">line 56</a>
     </li></ul></dd>
     
 
@@ -1378,9 +1376,9 @@ const response = httpTransport.createClient()
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .post(url, requestBody)
    .asResponse();</code></pre>
 
@@ -1500,7 +1498,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line80">line 80</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line78">line 78</a>
     </li></ul></dd>
     
 
@@ -1553,9 +1551,9 @@ const response = httpTransport.createClient()
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .put(url, requestBody)
    .asResponse();</code></pre>
 
@@ -1675,7 +1673,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line189">line 189</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line183">line 183</a>
     </li></ul></dd>
     
 
@@ -1728,9 +1726,9 @@ const response = httpTransport.createClient()
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .query({
      'perPage' : 1
    })
@@ -2009,7 +2007,7 @@ builder.retries(5);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line231">line 231</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line225">line 225</a>
     </li></ul></dd>
     
 
@@ -2062,9 +2060,9 @@ builder.retries(5);</code></pre>
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .retry(5) // for this request only
    .asResponse();</code></pre>
 
@@ -2161,7 +2159,7 @@ const response = httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line249">line 249</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line243">line 243</a>
     </li></ul></dd>
     
 
@@ -2214,9 +2212,9 @@ const response = httpTransport.createClient()
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .retry(2)
    .retryDelay(200)
    .asResponse();</code></pre>
@@ -2465,7 +2463,7 @@ builder.retryDelay(1000);</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line213">line 213</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line207">line 207</a>
     </li></ul></dd>
     
 
@@ -2518,9 +2516,9 @@ builder.retryDelay(1000);</code></pre>
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
-const response = httpTransport.createClient()
+const response = await httpTransport.createClient()
    .timeout(1)
    .asResponse();</code></pre>
 
@@ -2670,8 +2668,8 @@ const response = httpTransport.createClient()
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>const toError = require('http-transport-errors');
-const httpTransport = require('http-transport');
+    <pre class="prettyprint"><code>const toError = require('@bbc/http-transport-to-error');
+const httpTransport = require('@bbc/http-transport');
 
 httpTransport.createClient()
    .use(toError(404));</code></pre>
@@ -3073,7 +3071,7 @@ builder.userAgent('some-user-agent');</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Sep 28 2017 14:57:38 GMT+0100 (BST) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Feb 26 2018 09:54:59 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
