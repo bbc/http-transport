@@ -5,7 +5,7 @@ Approved
 
 ## Context
 
-[Flashheart](https://github.com/bbc/flashheart), although useful, has become difficult to maintain and extend due to features being coupled into the same client. HttpTransport mitigates this by using `middlware` to extend the Rest clients behaviour. Middleware is comparable to a `plugin` based artitecture. This allows users to add or change behaviour without having to the core client. This conforms to the [open/closed principle](https://en.wikipedia.org/wiki/Open/closed_principle). 
+[Flashheart](https://github.com/bbc/flashheart), although useful, has become difficult to maintain and extend due to features being coupled into the same client. HttpTransport mitigates this by using `middleware` to extend the Rest clients behaviour. Middleware is comparable to a `plugin` based artitecture. This allows users to add or change behaviour without having to make changes to the core client. This conforms to the [open/closed principle](https://en.wikipedia.org/wiki/Open/closed_principle). 
 
 ## Decision
 
@@ -38,13 +38,11 @@ httpTransport
 This would unwind the `stack` in the same way as Express/Koa does:
 
 ```
-1st middleware
-2nd middleware
-3rd middleware
-HTTP request
-3rd middleware
-2nd middleware
-1st middleware
+1st middleware ---> 2nd middleware ---> 3rd middleware ---> HTTP request
+                                                                 |
+                                                                 |
+                                                                 v
+1st middleware <--- 2nd middleware <--- 3rd middleware <--- HTTP response
 ```
 
 This aids with modules such as caching with transformations in between:
@@ -60,11 +58,11 @@ httpTransport.use(modifyHeaders)
 
 Middleware exection order:
 ```
-modifyHeaders
-redisCache
-HTTP request
-redisCache
-modifyHeaders
+modifyHeaders ---> redisCache ---> HTTP request
+                                        |
+                                        |
+                                        v
+redisCache <--- modifyHeaders <--- HTTP response
 ```
 
 This ensures the Caching module caches the request as it enters the pipeline and requires the minimum amount of processing to recreate the cache key despite the transport modifying it further.
