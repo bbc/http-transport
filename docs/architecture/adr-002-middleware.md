@@ -56,7 +56,7 @@ httpTransport.use(modifyHeaders)
              .use(redisCache);
 ```
 
-Middleware exection order:
+Middleware execution order:
 ```
 modifyHeaders ---> redisCache ---> HTTP request
                                         |
