@@ -1,6 +1,6 @@
 # HttpTranport
 
-> A flexible rest client that can be easy extended using plugins
+>  A flexible, modular REST client built for ease-of-use and resilience
 
 ## Common examples
 
@@ -86,6 +86,48 @@ Add multiple headers:
 
     console.log(res);
 ```
+
+#### Middleware
+
+Middleware are functions that can be executed with before and after a request. Middleware is typically used to: 
+
+* Modify the request object e.g set headers 
+* Terminate a request early e.g for caching purposes
+* Modify the response object e.g format the response body 
+
+Middlware can be executed **per request** using the `.use` method:
+```js
+    const exampleMiddleware = require('exampleMiddleware');
+
+    const url = 'http://example.com/';
+    const client = HttpTransport.createClient();
+
+    const res = await client
+        .use(exampleMiddleware()) // only for this request         
+        .get(url)
+        .asResponse();
+
+    console.error(err);
+```
+
+Middlware can also be executed **for every request** using the `.use` of the client builder. The client builder is created using the `createBuilder` method:
+
+```js
+    const exampleMiddleware = require('exampleMiddleware');
+
+    const url = 'http://example.com/';
+    const client = HttpTransport.createBuilder()
+      .use(exampleMiddleware()) // for all requests
+      .createClient();  
+
+    await client
+        .get(url)
+        .asResponse();
+
+    console.error(err);
+```
+
+For more information on offical HttpTransport middlware see [offical middlware](#offical-middleware)
 
 #### Handling errors
 
