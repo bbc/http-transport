@@ -62,7 +62,7 @@ modifyHeaders ---> redisCache ---> HTTP request
                                         |
                                         |
                                         v
-redisCache <--- modifyHeaders <--- HTTP response
+modifyHeaders <--- redisCache <--- HTTP response
 ```
 
 This ensures the Caching module caches the request as it enters the pipeline and requires the minimum amount of processing to recreate the cache key despite the transport modifying it further.
