@@ -4,7 +4,9 @@
     "dictionaries": ["jsdoc"]
   },
   "source": {
-    "include": ["./lib"]
+    "include": ["./lib"],
+    "includePattern": ".js$",
+    "excludePattern": "(node_modules/|docs)"
   },
   "plugins": ["plugins/markdown"],
   "opts": {
@@ -12,9 +14,11 @@
     "template": "docconfig/template",
     "encoding": "utf8",
     "destination": "./docs",
-    "recurse": true
+    "recurse": true,
+    "verbose": true
   },
   "templates": {
-    "cleverLinks": false
+    "cleverLinks": false,
+    "monospaceLinks": false
   }
 }
