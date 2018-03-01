@@ -129,6 +129,8 @@ Middlware can also be executed **for every request** using the `.use` of the cli
 
 For more information on offical HttpTransport middlware see [offical middlware](#offical-middleware)
 
+For writing middleware, see the [offical guide](https://github.com/koajs/koa/blob/master/docs/guide.md)
+
 #### Handling errors
 
 Convert `Internal Server` responses (500) to errors:
@@ -198,7 +200,35 @@ const res = await HttpTransport.createClient(OtherTranport)
 });
 ```
 
-For more information see [writing custom transports](./transports.md)
+#### Using the Client buider 
+
+The builder can be used to define behavior for **all requests**. This includes:
+* Default retries 
+* Default retry delay
+* Default user agent
+* Middleware 
+
+The builder is instantiated via `.createBuilder`:
+```js
+const HttpTransport = require('@bbc/http-transport');
+const builder = HttpTransport.createBuilder();
+```
+
+`createClient` instantiates a configured transport client:
+```js
+const url = 'http://example.com/';
+const HttpTransport = require('@bbc/http-transport');
+
+const builder = HttpTransport.createBuilder();
+
+const client = builder
+    .use(toError())
+    .retries(2)
+    .createClient();
+
+const body = await client.get(url).asBody();
+```
+
 
 #### Offical middleware
 See [Caching](https://github.com/bbc/http-transport-cache)
