@@ -87,50 +87,6 @@ Add multiple headers:
     console.log(res);
 ```
 
-#### Middleware
-
-Middleware are functions that can be executed with before and after a request. Middleware is typically used to: 
-
-* Modify the request object e.g set headers 
-* Terminate a request early e.g for caching purposes
-* Modify the response object e.g format the response body 
-
-Middlware can be executed **per request** using the `.use` method:
-```js
-    const exampleMiddleware = require('exampleMiddleware');
-
-    const url = 'http://example.com/';
-    const client = HttpTransport.createClient();
-
-    const res = await client
-        .use(exampleMiddleware()) // only for this request         
-        .get(url)
-        .asResponse();
-
-    console.error(err);
-```
-
-Middlware can also be executed **for every request** using the `.use` of the client builder. The client builder is created using the `createBuilder` method:
-
-```js
-    const exampleMiddleware = require('exampleMiddleware');
-
-    const url = 'http://example.com/';
-    const client = HttpTransport.createBuilder()
-      .use(exampleMiddleware()) // for all requests
-      .createClient();  
-
-    await client
-        .get(url)
-        .asResponse();
-
-    console.error(err);
-```
-
-For more information on offical HttpTransport middlware see [offical middlware](#offical-middleware)
-
-For writing middleware, see the [offical guide](https://github.com/koajs/koa/blob/master/docs/guide.md)
-
 #### Handling errors
 
 Convert `Internal Server` responses (500) to errors:
@@ -181,25 +137,6 @@ const body = await HttpTransport.createClient()
       .asBody();
 ```
 
-#### Using alternative HTTP clients via transport decorators
-
-Make a HTTP GET request and supply a alternative HTTP transport via `.createClient`
-
-```js
-const url = 'http://example.com/';
-const HttpTransport = require('@bbc/http-transport');
-const OtherTranport = require('some-other-transport');
-
-const res = await HttpTransport.createClient(OtherTranport)
-   .get(url)
-   .asResponse();
-
-  if (res.statusCode === 200) {
-    console.log(res.body);
-  }
-});
-```
-
 #### Using the Client buider 
 
 The builder can be used to define behavior for **all requests**. This includes:
@@ -229,8 +166,49 @@ const client = builder
 const body = await client.get(url).asBody();
 ```
 
+#### Middleware
 
-#### Offical middleware
+Middleware are functions that can be executed with before and after a request. Middleware is typically used to: 
+
+* Modify the request object e.g set headers 
+* Terminate a request early e.g for caching purposes
+* Modify the response object e.g format the response body 
+
+Middlware can be executed **per request** using the `.use` method:
+```js
+    const exampleMiddleware = require('exampleMiddleware');
+
+    const url = 'http://example.com/';
+    const client = HttpTransport.createClient();
+
+    const res = await client
+        .use(exampleMiddleware()) // only for this request         
+        .get(url)
+        .asResponse();
+
+    console.error(err);
+```
+
+Middlware can also be executed **for every request** using the `.use` of the client builder. The client builder is created using the `createBuilder` method:
+
+```js
+    const exampleMiddleware = require('exampleMiddleware');
+
+    const url = 'http://example.com/';
+    const client = HttpTransport.createBuilder()
+      .use(exampleMiddleware()) // for all requests
+      .createClient();  
+
+    await client
+        .get(url)
+        .asResponse();
+
+    console.error(err);
+```
+
+For writing middleware, see the [offical guide](https://github.com/koajs/koa/blob/master/docs/guide.md)
+
+#### Offical HttpTransport middleware
 See [Caching](https://github.com/bbc/http-transport-cache)
 
 See [Collapsing](https://github.com/bbc/http-transport-request-collapse)
@@ -241,5 +219,25 @@ See [Stats](https://github.com/bbc/http-transport-statsd)
 
 See [Ratelimiting](https://github.com/bbc/http-transport-rate-limiter)
 
-#### Offical transport decorators 
-See [Callbacks](https://github.com/bbc/http-transport-callbacks)
+
+#### Using alternative HTTP clients via transport decorators
+
+Make a HTTP GET request and supply a alternative HTTP transport via `.createClient`
+
+```js
+const url = 'http://example.com/';
+const HttpTransport = require('@bbc/http-transport');
+const OtherTranport = require('some-other-transport');
+
+const res = await HttpTransport.createClient(OtherTranport)
+   .get(url)
+   .asResponse();
+
+  if (res.statusCode === 200) {
+    console.log(res.body);
+  }
+});
+```
+
+#### Callback support
+HttpTransport does not support callbacks. However, to integrate with legacy code, use the [callback adapter](https://github.com/bbc/http-transport-callbacks)
