@@ -63,8 +63,8 @@ class HttpTransportClient {
    * @return a HttpTransport instance
    * @param {function} fn - per request plugin
    * @example
-   * const toError = require('http-transport-errors');
-   * const httpTransport = require('http-transport');
+   * const toError = require('@bbc/http-transport-to-error');
+   * const httpTransport = require('@bbc/http-transport');
    *
    * httpTransport.createClient()
    *    .use(toError(404));
@@ -82,9 +82,9 @@ class HttpTransportClient {
    * @param {string} url
    * @return a HttpTransport instance
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .get(url)
    *    .asResponse();
    */
@@ -101,9 +101,9 @@ class HttpTransportClient {
    * @param {object} request body
    * @return a HttpTransport instance
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .post(url, requestBody)
    *    .asResponse();
    */
@@ -123,9 +123,9 @@ class HttpTransportClient {
    * @param {object} request body
    * @return a HttpTransport instance
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .put(url, requestBody)
    *    .asResponse();
    */
@@ -145,9 +145,9 @@ class HttpTransportClient {
    * @param {object} request body
    * @return a HttpTransport instance
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .delete(url)
    *    .asResponse();
    */
@@ -164,9 +164,9 @@ class HttpTransportClient {
    * @param {object} request body
    * @return a HttpTransport instance
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .put(url, requestBody)
    *    .asResponse();
    */
@@ -185,9 +185,9 @@ class HttpTransportClient {
    * @param {string} url
    * @return a HttpTransport instance
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .head(url)
    *    .asResponse();
    */
@@ -204,9 +204,9 @@ class HttpTransportClient {
    * @param {string|object} value - header value
    * @return a HttpTransport instance
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .headers({
    *      'User-Agent' : 'someUserAgent'
    *    })
@@ -228,9 +228,9 @@ class HttpTransportClient {
    * @param {string|object} value - query value
    * @return a HttpTransport instance
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .query({
    *      'perPage' : 1
    *    })
@@ -251,9 +251,9 @@ class HttpTransportClient {
    * @param {integer} timeout - timeout in seconds
    * @return a HttpTransport instance
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .timeout(1)
    *    .asResponse();
    */
@@ -269,9 +269,9 @@ class HttpTransportClient {
    * @param {integer} timeout - number of times to retry a failed request
    * @return a HttpTransport instance
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .retry(5) // for this request only
    *    .asResponse();
    */
@@ -287,9 +287,9 @@ class HttpTransportClient {
    * @param {integer} timeout - number of ms to wait between retries (default: 100)
    * @return a HttpTransport instance
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .retry(2)
    *    .retryDelay(200)
    *    .asResponse();
@@ -306,13 +306,12 @@ class HttpTransportClient {
    * @return a Promise. If the Promise fulfils,
    * the fulfilment value is the response body, as a string by default.
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
-   *    .asBody()
-   *    .then((body) => {
-   *      console.log(body);
-   *    });
+   * const body = await httpTransport.createClient()
+   *    .asBody();
+   *
+   *    console.log(body);
    */
   async asBody() {
     const res = await this.asResponse();
@@ -326,13 +325,13 @@ class HttpTransportClient {
    * @return a Promise. If the Promise fulfils,
    * the fulfilment value is response object.
    * @example
-   * const httpTransport = require('http-transport');
+   * const httpTransport = require('@bbc/http-transport');
    *
-   * const response = httpTransport.createClient()
+   * const response = await httpTransport.createClient()
    *    .asResponse()
-   *    .then((body) => {
-   *      console.log(body);
-   *    });
+   *
+   *    console.log(response);
+   *
    */
   async asResponse() {
     const currentContext = this._ctx;
@@ -443,7 +442,7 @@ module.exports = HttpTransportClient;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 01 2018 13:53:03 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Mar 01 2018 13:54:39 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

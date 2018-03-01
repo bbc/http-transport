@@ -16,14 +16,13 @@ npm install @bbc/http-transport --save
 const url = 'http://example.com/';
 const client = require('@bbc/http-transport').createClient();
 
-client
+const res = await client
    .get(url)
-   .asResponse()
-   .then((res) => {
-     if (res.statusCode === 200) {
-       console.log(res.body);
-     }
-   });
+   .asResponse();
+  
+  if (res.statusCode === 200) {
+    console.log(res.body);
+  }
 ```
 
 ## Documentation

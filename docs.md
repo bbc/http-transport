@@ -1,6 +1,6 @@
 # HttpTranport
 
-> A flexible, modular REST client built for ease-of-use and resilience
+>  A flexible, modular REST client built for ease-of-use and resilience
 
 ## Common examples
 
