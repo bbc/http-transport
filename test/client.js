@@ -7,9 +7,9 @@ const sinon = require('sinon');
 
 const HttpTransport = require('..');
 const Transport = require('../lib/transport/transport');
-const toJson = require('../lib/plugins/asJson');
-const setContextProperty = require('../lib/plugins/setContextProperty');
-const log = require('../lib/plugins/logger');
+const toJson = require('../lib/middleware/asJson');
+const setContextProperty = require('../lib/middleware/setContextProperty');
+const log = require('../lib/middleware/logger');
 const packageInfo = require('../package');
 
 const sandbox = sinon.sandbox.create();
