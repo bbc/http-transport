@@ -38,7 +38,7 @@
     "codeclimate-test-reporter": "^0.4.0",
     "coveralls": "^2.11.9",
     "eslint": "^4.1.1",
-    "jsdoc": "^3.4.3",
+    "jsdoc": "^3.5.5",
     "mocha": "^3.0.2",
     "nock": "^9.0.4",
     "sinon": "^1.15.3",

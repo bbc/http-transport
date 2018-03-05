@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a></li><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a></li></ul><h3>Global</h3><ul><li><a href="global.html#asBody">asBody</a></li><li><a href="global.html#asResponse">asResponse</a></li><li><a href="global.html#createClient">createClient</a></li><li><a href="global.html#delete">delete</a></li><li><a href="global.html#get">get</a></li><li><a href="global.html#head">head</a></li><li><a href="global.html#headers">headers</a></li><li><a href="global.html#patch">patch</a></li><li><a href="global.html#post">post</a></li><li><a href="global.html#put">put</a></li><li><a href="global.html#query">query</a></li><li><a href="global.html#retries">retries</a></li><li><a href="global.html#retry">retry</a></li><li><a href="global.html#retryDelay">retryDelay</a></li><li><a href="global.html#timeout">timeout</a></li><li><a href="global.html#use">use</a></li><li><a href="global.html#userAgent">userAgent</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a><ul class='methods'><li data-type='method'><a href="HttpTransport.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransport.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransport.html#delete">delete</a></li><li data-type='method'><a href="HttpTransport.html#get">get</a></li><li data-type='method'><a href="HttpTransport.html#head">head</a></li><li data-type='method'><a href="HttpTransport.html#headers">headers</a></li><li data-type='method'><a href="HttpTransport.html#patch">patch</a></li><li data-type='method'><a href="HttpTransport.html#post">post</a></li><li data-type='method'><a href="HttpTransport.html#put">put</a></li><li data-type='method'><a href="HttpTransport.html#query">query</a></li><li data-type='method'><a href="HttpTransport.html#retry">retry</a></li><li data-type='method'><a href="HttpTransport.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransport.html#use">use</a></li></ul></li><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#retryDelay">retryDelay</a></li></ul>
 </nav>
 
 <div id="main">
@@ -46,10 +46,15 @@ const context = require('./context');
 const rejectedPromise = require('./rejectedPromise');
 const bind = require('./bind');
 
-/** @class */
+/** Core client */
 class HttpTransport {
-  constructor(httpTransport, defaults) {
-    this._httpTransport = httpTransport;
+  /**
+     * Create a HttpTransport.
+     * @param {Transport} transport - Transport instance.
+     * @param {object} defaults - default configutation
+     */
+  constructor(transport, defaults) {
+    this._httpTransport = transport;
     this._instancePlugins = _.get(defaults, 'plugins', []);
     this._defaults = defaults;
     this._initContext();
@@ -59,7 +64,6 @@ class HttpTransport {
   /**
    * Registers a per request plugin
    *
-   * @method use
    * @return a HttpTransport instance
    * @param {function} fn - per request plugin
    * @example
@@ -78,7 +82,6 @@ class HttpTransport {
   /**
    * Make a HTTP GET request
    *
-   * @method get
    * @param {string} url
    * @return a HttpTransport instance
    * @example
@@ -96,7 +99,6 @@ class HttpTransport {
   /**
    * Make a HTTP POST request
    *
-   * @method post
    * @param {string} url
    * @param {object} request body
    * @return a HttpTransport instance
@@ -118,7 +120,6 @@ class HttpTransport {
   /**
    * Make a HTTP PUT request
    *
-   * @method put
    * @param {string} url
    * @param {object} request body
    * @return a HttpTransport instance
@@ -140,7 +141,6 @@ class HttpTransport {
   /**
    * Make a HTTP DELETE request
    *
-   * @method delete
    * @param {string} url
    * @param {object} request body
    * @return a HttpTransport instance
@@ -159,7 +159,6 @@ class HttpTransport {
   /**
    * Make a HTTP PATCH request
    *
-   * @method patch
    * @param {string} url
    * @param {object} request body
    * @return a HttpTransport instance
@@ -181,7 +180,6 @@ class HttpTransport {
   /**
    * Make a HTTP HEAD request
    *
-   * @method head
    * @param {string} url
    * @return a HttpTransport instance
    * @example
@@ -199,7 +197,6 @@ class HttpTransport {
   /**
    * Sets the request headers
    *
-   * @method headers
    * @param {string|object} name - header name or headers object
    * @param {string|object} value - header value
    * @return a HttpTransport instance
@@ -223,7 +220,6 @@ class HttpTransport {
   /**
    * Sets the query strings
    *
-   * @method query
    * @param {string|object} name - query name or query object
    * @param {string|object} value - query value
    * @return a HttpTransport instance
@@ -247,7 +243,6 @@ class HttpTransport {
   /**
    * Sets a request timeout
    *
-   * @method timeout
    * @param {integer} timeout - timeout in seconds
    * @return a HttpTransport instance
    * @example
@@ -265,7 +260,6 @@ class HttpTransport {
   /**
    * Set the number of retries on failure for the request
    *
-   * @method retry
    * @param {integer} timeout - number of times to retry a failed request
    * @return a HttpTransport instance
    * @example
@@ -302,7 +296,6 @@ class HttpTransport {
   /**
    * Initiates the request, returning the response body, if successful.
    *
-   * @method asBody
    * @return a Promise. If the Promise fulfils,
    * the fulfilment value is the response body, as a string by default.
    * @example
@@ -321,7 +314,6 @@ class HttpTransport {
   /**
    * Initiates the request, returning a http transport response object, if successful.
    *
-   * @method asResponse
    * @return a Promise. If the Promise fulfils,
    * the fulfilment value is response object.
    * @example
@@ -442,7 +434,7 @@ module.exports = HttpTransport;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Feb 28 2018 17:26:58 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Feb 28 2018 19:47:45 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
