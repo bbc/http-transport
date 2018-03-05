@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/bbc/http-transport.svg)](https://travis-ci.org/bbc/http-transport) [![Coverage Status](https://coveralls.io/repos/github/bbc/http-transport/badge.svg?branch=master)](https://coveralls.io/github/bbc/http-transport?branch=master)
-
 # http-transport
 
 > A flexible, modular REST client built for ease-of-use and resilience
