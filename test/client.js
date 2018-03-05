@@ -98,10 +98,10 @@ describe('HttpTransportClient', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-          reqheaders: {
-            'User-Agent': HeaderValue
-          }
-        })
+        reqheaders: {
+          'User-Agent': HeaderValue
+        }
+      })
         .get(path)
         .times(2)
         .reply(200, responseBody);
@@ -116,10 +116,10 @@ describe('HttpTransportClient', () => {
       nock.cleanAll();
 
       nock(host, {
-          reqheaders: {
-            'User-Agent': 'some-new-user-agent'
-          }
-        })
+        reqheaders: {
+          'User-Agent': 'some-new-user-agent'
+        }
+      })
         .get(path)
         .times(2)
         .reply(200, responseBody);
@@ -416,11 +416,11 @@ describe('HttpTransportClient', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-          reqheaders: {
-            'User-Agent': HeaderValue,
-            foo: 'bar'
-          }
-        })
+        reqheaders: {
+          'User-Agent': HeaderValue,
+          foo: 'bar'
+        }
+      })
         .get(path)
         .reply(200, responseBody);
 
@@ -588,9 +588,9 @@ describe('HttpTransportClient', () => {
 
         const res = client
           .use(setContextProperty({
-              time: false
-            },
-            'opts'
+            time: false
+          },
+          'opts'
           ))
           .get(url)
           .asResponse();
@@ -689,9 +689,9 @@ describe('HttpTransportClient', () => {
 
         await client
           .use(setContextProperty({
-              time: false
-            },
-            'opts'
+            time: false
+          },
+          'opts'
           ))
           .get(url)
           .asBody();
