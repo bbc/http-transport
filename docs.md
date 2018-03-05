@@ -10,7 +10,7 @@ Make a HTTP GET request using `.get`
 
 ```js
     const url = 'http://example.com/';
-    await HttpTransport.createClient()
+    const res = await HttpTransport.createClient()
         .get(url)
         .asResponse()
       
@@ -21,7 +21,7 @@ Make a HTTP POST request using `.post`
 
 ```js
    const url = 'http://example.com/';
-   await HttpTransport.createClient()
+   const res = await HttpTransport.createClient()
         .post(url, requestBody)
         .asResponse()
         
@@ -66,7 +66,7 @@ Make a HTTP GET request specifiying request headers using `.headers`
 
 Add a single header:
 ```js
-    await HttpTransport.createClient()
+    const res = await HttpTransport.createClient()
         .get(url)
         .headers('someHeader1', 'someValue1')
         .asResponse();
@@ -76,7 +76,7 @@ Add a single header:
 
 Add multiple headers:
 ```js
-    await HttpTransport.createClient()
+    const res = await HttpTransport.createClient()
         .get(url)
         .headers({
           'someHeader1' : 'someValue1'
@@ -99,10 +99,12 @@ Convert `Internal Server` responses (500) to errors:
       .use(toError())
       .createClient();  // for all requests
 
-    await client.get(url)
-        .asResponse();
-
-    console.error(err);
+    try {
+        await client.get(url)
+            .asResponse();
+    } catch (err) {
+        console.error(err);
+    }
 ```
 
 `toError` is **only** required if the underlying client does not support HTTP error conversion. 
@@ -113,17 +115,17 @@ The default transport is `request`, which does **not** convert errors.
 Make a HTTP GET and retry twice on error `.retry`
 
 ```js
-const toError = require('@bbc/http-transport-to-error');
+    const toError = require('@bbc/http-transport-to-error');
 
-const client = HttpTransport.createBuilder()
+    const client = HttpTransport.createBuilder()
         .use(toError())
         .createClient();
 
-        const res = await client.get('http://example.com/')
+    const res = await client.get('http://example.com/')
         .retry(2)
         .asResponse();
 
-        console.log(res);
+    console.log(res);
 ```
 
 #### Timeouts
@@ -181,12 +183,14 @@ Middlware can be executed **per request** using the `.use` method:
     const url = 'http://example.com/';
     const client = HttpTransport.createClient();
 
-    const res = await client
+    try {
+        await client
         .use(exampleMiddleware()) // only for this request         
         .get(url)
         .asResponse();
-
-    console.error(err);
+    } catch (err) {
+        console.error(err);
+    }
 ```
 
 Middlware can also be executed **for every request** using the `.use` of the client builder. The client builder is created using the `createBuilder` method:
@@ -199,11 +203,13 @@ Middlware can also be executed **for every request** using the `.use` of the cli
       .use(exampleMiddleware()) // for all requests
       .createClient();  
 
-    await client
+    try {
+        await client
         .get(url)
         .asResponse();
-
-    console.error(err);
+    } catch (err) {
+        console.error(err);
+    }
 ```
 
 For writing middleware, see the [offical guide](https://github.com/koajs/koa/blob/master/docs/guide.md)
