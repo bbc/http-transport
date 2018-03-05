@@ -87,6 +87,85 @@ Add multiple headers:
     console.log(res);
 ```
 
+#### Handling errors
+
+Convert `Internal Server` responses (500) to errors:
+
+```js
+    const toError = require('@bbc/http-transport-to-error');
+
+    const url = 'http://example.com/';
+    const client = HttpTransport.createBuilder()
+      .use(toError())
+      .createClient();  // for all requests
+
+    await client.get(url)
+        .asResponse();
+
+    console.error(err);
+```
+
+`toError` is **only** required if the underlying client does not support HTTP error conversion. 
+The default transport is `request`, which does **not** convert errors. 
+
+#### Retries
+
+Make a HTTP GET and retry twice on error `.retry`
+
+```js
+const toError = require('@bbc/http-transport-to-error');
+
+const client = HttpTransport.createBuilder()
+        .use(toError())
+        .createClient();
+
+        const res = await client.get('http://example.com/')
+        .retry(2)
+        .asResponse();
+
+        console.log(res);
+```
+
+#### Timeouts
+
+Make a HTTP GET and timeout after 50ms `.query`
+
+```js
+const body = await HttpTransport.createClient()
+      .get(url)
+      .timeout(50)
+      .asBody();
+```
+
+#### Using the Client buider 
+
+The builder can be used to define behavior for **all requests**. This includes:
+* Default retries 
+* Default retry delay
+* Default user agent
+* Middleware 
+
+The builder is instantiated via `.createBuilder`:
+```js
+const HttpTransport = require('@bbc/http-transport');
+const builder = HttpTransport.createBuilder();
+```
+
+`createClient` instantiates a configured transport client:
+```js
+const url = 'http://example.com/';
+const HttpTransport = require('@bbc/http-transport');
+
+const builder = HttpTransport.createBuilder();
+
+const client = builder
+    .use(toError())
+    .retries(2)
+    .createClient();
+
+const body = await client.get(url).asBody();
+```
+
 #### Middleware
 
 Middleware are functions that can be executed with before and after a request. Middleware is typically used to: 
@@ -127,59 +206,21 @@ Middlware can also be executed **for every request** using the `.use` of the cli
     console.error(err);
 ```
 
-For more information on offical HttpTransport middlware see [offical middlware](#offical-middleware)
+For writing middleware, see the [offical guide](https://github.com/koajs/koa/blob/master/docs/guide.md)
 
-#### Handling errors
+#### Offical HttpTransport middleware
+See [Caching](https://github.com/bbc/http-transport-cache)
 
-Convert `Internal Server` responses (500) to errors:
+See [Collapsing](https://github.com/bbc/http-transport-request-collapse)
 
-```js
-    const toError = require('@bbc/http-transport-to-error');
+See [Errors](https://github.com/bbc/http-transport-to-error)
 
-    const url = 'http://example.com/';
-    const client = HttpTransport.createBuilder()
-      .use(toError())
-      .createClient();  // for all requests
+See [Stats](https://github.com/bbc/http-transport-statsd)
 
-    await client.get(url)
-        .asResponse();
+See [Ratelimiting](https://github.com/bbc/http-transport-rate-limiter)
 
-    console.error(err);
-```
 
-`toError` is only required if the underlying client does not support HTTP error conversion. 
-The default transport is `request`, which does not convert errors. 
-
-#### Retries
-
-Make a HTTP GET and retry twice on error `.retry`
-
-```js
-const toError = require('@bbc/http-transport-to-error');
-
-const client = HttpTransport.createBuilder()
-        .use(toError())
-        .createClient();
-
-        const res = await client.get('http://example.com/')
-        .retry(2)
-        .asResponse();
-
-        console.log(res);
-```
-
-#### Timeouts
-
-Make a HTTP GET and timeout after 50ms `.query`
-
-```js
-const body = await HttpTransport.createClient()
-      .get(url)
-      .timeout(50)
-      .asBody();
-```
-
-#### Using alternative HTTP clients
+#### Using alternative HTTP clients via transport decorators
 
 Make a HTTP GET request and supply a alternative HTTP transport via `.createClient`
 
@@ -198,16 +239,5 @@ const res = await HttpTransport.createClient(OtherTranport)
 });
 ```
 
-#### Offical plugins
-See [Caching](https://github.com/bbc/http-transport-cache)
-
-See [Collapsing](https://github.com/bbc/http-transport-request-collapse)
-
-See [Errors](https://github.com/bbc/http-transport-to-error)
-
-See [Stats](https://github.com/bbc/http-transport-statsd)
-
-See [Ratelimiting](https://github.com/bbc/http-transport-rate-limiter)
-
-#### Offical transport decorators 
-See [Callbacks](https://github.com/bbc/http-transport-callbacks)
+#### Callback support
+HttpTransport does not support callbacks. However, to integrate with legacy code, use the [callback adapter](https://github.com/bbc/http-transport-callbacks)

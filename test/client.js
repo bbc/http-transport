@@ -7,9 +7,9 @@ const sinon = require('sinon');
 
 const HttpTransport = require('..');
 const Transport = require('../lib/transport/transport');
-const toJson = require('../lib/plugins/asJson');
-const setContextProperty = require('../lib/plugins/setContextProperty');
-const log = require('../lib/plugins/logger');
+const toJson = require('../lib/middleware/asJson');
+const setContextProperty = require('../lib/middleware/setContextProperty');
+const log = require('../lib/middleware/logger');
 const packageInfo = require('../package');
 
 const sandbox = sinon.sandbox.create();
@@ -68,7 +68,7 @@ function toError() {
   };
 }
 
-describe('HttpTransport', () => {
+describe('HttpTransportClient', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.cleanAll();
@@ -98,10 +98,10 @@ describe('HttpTransport', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-        reqheaders: {
-          'User-Agent': HeaderValue
-        }
-      })
+          reqheaders: {
+            'User-Agent': HeaderValue
+          }
+        })
         .get(path)
         .times(2)
         .reply(200, responseBody);
@@ -116,10 +116,10 @@ describe('HttpTransport', () => {
       nock.cleanAll();
 
       nock(host, {
-        reqheaders: {
-          'User-Agent': 'some-new-user-agent'
-        }
-      })
+          reqheaders: {
+            'User-Agent': 'some-new-user-agent'
+          }
+        })
         .get(path)
         .times(2)
         .reply(200, responseBody);
@@ -416,11 +416,11 @@ describe('HttpTransport', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-        reqheaders: {
-          'User-Agent': HeaderValue,
-          foo: 'bar'
-        }
-      })
+          reqheaders: {
+            'User-Agent': HeaderValue,
+            foo: 'bar'
+          }
+        })
         .get(path)
         .reply(200, responseBody);
 
@@ -587,13 +587,11 @@ describe('HttpTransport', () => {
           .createClient();
 
         const res = client
-          .use(setContextProperty(
-            {
+          .use(setContextProperty({
               time: false
             },
             'opts'
-          )
-          )
+          ))
           .get(url)
           .asResponse();
 
@@ -690,13 +688,11 @@ describe('HttpTransport', () => {
           .createClient();
 
         await client
-          .use(setContextProperty(
-            {
+          .use(setContextProperty({
               time: false
             },
             'opts'
-          )
-          )
+          ))
           .get(url)
           .asBody();
 

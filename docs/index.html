@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransport.html">HttpTransport</a><ul class='methods'><li data-type='method'><a href="HttpTransport.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransport.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransport.html#delete">delete</a></li><li data-type='method'><a href="HttpTransport.html#get">get</a></li><li data-type='method'><a href="HttpTransport.html#head">head</a></li><li data-type='method'><a href="HttpTransport.html#headers">headers</a></li><li data-type='method'><a href="HttpTransport.html#patch">patch</a></li><li data-type='method'><a href="HttpTransport.html#post">post</a></li><li data-type='method'><a href="HttpTransport.html#put">put</a></li><li data-type='method'><a href="HttpTransport.html#query">query</a></li><li data-type='method'><a href="HttpTransport.html#retry">retry</a></li><li data-type='method'><a href="HttpTransport.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransport.html#use">use</a></li></ul></li><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#retryDelay">retryDelay</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li><li><a href="HttpTransportClient.html">HttpTransportClient</a><ul class='methods'><li data-type='method'><a href="HttpTransportClient.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransportClient.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransportClient.html#delete">delete</a></li><li data-type='method'><a href="HttpTransportClient.html#get">get</a></li><li data-type='method'><a href="HttpTransportClient.html#head">head</a></li><li data-type='method'><a href="HttpTransportClient.html#headers">headers</a></li><li data-type='method'><a href="HttpTransportClient.html#patch">patch</a></li><li data-type='method'><a href="HttpTransportClient.html#post">post</a></li><li data-type='method'><a href="HttpTransportClient.html#put">put</a></li><li data-type='method'><a href="HttpTransportClient.html#query">query</a></li><li data-type='method'><a href="HttpTransportClient.html#retry">retry</a></li><li data-type='method'><a href="HttpTransportClient.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransportClient.html#use">use</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#retryDelay">retryDelay</a></li></ul>
 </nav>
 
 <div id="main">
@@ -97,7 +97,55 @@
         })
         .asResponse();
 
-    console.log(res);</code></pre><h4>Middleware</h4><p>Middleware are functions that can be executed with before and after a request. Middleware is typically used to: </p>
+    console.log(res);</code></pre><h4>Handling errors</h4><p>Convert <code>Internal Server</code> responses (500) to errors:</p>
+<pre class="prettyprint source lang-js"><code>    const toError = require('@bbc/http-transport-to-error');
+
+    const url = 'http://example.com/';
+    const client = HttpTransport.createBuilder()
+      .use(toError())
+      .createClient();  // for all requests
+
+    await client.get(url)
+        .asResponse();
+
+    console.error(err);</code></pre><p><code>toError</code> is <strong>only</strong> required if the underlying client does not support HTTP error conversion. 
+The default transport is <code>request</code>, which does <strong>not</strong> convert errors. </p>
+<h4>Retries</h4><p>Make a HTTP GET and retry twice on error <code>.retry</code></p>
+<pre class="prettyprint source lang-js"><code>const toError = require('@bbc/http-transport-to-error');
+
+const client = HttpTransport.createBuilder()
+        .use(toError())
+        .createClient();
+
+        const res = await client.get('http://example.com/')
+        .retry(2)
+        .asResponse();
+
+        console.log(res);</code></pre><h4>Timeouts</h4><p>Make a HTTP GET and timeout after 50ms <code>.query</code></p>
+<pre class="prettyprint source lang-js"><code>const body = await HttpTransport.createClient()
+      .get(url)
+      .timeout(50)
+      .asBody();</code></pre><h4>Using the Client buider</h4><p>The builder can be used to define behavior for <strong>all requests</strong>. This includes:</p>
+<ul>
+<li>Default retries </li>
+<li>Default retry delay</li>
+<li>Default user agent</li>
+<li>Middleware </li>
+</ul>
+<p>The builder is instantiated via <code>.createBuilder</code>:</p>
+<pre class="prettyprint source lang-js"><code>const HttpTransport = require('@bbc/http-transport');
+const builder = HttpTransport.createBuilder();</code></pre><p><code>createClient</code> instantiates a configured transport client:</p>
+<pre class="prettyprint source lang-js"><code>const url = 'http://example.com/';
+const HttpTransport = require('@bbc/http-transport');
+
+const builder = HttpTransport.createBuilder();
+
+const client = builder
+    .use(toError())
+    .retries(2)
+    .createClient();
+
+const body = await client.get(url).asBody();</code></pre><h4>Middleware</h4><p>Middleware are functions that can be executed with before and after a request. Middleware is typically used to: </p>
 <ul>
 <li>Modify the request object e.g set headers </li>
 <li>Terminate a request early e.g for caching purposes</li>
@@ -126,36 +174,13 @@
         .get(url)
         .asResponse();
 
-    console.error(err);</code></pre><p>For more information on offical HttpTransport middlware see <a href="#offical-middleware">offical middlware</a></p>
-<h4>Handling errors</h4><p>Convert <code>Internal Server</code> responses (500) to errors:</p>
-<pre class="prettyprint source lang-js"><code>    const toError = require('@bbc/http-transport-to-error');
-
-    const url = 'http://example.com/';
-    const client = HttpTransport.createBuilder()
-      .use(toError())
-      .createClient();  // for all requests
-
-    await client.get(url)
-        .asResponse();
-
-    console.error(err);</code></pre><p><code>toError</code> is only required if the underlying client does not support HTTP error conversion. 
-The default transport is <code>request</code>, which does not convert errors. </p>
-<h4>Retries</h4><p>Make a HTTP GET and retry twice on error <code>.retry</code></p>
-<pre class="prettyprint source lang-js"><code>const toError = require('@bbc/http-transport-to-error');
-
-const client = HttpTransport.createBuilder()
-        .use(toError())
-        .createClient();
-
-        const res = await client.get('http://example.com/')
-        .retry(2)
-        .asResponse();
-
-        console.log(res);</code></pre><h4>Timeouts</h4><p>Make a HTTP GET and timeout after 50ms <code>.query</code></p>
-<pre class="prettyprint source lang-js"><code>const body = await HttpTransport.createClient()
-      .get(url)
-      .timeout(50)
-      .asBody();</code></pre><h4>Using alternative HTTP clients</h4><p>Make a HTTP GET request and supply a alternative HTTP transport via <code>.createClient</code></p>
+    console.error(err);</code></pre><p>For writing middleware, see the <a href="https://github.com/koajs/koa/blob/master/docs/guide.md">offical guide</a></p>
+<h4>Offical HttpTransport middleware</h4><p>See <a href="https://github.com/bbc/http-transport-cache">Caching</a></p>
+<p>See <a href="https://github.com/bbc/http-transport-request-collapse">Collapsing</a></p>
+<p>See <a href="https://github.com/bbc/http-transport-to-error">Errors</a></p>
+<p>See <a href="https://github.com/bbc/http-transport-statsd">Stats</a></p>
+<p>See <a href="https://github.com/bbc/http-transport-rate-limiter">Ratelimiting</a></p>
+<h4>Using alternative HTTP clients via transport decorators</h4><p>Make a HTTP GET request and supply a alternative HTTP transport via <code>.createClient</code></p>
 <pre class="prettyprint source lang-js"><code>const url = 'http://example.com/';
 const HttpTransport = require('@bbc/http-transport');
 const OtherTranport = require('some-other-transport');
@@ -167,12 +192,7 @@ const res = await HttpTransport.createClient(OtherTranport)
   if (res.statusCode === 200) {
     console.log(res.body);
   }
-});</code></pre><h4>Offical plugins</h4><p>See <a href="https://github.com/bbc/http-transport-cache">Caching</a></p>
-<p>See <a href="https://github.com/bbc/http-transport-request-collapse">Collapsing</a></p>
-<p>See <a href="https://github.com/bbc/http-transport-to-error">Errors</a></p>
-<p>See <a href="https://github.com/bbc/http-transport-statsd">Stats</a></p>
-<p>See <a href="https://github.com/bbc/http-transport-rate-limiter">Ratelimiting</a></p>
-<h4>Offical transport decorators</h4><p>See <a href="https://github.com/bbc/http-transport-callbacks">Callbacks</a></p></article>
+});</code></pre><h4>Callback support</h4><p>HttpTransport does not support callbacks. However, to integrate with legacy code, use the <a href="https://github.com/bbc/http-transport-callbacks">callback adapter</a></p></article>
     </section>
 
 
@@ -185,7 +205,7 @@ const res = await HttpTransport.createClient(OtherTranport)
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Feb 28 2018 19:47:45 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 05 2018 11:46:03 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
