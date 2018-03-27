@@ -100,4 +100,23 @@ describe('Response', () => {
     const asJson = JSON.parse(asString);
     assert.deepEqual(asJson, state);
   });
+
+  it('defaults retries to an empty array', () => {
+    const response = Response.create();
+    assert.deepEqual(response.retries, []);
+  });
+
+  it('returns an array of retries', () => {
+    const retries = [{ a: 1 }, { b: 2 }];
+    const response = Response.create();
+    response.retries = retries;
+    assert.deepEqual(response.retries, retries);
+  });
+
+  it('always sets retries to an empty array', () => {
+    const retries = [];
+    const response = Response.create();
+    response.retries = 'crazy input';
+    assert.deepEqual(response.retries, retries);
+  });
 });
