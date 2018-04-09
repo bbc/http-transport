@@ -245,23 +245,6 @@ describe('HttpTransportClient', () => {
       assert.equal(res.statusCode, 200);
     });
 
-    it('tracks retry attempts', async () => {
-      nockRetries(2);
-
-      const client = HttpTransport.createClient();
-
-      const res = await client
-        .get(url)
-        .use(toError())
-        .retry(2)
-        .asResponse();
-
-      const retries = res.retries;
-      assert.equal(retries.length, 2);
-      assert.equal(retries[0].statusCode, 500);
-      assert.match(retries[0].reason, /something bad/);
-    });
-
     it('does not retry 4XX errors', async () => {
       nock.cleanAll();
       api
