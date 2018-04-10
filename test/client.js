@@ -11,7 +11,7 @@ const toJson = require('../lib/middleware/asJson');
 const setContextProperty = require('../lib/middleware/setContextProperty');
 const log = require('../lib/middleware/logger');
 const packageInfo = require('../package');
-
+const toError = require('./toError');
 const sandbox = sinon.sandbox.create();
 
 const url = 'http://www.example.com/';
@@ -55,19 +55,6 @@ function nockTimeouts(number, opts) {
   api[httpMethod](path).reply(successCode);
 }
 
-function toError() {
-  return async (ctx, next) => {
-    await next();
-
-    if (ctx.res.statusCode >= 400) {
-      const err = new Error('something bad happend.');
-      err.statusCode = ctx.res.statusCode;
-      err.headers = ctx.res.headers;
-      throw err;
-    }
-  };
-}
-
 describe('HttpTransportClient', () => {
   beforeEach(() => {
     nock.disableNetConnect();
@@ -98,10 +85,10 @@ describe('HttpTransportClient', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-        reqheaders: {
-          'User-Agent': HeaderValue
-        }
-      })
+          reqheaders: {
+            'User-Agent': HeaderValue
+          }
+        })
         .get(path)
         .times(2)
         .reply(200, responseBody);
@@ -116,10 +103,10 @@ describe('HttpTransportClient', () => {
       nock.cleanAll();
 
       nock(host, {
-        reqheaders: {
-          'User-Agent': 'some-new-user-agent'
-        }
-      })
+          reqheaders: {
+            'User-Agent': 'some-new-user-agent'
+          }
+        })
         .get(path)
         .times(2)
         .reply(200, responseBody);
@@ -399,11 +386,11 @@ describe('HttpTransportClient', () => {
 
       const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
-        reqheaders: {
-          'User-Agent': HeaderValue,
-          foo: 'bar'
-        }
-      })
+          reqheaders: {
+            'User-Agent': HeaderValue,
+            foo: 'bar'
+          }
+        })
         .get(path)
         .reply(200, responseBody);
 
@@ -571,9 +558,9 @@ describe('HttpTransportClient', () => {
 
         const res = client
           .use(setContextProperty({
-            time: false
-          },
-          'opts'
+              time: false
+            },
+            'opts'
           ))
           .get(url)
           .asResponse();
@@ -672,9 +659,9 @@ describe('HttpTransportClient', () => {
 
         await client
           .use(setContextProperty({
-            time: false
-          },
-          'opts'
+              time: false
+            },
+            'opts'
           ))
           .get(url)
           .asBody();
