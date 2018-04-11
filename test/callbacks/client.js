@@ -74,10 +74,10 @@ describe('CallbackDecorator', () => {
 
             const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
             nock(host, {
-                    reqheaders: {
-                        'User-Agent': HeaderValue
-                    }
-                })
+                reqheaders: {
+                    'User-Agent': HeaderValue
+                }
+            })
                 .get(path)
                 .reply(200, responseBody);
 
@@ -102,7 +102,7 @@ describe('CallbackDecorator', () => {
     });
 
     describe('timeout', () => {
-        it('sets the a timeout', (done) => {
+        it('sets the timeout', (done) => {
             nock.cleanAll();
             api
                 .get('/')
@@ -121,19 +121,6 @@ describe('CallbackDecorator', () => {
     });
 
     describe('.retries', () => {
-        it('retries a given number of times for failed requests', (done) => {
-            nockRetries(2);
-            new CallbackDecorator(httpTransport)
-                .use(toError())
-                .get(url)
-                .retry(2)
-                .asResponse((err, res) => {
-                    assert.ifError(err);
-                    assert.equal(res.statusCode, 200);
-                    done();
-                });
-        });
-
         it('retries a given number of times for failed requests', (done) => {
             nockRetries(2);
             new CallbackDecorator(httpTransport)
@@ -316,16 +303,16 @@ describe('CallbackDecorator', () => {
     });
 
     describe('.headers', () => {
-        it('sends a custom headers', (done) => {
+        it('sends custom headers', (done) => {
             nock.cleanAll();
 
             const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
             nock(host, {
-                    reqheaders: {
-                        'User-Agent': HeaderValue,
-                        foo: 'bar'
-                    }
-                })
+                reqheaders: {
+                    'User-Agent': HeaderValue,
+                    foo: 'bar'
+                }
+            })
                 .get(path)
                 .reply(200, responseBody);
 
