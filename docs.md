@@ -225,6 +225,7 @@ See [Stats](https://github.com/bbc/http-transport-statsd)
 
 See [Ratelimiting](https://github.com/bbc/http-transport-rate-limiter)
 
+See [xray](https://github.com/bbc/http-transport-xray)
 
 #### Using alternative HTTP clients via transport decorators
 
