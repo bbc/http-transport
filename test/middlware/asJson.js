@@ -95,6 +95,44 @@ describe('asJson', () => {
     assert.deepEqual(ctxWithJsonBody.res.body, {});
   });
 
+  it('does not parse the response if there is no body', async () => {
+    sandbox.stub(JSON, 'parse').throws();
+
+    const asJson = asJsonPlugin();
+
+    const ctxWithJsonBody = {
+      res: {
+        body: undefined,
+        headers: {
+          'content-type': 'application/json'
+        }
+      }
+    };
+
+    await asJson(ctxWithJsonBody, stubPromise());
+    sinon.assert.notCalled(JSON.parse);
+    assert.deepEqual(ctxWithJsonBody.res.body, undefined);
+  });
+
+  it('does not parse the response if the body is empty', async () => {
+    sandbox.stub(JSON, 'parse').throws();
+
+    const asJson = asJsonPlugin();
+
+    const ctxWithJsonBody = {
+      res: {
+        body: '',
+        headers: {
+          'content-type': 'application/json'
+        }
+      }
+    };
+
+    await asJson(ctxWithJsonBody, stubPromise());
+    sinon.assert.notCalled(JSON.parse);
+    assert.deepEqual(ctxWithJsonBody.res.body, '');
+  });
+
   it('throws an error when throw property is set true', async () => {
     const asJson = asJsonPlugin({
       throwOnConflict: true
