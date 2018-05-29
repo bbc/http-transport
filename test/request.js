@@ -71,4 +71,19 @@ describe('Request', () => {
       assert.equal(request.getUrl(), HOST + '?a%5B0%5D=1&a%5B1%5D=2');
     });
   });
+
+  describe('.getRequestKey', () => {
+    it('returns a cacheable key for a request', () => {
+      const request = Request.create();
+
+      request
+        .method('GET')
+        .baseUrl(HOST)
+        .addQuery('a', 1)
+        .addQuery('b', 2);
+
+      const key = `GET:${HOST}?a=1&b=2`;
+      assert.equal(request.getRequestKey(), key);
+    });
+  });
 });
