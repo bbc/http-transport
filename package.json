@@ -3,6 +3,7 @@
   "version": "3.3.0",
   "description": "A flexible, modular REST client built for ease-of-use and resilience.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "mocha",
     "jsdoc": "jsdoc -c ./docconfig/jsdoc.json",
