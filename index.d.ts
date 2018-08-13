@@ -10,6 +10,44 @@ declare type response = Object;
 declare type errorObject = {
   message: string
 }
+declare type contextDefaults = {
+  userAgent: string
+  retries: number
+  retryDelay: number
+}
+declare enum method {
+  get,
+  set,
+  put,
+  patch,
+  delete,
+  head,
+  options
+}
+
+declare class Request {
+  addQuery(key: string, value: string): Request
+  addHeader(key: string, value: string): Request
+  body(content: string): Request
+  method(method: method): Request
+  baseUrl(baseUrl: string): Request
+  timeout(timeout: number): Request
+  getMethod(): method
+  getTimeout(): number
+  getUrl(): string
+  getRequestKey(): string
+  getHeaders(): Object
+  getQueries(): Object
+  hasQueries(): boolean
+  hasBaseQueries(): boolean
+  hasHeaders(): boolean
+  getBody(): string
+  create(): Request
+}
+
+declare class Response {
+
+}
 
 
 declare class HttpTransportBuilder {
@@ -38,7 +76,13 @@ declare class HttpTransportClient {
 }
 
 declare class Context {
+  plugins: plugin[]
+  req: Request
+  res: Response
 
+  static create(defaults: contextDefaults)
+  retryAttempts: []
+  addPlugin(plugin: plugin): Context
 }
 
 declare class RequestTransport {
