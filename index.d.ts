@@ -40,6 +40,7 @@ declare enum method {
   options
 }
 
+declare type callbackFunction = (err: any, value?: any) => void
 declare function toJson(opts: toJsonOpts): plugin
 declare function logger(logger?: any): plugin
 declare function setContextProperty(opts: any, path: string): plugin
@@ -72,9 +73,7 @@ declare class Response {
   toJson(): ResponseProps
 }
 
-declare function callbackFunction(err: any, value?: R): void
-
-declare class HttpTransportCallbackClient implements HttpTransportClient{
+declare class HttpTransportCallbackClient {
   use(fn: plugin): HttpTransportCallbackClient
   get(baseUrl: string): HttpTransportCallbackClient
   post(baseUrl: string, body: string): HttpTransportCallbackClient
@@ -87,8 +86,8 @@ declare class HttpTransportCallbackClient implements HttpTransportClient{
   timeout(timeout: number): HttpTransportCallbackClient
   retries(retries: number): HttpTransportCallbackClient
   retryDelay(retryDelay: number): HttpTransportCallbackClient
-  asResponse(cb: callbackFunction): Promise
-  asBody(cb: callbackFunction): Promise
+  asResponse(cb: callbackFunction): Promise<response>
+  asBody(cb: callbackFunction): Promise<body>
 }
 
 declare class HttpTransportBuilder {
