@@ -6,7 +6,6 @@ export declare type headers = Object;
 export declare type query = Object;
 export declare type body = string;
 export declare type requestOptions = Object;
-export declare type response = Object;
 export declare type errorObject = {
   message: string
 }
@@ -40,7 +39,7 @@ declare enum method {
   options
 }
 
-declare type callbackFunction = (err: any, value?: any) => void
+declare type callbackFunction<T> = (err: any, value?: T) => void
 export declare function toJson(opts: toJsonOpts): plugin
 export declare function logger(logger?: any): plugin
 export declare function setContextProperty(opts: any, path: string): plugin
@@ -86,8 +85,8 @@ export declare class HttpTransportCallbackClient {
   timeout(timeout: number): HttpTransportCallbackClient
   retries(retries: number): HttpTransportCallbackClient
   retryDelay(retryDelay: number): HttpTransportCallbackClient
-  asResponse(cb: callbackFunction): Promise<response>
-  asBody(cb: callbackFunction): Promise<body>
+  asResponse(cb: callbackFunction<Response>): Promise<Response>
+  asBody(cb: callbackFunction<body>): Promise<body>
 }
 
 export declare class HttpTransportBuilder {
@@ -113,7 +112,7 @@ export declare class HttpTransportClient {
   retries(retries: number): HttpTransportClient
   retryDelay(retryDelay: number): HttpTransportClient
   asBody(): Promise<body>
-  asResponse(): Promise<response>
+  asResponse(): Promise<Response>
 }
 
 declare class Context {
@@ -134,8 +133,8 @@ export declare class Transport {
   execute(ctx: Context): Promise<RequestTransport>
   onError(ctx: Context): Function
   toOptions(ctx: Context): requestOptions
-  toResponse(ctx: Context, from: response): response
-  makeRequest(ctx: Context, opts: requestOptions): Promise<response>
+  toResponse(ctx: Context, from: Response): Response
+  makeRequest(ctx: Context, opts: requestOptions): Promise<Response>
 }
 
 export declare var defaultTransport: RequestTransport;
