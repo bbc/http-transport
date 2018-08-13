@@ -1,17 +1,17 @@
-declare function createBuilder(transport?: Transport): HttpTransportBuilder;
-declare function createClient(): HttpTransportClient;
+export declare function createBuilder(transport?: Transport): HttpTransportBuilder;
+export declare function createClient(): HttpTransportClient;
 
-declare type plugin = (ctx: Context, next: plugin) => any;
-declare type headers = Object;
-declare type query = Object;
-declare type body = string;
-declare type requestOptions = Object;
-declare type response = Object;
-declare type errorObject = {
+export declare type plugin = (ctx: Context, next: plugin) => any;
+export declare type headers = Object;
+export declare type query = Object;
+export declare type body = string;
+export declare type requestOptions = Object;
+export declare type response = Object;
+export declare type errorObject = {
   message: string
 }
 
-declare type ResponseProps = {
+export declare type ResponseProps = {
   body: string
   elapsedTime: number
   url: string
@@ -41,11 +41,11 @@ declare enum method {
 }
 
 declare type callbackFunction = (err: any, value?: any) => void
-declare function toJson(opts: toJsonOpts): plugin
-declare function logger(logger?: any): plugin
-declare function setContextProperty(opts: any, path: string): plugin
+export declare function toJson(opts: toJsonOpts): plugin
+export declare function logger(logger?: any): plugin
+export declare function setContextProperty(opts: any, path: string): plugin
 
-declare class Request {
+export declare class Request {
   addQuery(key: string, value: string): Request
   addHeader(key: string, value: string): Request
   body(content: string): Request
@@ -65,15 +65,15 @@ declare class Request {
   create(): Request
 }
 
-declare class Response {
-  readonly length: number 
+export declare class Response {
+  readonly length: number
   static create(opts?: ResponseProps): Response
   addHeader(key: string, value: string): Request
   getHeader(key: string): string
   toJson(): ResponseProps
 }
 
-declare class HttpTransportCallbackClient {
+export declare class HttpTransportCallbackClient {
   use(fn: plugin): HttpTransportCallbackClient
   get(baseUrl: string): HttpTransportCallbackClient
   post(baseUrl: string, body: string): HttpTransportCallbackClient
@@ -90,7 +90,7 @@ declare class HttpTransportCallbackClient {
   asBody(cb: callbackFunction): Promise<body>
 }
 
-declare class HttpTransportBuilder {
+export declare class HttpTransportBuilder {
   userAgent(userAgent: string): HttpTransportBuilder
   retries(retries: number): HttpTransportBuilder
   retryDelay(retryDelay: number): HttpTransportBuilder
@@ -99,7 +99,7 @@ declare class HttpTransportBuilder {
   createClient(): HttpTransportClient | HttpTransportCallbackClient
 }
 
-declare class HttpTransportClient {
+export declare class HttpTransportClient {
   use(fn: plugin): HttpTransportClient
   get(baseUrl: string): HttpTransportClient
   post(baseUrl: string, body: string): HttpTransportClient
@@ -122,13 +122,13 @@ declare class Context {
   res: Response
 
   static create(defaults: contextDefaults)
-  retryAttempts: []
+  retryAttempts: Array<any>
   addPlugin(plugin: plugin): Context
 }
 
-declare class RequestTransport extends Transport {}
+export declare class RequestTransport extends Transport { }
 
-declare class Transport {
+export declare class Transport {
   toError(err: errorObject, ctx: Context): Error
   createError(err: errorObject, ctx: Context): Error
   execute(ctx: Context): Promise<RequestTransport>
@@ -138,14 +138,7 @@ declare class Transport {
   makeRequest(ctx: Context, opts: requestOptions): Promise<response>
 }
 
-export = {
-  defaultTransport: RequestTransport,
-  builder: HttpTransportBuilder,
-  transport: Transport,
-  context: Context,
-  toJson: toJson,
-  logger: logger,
-  setContextProperty: setContextProperty,
-  createClient: createClient,
-  createBuilder: createBuilder
-}
+export declare var defaultTransport: RequestTransport;
+export declare var builder: HttpTransportBuilder;
+export declare var transport: Transport;
+export declare var context: Context;
