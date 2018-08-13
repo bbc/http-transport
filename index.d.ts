@@ -72,6 +72,24 @@ declare class Response {
   toJson(): ResponseProps
 }
 
+declare function callbackFunction(err: any, value?: R): void
+
+declare class HttpTransportCallbackClient implements HttpTransportClient{
+  use(fn: plugin): HttpTransportCallbackClient
+  get(baseUrl: string): HttpTransportCallbackClient
+  post(baseUrl: string, body: string): HttpTransportCallbackClient
+  patch(baseUrl: string, body: string): HttpTransportCallbackClient
+  put(baseUrl: string, body: string): HttpTransportCallbackClient
+  delete(baseUrl: string): HttpTransportCallbackClient
+  head(baseUrl: string): HttpTransportCallbackClient
+  headers(headers: headers): HttpTransportCallbackClient
+  query(query: query): HttpTransportCallbackClient
+  timeout(timeout: number): HttpTransportCallbackClient
+  retries(retries: number): HttpTransportCallbackClient
+  retryDelay(retryDelay: number): HttpTransportCallbackClient
+  asResponse(cb: callbackFunction): Promise
+  asBody(cb: callbackFunction): Promise
+}
 
 declare class HttpTransportBuilder {
   userAgent(userAgent: string): HttpTransportBuilder
@@ -79,21 +97,22 @@ declare class HttpTransportBuilder {
   retryDelay(retryDelay: number): HttpTransportBuilder
   use(fn: plugin): HttpTransportBuilder
   asCallback(): HttpTransportBuilder
+  createClient(): HttpTransportClient | HttpTransportCallbackClient
 }
 
 declare class HttpTransportClient {
-  use(fn: plugin): HttpTransportBuilder
-  get(baseUrl: string): HttpTransportBuilder
-  post(baseUrl: string, body: string): HttpTransportBuilder
-  patch(baseUrl: string, body: string): HttpTransportBuilder
-  put(baseUrl: string, body: string): HttpTransportBuilder
-  delete(baseUrl: string): HttpTransportBuilder
-  head(baseUrl: string): HttpTransportBuilder
-  headers(headers: headers): HttpTransportBuilder
-  query(query: query): HttpTransportBuilder
-  timeout(timeout: number): HttpTransportBuilder
-  retries(retries: number): HttpTransportBuilder
-  retryDelay(retryDelay: number): HttpTransportBuilder
+  use(fn: plugin): HttpTransportClient
+  get(baseUrl: string): HttpTransportClient
+  post(baseUrl: string, body: string): HttpTransportClient
+  patch(baseUrl: string, body: string): HttpTransportClient
+  put(baseUrl: string, body: string): HttpTransportClient
+  delete(baseUrl: string): HttpTransportClient
+  head(baseUrl: string): HttpTransportClient
+  headers(headers: headers): HttpTransportClient
+  query(query: query): HttpTransportClient
+  timeout(timeout: number): HttpTransportClient
+  retries(retries: number): HttpTransportClient
+  retryDelay(retryDelay: number): HttpTransportClient
   asBody(): Promise<body>
   asResponse(): Promise<response>
 }
