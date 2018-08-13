@@ -48,6 +48,7 @@
     "nyc": "^11.2.1"
   },
   "dependencies": {
+    "@types/request": "^2.47.1",
     "bluebird": "^3.5.0",
     "koa-compose": "^4.0.0",
     "lodash": "^4.17.4",

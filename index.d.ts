@@ -1,3 +1,5 @@
+import * as request from "request";
+
 export declare function createBuilder(transport?: Transport): HttpTransportBuilder;
 export declare function createClient(): HttpTransportClient;
 
@@ -70,6 +72,12 @@ export declare class Request {
 }
 
 export declare class Response {
+  headers: Header[]
+  elapsedTime: number
+  url: string
+  statusCode: number
+  body: Body
+  httpResponse?: request.Response
   readonly length: number
   static create(opts?: JsonResponse): Response
   addHeader(key: string, value: string): Request
@@ -138,7 +146,7 @@ export declare class Transport {
   execute(ctx: Context): Promise<RequestTransport>
   onError(ctx: Context): Function
   toOptions(ctx: Context): RequestOptions
-  toResponse(ctx: Context, from: Response): Response
+  toResponse(ctx: Context, from: request.Response): Response
   makeRequest(ctx: Context, opts: RequestOptions): Promise<Response>
 }
 
