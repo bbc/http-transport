@@ -1,20 +1,26 @@
 export declare function createBuilder(transport?: Transport): HttpTransportBuilder;
 export declare function createClient(): HttpTransportClient;
 
-export declare type plugin = (ctx: Context, next: plugin) => any;
-export declare type headers = Object;
-export declare type query = Object;
-export declare type body = string;
-export declare type requestOptions = Object;
-export declare type errorObject = {
+declare type callbackFunction<T> = (err: any, value?: T) => void
+export declare type Plugin = (ctx: Context, next: Plugin) => any;
+export declare type Header = Object;
+export declare type Querystring = Object;
+export declare type Bodt = string;
+export declare type RequestOptions = Object;
+export declare type ErrorObject = {
   message: string
 }
 
-export declare type ResponseProps = {
+export declare type JsonResponse = {
   body: string
   elapsedTime: number
   url: string
   headers: Object
+  statusCode: number
+}
+
+declare type RetryAttempt = {
+  reason: string,
   statusCode: number
 }
 
@@ -24,12 +30,12 @@ declare type contextDefaults = {
   retryDelay?: number
 }
 
-declare type toJsonOpts = {
+declare type ToJsonOpts = {
   throwOnConflict?: boolean,
   force?: boolean
 }
 
-declare enum method {
+declare enum Method {
   get,
   set,
   put,
@@ -39,19 +45,18 @@ declare enum method {
   options
 }
 
-declare type callbackFunction<T> = (err: any, value?: T) => void
-export declare function toJson(opts: toJsonOpts): plugin
-export declare function logger(logger?: any): plugin
-export declare function setContextProperty(opts: any, path: string): plugin
+export declare function toJson(opts: ToJsonOpts): Plugin
+export declare function logger(logger?: any): Plugin
+export declare function setContextProperty(opts: any, path: string): Plugin
 
 export declare class Request {
   addQuery(key: string, value: string): Request
   addHeader(key: string, value: string): Request
   body(content: string): Request
-  method(method: method): Request
+  method(method: Method): Request
   baseUrl(baseUrl: string): Request
   timeout(timeout: number): Request
-  getMethod(): method
+  getMethod(): Method
   getTimeout(): number
   getUrl(): string
   getRequestKey(): string
@@ -66,75 +71,75 @@ export declare class Request {
 
 export declare class Response {
   readonly length: number
-  static create(opts?: ResponseProps): Response
+  static create(opts?: JsonResponse): Response
   addHeader(key: string, value: string): Request
   getHeader(key: string): string
-  toJson(): ResponseProps
+  toJson(): JsonResponse
 }
 
 export declare class HttpTransportCallbackClient {
-  use(fn: plugin): HttpTransportCallbackClient
+  use(fn: Plugin): HttpTransportCallbackClient
   get(baseUrl: string): HttpTransportCallbackClient
   post(baseUrl: string, body: string): HttpTransportCallbackClient
   patch(baseUrl: string, body: string): HttpTransportCallbackClient
   put(baseUrl: string, body: string): HttpTransportCallbackClient
   delete(baseUrl: string): HttpTransportCallbackClient
   head(baseUrl: string): HttpTransportCallbackClient
-  headers(headers: headers): HttpTransportCallbackClient
-  query(query: query): HttpTransportCallbackClient
+  headers(headers: Header): HttpTransportCallbackClient
+  query(query: Querystring): HttpTransportCallbackClient
   timeout(timeout: number): HttpTransportCallbackClient
   retries(retries: number): HttpTransportCallbackClient
   retryDelay(retryDelay: number): HttpTransportCallbackClient
   asResponse(cb: callbackFunction<Response>): Promise<Response>
-  asBody(cb: callbackFunction<body>): Promise<body>
+  asBody(cb: callbackFunction<Bodt>): Promise<Bodt>
 }
 
 export declare class HttpTransportBuilder {
   userAgent(userAgent: string): HttpTransportBuilder
   retries(retries: number): HttpTransportBuilder
   retryDelay(retryDelay: number): HttpTransportBuilder
-  use(fn: plugin): HttpTransportBuilder
+  use(fn: Plugin): HttpTransportBuilder
   asCallback(): HttpTransportBuilder
   createClient(): HttpTransportClient | HttpTransportCallbackClient
 }
 
 export declare class HttpTransportClient {
-  use(fn: plugin): HttpTransportClient
+  use(fn: Plugin): HttpTransportClient
   get(baseUrl: string): HttpTransportClient
   post(baseUrl: string, body: string): HttpTransportClient
   patch(baseUrl: string, body: string): HttpTransportClient
   put(baseUrl: string, body: string): HttpTransportClient
   delete(baseUrl: string): HttpTransportClient
   head(baseUrl: string): HttpTransportClient
-  headers(headers: headers): HttpTransportClient
-  query(query: query): HttpTransportClient
+  headers(headers: Header): HttpTransportClient
+  query(query: Querystring): HttpTransportClient
   timeout(timeout: number): HttpTransportClient
   retries(retries: number): HttpTransportClient
   retryDelay(retryDelay: number): HttpTransportClient
-  asBody(): Promise<body>
+  asBody(): Promise<Bodt>
   asResponse(): Promise<Response>
 }
 
 declare class Context {
-  plugins: plugin[]
+  plugins: Plugin[]
   req: Request
   res: Response
 
   static create(defaults: contextDefaults)
-  retryAttempts: Array<any>
-  addPlugin(plugin: plugin): Context
+  retryAttempts: Array<RetryAttempt>
+  addPlugin(plugin: Plugin): Context
 }
 
 export declare class RequestTransport extends Transport { }
 
 export declare class Transport {
-  toError(err: errorObject, ctx: Context): Error
-  createError(err: errorObject, ctx: Context): Error
+  toError(err: ErrorObject, ctx: Context): Error
+  createError(err: ErrorObject, ctx: Context): Error
   execute(ctx: Context): Promise<RequestTransport>
   onError(ctx: Context): Function
-  toOptions(ctx: Context): requestOptions
+  toOptions(ctx: Context): RequestOptions
   toResponse(ctx: Context, from: Response): Response
-  makeRequest(ctx: Context, opts: requestOptions): Promise<Response>
+  makeRequest(ctx: Context, opts: RequestOptions): Promise<Response>
 }
 
 export declare var defaultTransport: RequestTransport;
