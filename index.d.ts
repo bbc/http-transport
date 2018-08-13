@@ -1,7 +1,7 @@
-declare function createBuilder(transport: Transport): HttpTransportBuilder;
+declare function createBuilder(transport?: Transport): HttpTransportBuilder;
 declare function createClient(): HttpTransportClient;
 
-declare type plugin = Function;
+declare type plugin = (ctx: Context, next: plugin) => any;
 declare type headers = Object;
 declare type query = Object;
 declare type body = string;
@@ -10,11 +10,26 @@ declare type response = Object;
 declare type errorObject = {
   message: string
 }
-declare type contextDefaults = {
-  userAgent: string
-  retries: number
-  retryDelay: number
+
+declare type ResponseProps = {
+  body: string
+  elapsedTime: number
+  url: string
+  headers: Object
+  statusCode: number
 }
+
+declare type contextDefaults = {
+  userAgent?: string
+  retries?: number
+  retryDelay?: number
+}
+
+declare type toJsonOpts = {
+  throwOnConflict?: boolean,
+  force?: boolean
+}
+
 declare enum method {
   get,
   set,
@@ -24,6 +39,10 @@ declare enum method {
   head,
   options
 }
+
+declare function toJson(opts: toJsonOpts): plugin
+declare function logger(logger?: any): plugin
+declare function setContextProperty(opts: any, path: string): plugin
 
 declare class Request {
   addQuery(key: string, value: string): Request
@@ -46,7 +65,11 @@ declare class Request {
 }
 
 declare class Response {
-
+  readonly length: number 
+  static create(opts?: ResponseProps): Response
+  addHeader(key: string, value: string): Request
+  getHeader(key: string): string
+  toJson(): ResponseProps
 }
 
 
@@ -85,9 +108,7 @@ declare class Context {
   addPlugin(plugin: plugin): Context
 }
 
-declare class RequestTransport {
-
-}
+declare class RequestTransport extends Transport {}
 
 declare class Transport {
   toError(err: errorObject, ctx: Context): Error
@@ -97,4 +118,16 @@ declare class Transport {
   toOptions(ctx: Context): requestOptions
   toResponse(ctx: Context, from: response): response
   makeRequest(ctx: Context, opts: requestOptions): Promise<response>
+}
+
+export = {
+  defaultTransport: RequestTransport,
+  builder: HttpTransportBuilder,
+  transport: Transport,
+  context: Context,
+  toJson: toJson,
+  logger: logger,
+  setContextProperty: setContextProperty,
+  createClient: createClient,
+  createBuilder: createBuilder
 }
