@@ -5,7 +5,7 @@ declare type callbackFunction<T> = (err: any, value?: T) => void
 export declare type Plugin = (ctx: Context, next: Plugin) => any;
 export declare type Header = Object;
 export declare type Querystring = Object;
-export declare type Bodt = string;
+export declare type Body = string;
 export declare type RequestOptions = Object;
 export declare type ErrorObject = {
   message: string
@@ -91,7 +91,7 @@ export declare class HttpTransportCallbackClient {
   retries(retries: number): HttpTransportCallbackClient
   retryDelay(retryDelay: number): HttpTransportCallbackClient
   asResponse(cb: callbackFunction<Response>): Promise<Response>
-  asBody(cb: callbackFunction<Bodt>): Promise<Bodt>
+  asBody(cb: callbackFunction<Body>): Promise<Body>
 }
 
 export declare class HttpTransportBuilder {
@@ -116,7 +116,7 @@ export declare class HttpTransportClient {
   timeout(timeout: number): HttpTransportClient
   retries(retries: number): HttpTransportClient
   retryDelay(retryDelay: number): HttpTransportClient
-  asBody(): Promise<Bodt>
+  asBody(): Promise<Body>
   asResponse(): Promise<Response>
 }
 
