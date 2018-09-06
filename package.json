@@ -3,6 +3,7 @@
   "version": "3.3.0",
   "description": "A flexible, modular REST client built for ease-of-use and resilience.",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "mocha",
     "jsdoc": "jsdoc -c ./docconfig/jsdoc.json",
@@ -47,6 +48,7 @@
     "nyc": "^11.2.1"
   },
   "dependencies": {
+    "@types/request": "^2.47.1",
     "bluebird": "^3.5.0",
     "koa-compose": "^4.0.0",
     "lodash": "^4.17.4",

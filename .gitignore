@@ -3,3 +3,4 @@ coverage
 *.log
 package-lock.json
 .nyc_output
+.vscode
