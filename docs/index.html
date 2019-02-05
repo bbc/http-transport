@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li><li><a href="HttpTransportClient.html">HttpTransportClient</a><ul class='methods'><li data-type='method'><a href="HttpTransportClient.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransportClient.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransportClient.html#delete">delete</a></li><li data-type='method'><a href="HttpTransportClient.html#get">get</a></li><li data-type='method'><a href="HttpTransportClient.html#head">head</a></li><li data-type='method'><a href="HttpTransportClient.html#headers">headers</a></li><li data-type='method'><a href="HttpTransportClient.html#patch">patch</a></li><li data-type='method'><a href="HttpTransportClient.html#post">post</a></li><li data-type='method'><a href="HttpTransportClient.html#put">put</a></li><li data-type='method'><a href="HttpTransportClient.html#query">query</a></li><li data-type='method'><a href="HttpTransportClient.html#retry">retry</a></li><li data-type='method'><a href="HttpTransportClient.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransportClient.html#use">use</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#retryDelay">retryDelay</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#asCallback">asCallback</a></li><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li><li><a href="HttpTransportClient.html">HttpTransportClient</a><ul class='methods'><li data-type='method'><a href="HttpTransportClient.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransportClient.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransportClient.html#delete">delete</a></li><li data-type='method'><a href="HttpTransportClient.html#get">get</a></li><li data-type='method'><a href="HttpTransportClient.html#head">head</a></li><li data-type='method'><a href="HttpTransportClient.html#headers">headers</a></li><li data-type='method'><a href="HttpTransportClient.html#patch">patch</a></li><li data-type='method'><a href="HttpTransportClient.html#post">post</a></li><li data-type='method'><a href="HttpTransportClient.html#put">put</a></li><li data-type='method'><a href="HttpTransportClient.html#query">query</a></li><li data-type='method'><a href="HttpTransportClient.html#retry">retry</a></li><li data-type='method'><a href="HttpTransportClient.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportClient.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransportClient.html#use">use</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -52,17 +52,17 @@
 </blockquote>
 <h2>Common examples</h2><h4>Supported HTTP methods</h4><p>Make a HTTP GET request using <code>.get</code></p>
 <pre class="prettyprint source lang-js"><code>    const url = 'http://example.com/';
-    await HttpTransport.createClient()
+    const res = await HttpTransport.createClient()
         .get(url)
         .asResponse()
 
     console.log(res);</code></pre><p>Make a HTTP POST request using <code>.post</code></p>
 <pre class="prettyprint source lang-js"><code>   const url = 'http://example.com/';
-   await HttpTransport.createClient()
+   const res = await HttpTransport.createClient()
         .post(url, requestBody)
         .asResponse()
 
-   console.log(res);</code></pre><p>PATCH, DELETE, HEAD are also supported. </p>
+   console.log(res);  </code></pre><p>PATCH, DELETE, HEAD are also supported. </p>
 <h4>Query strings</h4><p>Make a HTTP GET request specifiying query strings using <code>.query</code></p>
 <p>Single query string</p>
 <pre class="prettyprint source lang-js"><code>    const url = 'http://example.com/';
@@ -83,13 +83,13 @@
 
     console.log(res);</code></pre><h4>Headers</h4><p>Make a HTTP GET request specifiying request headers using <code>.headers</code></p>
 <p>Add a single header:</p>
-<pre class="prettyprint source lang-js"><code>    await HttpTransport.createClient()
+<pre class="prettyprint source lang-js"><code>    const res = await HttpTransport.createClient()
         .get(url)
         .headers('someHeader1', 'someValue1')
         .asResponse();
 
     console.log(res);</code></pre><p>Add multiple headers:</p>
-<pre class="prettyprint source lang-js"><code>    await HttpTransport.createClient()
+<pre class="prettyprint source lang-js"><code>    const res = await HttpTransport.createClient()
         .get(url)
         .headers({
           'someHeader1' : 'someValue1'
@@ -105,23 +105,25 @@
       .use(toError())
       .createClient();  // for all requests
 
-    await client.get(url)
-        .asResponse();
-
-    console.error(err);</code></pre><p><code>toError</code> is <strong>only</strong> required if the underlying client does not support HTTP error conversion. 
+    try {
+        await client.get(url)
+            .asResponse();
+    } catch (err) {
+        console.error(err);
+    }</code></pre><p><code>toError</code> is <strong>only</strong> required if the underlying client does not support HTTP error conversion. 
 The default transport is <code>request</code>, which does <strong>not</strong> convert errors. </p>
 <h4>Retries</h4><p>Make a HTTP GET and retry twice on error <code>.retry</code></p>
-<pre class="prettyprint source lang-js"><code>const toError = require('@bbc/http-transport-to-error');
+<pre class="prettyprint source lang-js"><code>    const toError = require('@bbc/http-transport-to-error');
 
-const client = HttpTransport.createBuilder()
+    const client = HttpTransport.createBuilder()
         .use(toError())
         .createClient();
 
-        const res = await client.get('http://example.com/')
+    const res = await client.get('http://example.com/')
         .retry(2)
         .asResponse();
 
-        console.log(res);</code></pre><h4>Timeouts</h4><p>Make a HTTP GET and timeout after 50ms <code>.query</code></p>
+    console.log(res);</code></pre><h4>Timeouts</h4><p>Make a HTTP GET and timeout after 50ms <code>.query</code></p>
 <pre class="prettyprint source lang-js"><code>const body = await HttpTransport.createClient()
       .get(url)
       .timeout(50)
@@ -157,12 +159,14 @@ const body = await client.get(url).asBody();</code></pre><h4>Middleware</h4><p>M
     const url = 'http://example.com/';
     const client = HttpTransport.createClient();
 
-    const res = await client
+    try {
+        await client
         .use(exampleMiddleware()) // only for this request         
         .get(url)
         .asResponse();
-
-    console.error(err);</code></pre><p>Middlware can also be executed <strong>for every request</strong> using the <code>.use</code> of the client builder. The client builder is created using the <code>createBuilder</code> method:</p>
+    } catch (err) {
+        console.error(err);
+    }</code></pre><p>Middlware can also be executed <strong>for every request</strong> using the <code>.use</code> of the client builder. The client builder is created using the <code>createBuilder</code> method:</p>
 <pre class="prettyprint source lang-js"><code>    const exampleMiddleware = require('exampleMiddleware');
 
     const url = 'http://example.com/';
@@ -170,16 +174,19 @@ const body = await client.get(url).asBody();</code></pre><h4>Middleware</h4><p>M
       .use(exampleMiddleware()) // for all requests
       .createClient();  
 
-    await client
+    try {
+        await client
         .get(url)
         .asResponse();
-
-    console.error(err);</code></pre><p>For writing middleware, see the <a href="https://github.com/koajs/koa/blob/master/docs/guide.md">offical guide</a></p>
+    } catch (err) {
+        console.error(err);
+    }</code></pre><p>For writing middleware, see the <a href="https://github.com/koajs/koa/blob/master/docs/guide.md">offical guide</a></p>
 <h4>Offical HttpTransport middleware</h4><p>See <a href="https://github.com/bbc/http-transport-cache">Caching</a></p>
 <p>See <a href="https://github.com/bbc/http-transport-request-collapse">Collapsing</a></p>
 <p>See <a href="https://github.com/bbc/http-transport-to-error">Errors</a></p>
 <p>See <a href="https://github.com/bbc/http-transport-statsd">Stats</a></p>
 <p>See <a href="https://github.com/bbc/http-transport-rate-limiter">Ratelimiting</a></p>
+<p>See <a href="https://github.com/bbc/http-transport-xray">xray</a></p>
 <h4>Using alternative HTTP clients via transport decorators</h4><p>Make a HTTP GET request and supply a alternative HTTP transport via <code>.createClient</code></p>
 <pre class="prettyprint source lang-js"><code>const url = 'http://example.com/';
 const HttpTransport = require('@bbc/http-transport');
@@ -205,7 +212,7 @@ const res = await HttpTransport.createClient(OtherTranport)
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Mar 05 2018 11:46:03 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Feb 05 2019 12:09:45 GMT+0000 (GMT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
