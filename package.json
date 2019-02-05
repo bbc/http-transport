@@ -37,15 +37,15 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "codeclimate-test-reporter": "^0.4.0",
-    "coveralls": "^2.11.9",
+    "coveralls": "^3.0.2",
     "eslint": "^4.1.1",
-    "jsdoc": "^3.5.5",
-    "mocha": "^3.0.2",
-    "nock": "^9.0.4",
-    "sinon": "^1.15.3",
     "eslint-config-iplayer-es6": "^3.1.0",
     "eslint-plugin-mocha": "^4.11.0",
-    "nyc": "^11.2.1"
+    "jsdoc": "^3.5.5",
+    "mocha": "^5.2.0",
+    "nock": "^9.0.4",
+    "nyc": "^11.2.1",
+    "sinon": "^1.15.3"
   },
   "dependencies": {
     "@types/request": "^2.47.1",
