@@ -124,7 +124,9 @@ declare class Context {
 export declare class defaultTransport extends RequestTransport {
   constructor(params: request.RequestAPI<request.Request, request.CoreOptions, request.RequiredUriUrl>)
 }
-export declare class RequestTransport extends Transport { }
+export declare class RequestTransport extends Transport {
+  constructor(params: request.RequestAPI<request.Request, request.CoreOptions, request.RequiredUriUrl>)
+}
 
 export declare class Transport {
   toError(err: ErrorObject, ctx: Context): Error
