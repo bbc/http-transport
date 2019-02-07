@@ -229,21 +229,43 @@ See [xray](https://github.com/bbc/http-transport-xray)
 
 #### Using alternative HTTP clients via transport decorators
 
-Make a HTTP GET request and supply a alternative HTTP transport via `.createClient`
+Make a HTTP GET request and supply an alternative HTTP transport via `.createClient`
 
 ```js
 const url = 'http://example.com/';
 const HttpTransport = require('@bbc/http-transport');
-const OtherTranport = require('some-other-transport');
+const OtherTransport = require('some-other-transport');
 
-const res = await HttpTransport.createClient(OtherTranport)
+const res = await HttpTransport.createClient(OtherTransport)
    .get(url)
    .asResponse();
 
-  if (res.statusCode === 200) {
-    console.log(res.body);
-  }
-});
+    if (res.statusCode === 200) {
+        console.log(res.body);
+    }
+```
+
+Make a HTTP GET request by configuring an alternative request instance and supplying it in RequestTransport transport via `.createClient`
+
+```js
+const url = 'http://example.com/';
+const HttpTransport = require('@bbc/http-transport');
+const request = require('request');
+
+const requestDefaults = {
+    headers: {
+        special: 'special value'
+    }
+};
+const requestTransport = new HttpTransport.RequestTransport(request.defaults(requestDefaults));
+
+const res = await HttpTransport.createClient(requestTransport);
+    .get(url)
+    .asResponse();
+
+    if (res.statusCode === 200) {
+        console.log(res.body);
+    }
 ```
 
 #### Callback support
