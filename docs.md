@@ -234,7 +234,7 @@ Make a HTTP GET request and supply an alternative HTTP transport via `.createCli
 ```js
 const url = 'http://example.com/';
 const HttpTransport = require('@bbc/http-transport');
-const OtherTranport = require('some-other-transport');
+const OtherTransport = require('some-other-transport');
 
 const res = await HttpTransport.createClient(OtherTransport)
    .get(url)
