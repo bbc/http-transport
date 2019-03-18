@@ -116,7 +116,7 @@ declare class Context {
   req: Request
   res: Response
 
-  static create(defaults: contextDefaults)
+  static create(defaults: contextDefaults): any
   retryAttempts: Array<RetryAttempt>
   addPlugin(plugin: Plugin): Context
 }
