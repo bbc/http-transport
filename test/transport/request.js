@@ -251,5 +251,18 @@ describe('Request HTTP transport', () => {
         })
         .catch(assert.ifError);
     });
+    it('uses customDNSLookup function by default', () => {
+      nock.cleanAll();
+      api.get('/').reply(200, simpleResponseBody);
+
+      const ctx = createContext(url);
+
+      return new RequestTransport()
+        .execute(ctx)
+        .then((ctx) => {
+          assert.equal(ctx.res.httpResponse.request.lookup.name, 'customDNSLookup');
+        })
+        .catch(assert.ifError);
+    });
   });
 });
