@@ -5,6 +5,7 @@ const nock = require('nock');
 const context = require('../../lib/context');
 const sinon = require('sinon');
 const sandbox = sinon.sandbox.create();
+const dns = require('dns');
 
 const RequestTransport = require('../../lib/transport/request');
 
@@ -251,5 +252,23 @@ describe('Request HTTP transport', () => {
         })
         .catch(assert.ifError);
     });
+
+    it('enables uses verbatim', () => {
+      nock.cleanAll();
+      api.get('/').reply(200, simpleResponseBody);
+
+      sinon.spy(dns, 'lookup');
+
+      const ctx = createContext(url);
+
+      return new RequestTransport()
+        .execute(ctx)
+        .then((ctx) => {
+          ctx.res.httpResponse.request.agentOptions.lookup('www.example.com', {}, () => {});
+          sinon.assert.calledWith(dns.lookup, 'www.example.com', {verbatim: true});
+        })
+        .catch(assert.ifError);
+    });
+
   });
 });
