@@ -35,6 +35,41 @@ const res = await client
 ## Documentation
 For more examples and API details, see [API documentation](https://bbc.github.io/http-transport)
 
+## TypeScript
+Types are included in this project, and they also work with plugins.
+
+Just pass the types that your plugin will add to `context` as a generic. This will be overlayed on top of any types added by previous plugins in the chain.
+
+E.g.
+
+```ts
+const addSessionData: Plugin<{ session: { userId: string } } }> = (context, next) => {
+  context.session = { userId: 'some-user' };
+};
+
+const res = await client
+  .use(addSessionData)
+  .use((context, next) => {
+    if (context.session.userId === 'some-user') { // this would error if addSessionData middleware was missing
+      // do something
+    }
+  })
+  .use<{res: { random: number } }>((context, next) => {
+    context.res.random = Math.random();
+  })
+  .get(url)
+  .asResponse();
+
+console.log(res.random); // number
+```
+
+## Opting Out
+If you don't want to type your plugin, simply use `any` as the type. This is not recomemnded though as it means all plugins later in the chain will loose the types too, because they have no idea what changes were made.
+
+```ts
+const myPlugin: Plugin<any> = (context, next) => {};
+```
+
 ## Test
 
 ```
