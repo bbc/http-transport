@@ -42,9 +42,9 @@
     "eslint-config-iplayer-es6": "^3.1.0",
     "eslint-plugin-mocha": "^4.11.0",
     "jsdoc": "^3.5.5",
-    "mocha": "^5.2.0",
-    "nock": "^9.0.4",
-    "nyc": "^13.3.0",
+    "mocha": "^7.2.0",
+    "nock": "^11.9.1",
+    "nyc": "^15.1.0",
     "sinon": "^1.15.3"
   },
   "dependencies": {
@@ -54,6 +54,10 @@
     "lodash": "^4.17.4",
     "qs": "^6.5.1",
     "request": "^2.88.0"
+  },
+  "mocha": {
+    "recursive": true,
+    "exit": true
   },
   "eslintConfig": {
     "extends": "iplayer-es6",

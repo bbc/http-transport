@@ -106,7 +106,7 @@ describe('CallbackDecorator', () => {
       nock.cleanAll();
       api
         .get('/')
-        .socketDelay(1000)
+        .delay(1000)
         .reply(200, simpleResponseBody);
 
       const client = new CallbackDecorator(httpTransport);

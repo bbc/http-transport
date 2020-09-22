@@ -50,7 +50,7 @@ function nockTimeouts(number, opts) {
   nock.cleanAll();
   api[httpMethod](path)
     .times(number)
-    .socketDelay(10000)
+    .delay(10000)
     .reply(200);
   api[httpMethod](path).reply(successCode);
 }
@@ -458,7 +458,7 @@ describe('HttpTransportClient', () => {
       nock.cleanAll();
       api
         .get('/')
-        .socketDelay(1000)
+        .delay(1000)
         .reply(200, simpleResponseBody);
 
       try {
@@ -572,7 +572,7 @@ describe('HttpTransportClient', () => {
         nock.cleanAll();
         api
           .get(path)
-          .socketDelay(1000)
+          .delay(1000)
           .reply(200, responseBody);
 
         const client = HttpTransport.createBuilder()

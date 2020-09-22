@@ -177,7 +177,7 @@ describe('Request HTTP transport', () => {
       nock.cleanAll();
       api
         .get('/')
-        .socketDelay(500)
+        .delay(500)
         .reply(200, simpleResponseBody);
 
       const ctx = createContext(url);
@@ -229,7 +229,7 @@ describe('Request HTTP transport', () => {
       nock.cleanAll();
       api
         .get('/')
-        .socketDelay(500)
+        .delay(500)
         .reply(200, simpleResponseBody);
 
       const res = {
