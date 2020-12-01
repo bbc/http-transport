@@ -270,5 +270,26 @@ describe('Request HTTP transport', () => {
         .catch(assert.ifError);
     });
 
+    it('adds error code to request errors', () => {
+      nock.cleanAll();
+      api
+        .get('/')
+        .delay(500)
+        .reply(200, simpleResponseBody);
+
+      const ctx = createContext(url);
+      ctx.req.timeout(20);
+
+      return new RequestTransport()
+        .execute(ctx)
+        .then(() => {
+          assert.fail('Expected request to timeout');
+        })
+        .catch((e) => {
+          assert.ok(e);
+          assert.equal(e.code, 'ESOCKETTIMEDOUT');
+        });
+    });
+
   });
 });

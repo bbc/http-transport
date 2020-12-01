@@ -19,6 +19,11 @@ export declare type Body = string;
 export declare type RequestOptions = Object;
 export declare type ErrorObject = {
   message: string;
+  code?: string;
+};
+
+export declare interface CustomError extends Error {
+  code?: string;
 };
 
 export declare type JsonResponse = {
@@ -167,7 +172,7 @@ export declare class RequestTransport extends Transport {
 
 export declare class Transport {
   toError(err: ErrorObject, ctx: Context): Error;
-  createError(err: ErrorObject, ctx: Context): Error;
+  createError(err: ErrorObject, ctx: Context): CustomError;
   execute(ctx: Context): Promise<RequestTransport>;
   onError(ctx: Context): Function;
   toOptions(ctx: Context): RequestOptions;
