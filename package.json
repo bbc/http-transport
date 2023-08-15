@@ -20,7 +20,7 @@
     "url": "https://github.com/bbc/http-transport/issues"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=18.0.0"
   },
   "keywords": [
     "https",
@@ -52,8 +52,10 @@
     "bluebird": "^3.5.0",
     "koa-compose": "^4.0.0",
     "lodash": "^4.17.4",
+    "node-fetch": "^3.3.2",
     "qs": "^6.5.1",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.9"
   },
   "mocha": {
     "recursive": true,

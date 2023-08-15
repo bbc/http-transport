@@ -72,10 +72,11 @@ describe('HttpTransportClient', () => {
   });
 
   describe('.get', () => {
-    it('returns a response', async () => {
+    it.only('returns a response', async () => {
       const res = await HttpTransport.createClient()
         .get(url)
         .asResponse();
+      console.log("🚀 ~ file: client.js:79 ~ it.only ~ res:", res)
 
       assert.equal(res.body, simpleResponseBody);
     });
