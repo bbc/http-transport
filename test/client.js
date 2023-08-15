@@ -19,7 +19,7 @@ const host = 'http://www.example.com';
 const api = nock(host);
 const path = '/';
 
-const simpleResponseBody = 'Illegitimi non carborundum';
+const simpleResponseBody = { 'blobby': 'Illegitimi non carborundum' };
 const requestBody = {
   foo: 'bar'
 };
@@ -78,7 +78,7 @@ describe('HttpTransportClient', () => {
         .asResponse();
       console.log("🚀 ~ file: client.js:79 ~ it.only ~ res:", res)
 
-      assert.equal(res.body, simpleResponseBody);
+      assert.deepEqual(res, simpleResponseBody);
     });
 
     it('sets a default User-agent for every request', async () => {
