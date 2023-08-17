@@ -11,7 +11,7 @@ module.exports.context = require('./lib/context');
 module.exports.toJson = require('./lib/middleware/asJson');
 module.exports.logger = require('./lib/middleware/logger');
 module.exports.setContextProperty = require('./lib/middleware/setContextProperty');
-
+console.log('linked...')
 module.exports.createClient = () => {
   return new HttpTransportBuilder(new DefaultTransport()).createClient();
 };
