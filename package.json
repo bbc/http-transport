@@ -50,6 +50,7 @@
   "dependencies": {
     "@types/request": "^2.47.1",
     "bluebird": "^3.5.0",
+    "https-proxy-agent": "^7.0.1",
     "koa-compose": "^4.0.0",
     "lodash": "^4.17.4",
     "node-fetch": "^3.3.2",
