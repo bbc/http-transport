@@ -76,9 +76,8 @@ describe('HttpTransportClient', () => {
       const res = await HttpTransport.createClient()
         .get(url)
         .asResponse();
-      console.log("🚀 ~ file: client.js:79 ~ it.only ~ res:", res)
 
-      assert.deepEqual(res, simpleResponseBody);
+      assert.deepEqual(res.body, simpleResponseBody);
     });
 
     it('sets a default User-agent for every request', async () => {
