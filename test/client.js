@@ -137,7 +137,7 @@ describe('HttpTransportClient', () => {
   });
 
   describe('.retries', () => {
-    it.only('retries a given number of times for failed requests', async () => {
+    it('retries a given number of times for failed requests', async () => {
       nockRetries(2);
 
       const client = HttpTransport.createBuilder()
@@ -161,14 +161,14 @@ describe('HttpTransportClient', () => {
 
       const res = await client
         .get(url)
-        .timeout(2000)
+        .timeout(500)
         .retry(2)
         .asResponse();
 
-      assert.equal(res.statusCode, 200);
+      assert.equal(res.status, 200);
     });
 
-    it('waits a minimum of 100ms between retries by default', async () => {
+    it.only('waits a minimum of 100ms between retries by default', async () => {
       nockRetries(1);
       const startTime = Date.now();
 
@@ -183,7 +183,7 @@ describe('HttpTransportClient', () => {
 
       const timeTaken = Date.now() - startTime;
       assert(timeTaken > 100);
-      assert.equal(res.statusCode, 200);
+      assert.equal(res.status, 200);
     });
 
     it('disables retryDelay if retries if set to zero', async () => {
