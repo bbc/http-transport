@@ -251,8 +251,8 @@ describe('HttpTransportClient', () => {
   });
 
   describe('.post', () => {
-    it.only('makes a POST request', async () => {
-      const nock = api.post(path, requestBody).reply(201, responseBody);
+    it('makes a POST request', async () => {
+      const nock = api.post(path, requestBody).reply(201, responseBody, { 'content-type': 'application/json'});
 
       const body = await HttpTransport.createClient()
         .post(url, requestBody)
@@ -279,7 +279,7 @@ describe('HttpTransportClient', () => {
 
   describe('.put', () => {
     it('makes a PUT request with a JSON body', async () => {
-      api.put(path, requestBody).reply(201, responseBody);
+      api.put(path, requestBody).reply(201, responseBody, { 'content-type': 'application/json'});
 
       const body = await HttpTransport.createClient()
         .put(url, requestBody)
@@ -401,18 +401,23 @@ describe('HttpTransportClient', () => {
     });
 
     it('ignores an empty header object', async () => {
+      nock.cleanAll();
+      api.get(path).reply(200, simpleResponseBody, { 'content-type': 'application/json'});
+
       const res = await HttpTransport.createClient()
         .headers({})
         .get(url)
         .asResponse();
 
-      assert.equal(res.body, simpleResponseBody);
+      console.log('res.body', res.body)
+      console.log({simpleResponseBody})
+      assert.deepEqual(res.body, simpleResponseBody);
     });
   });
 
-  describe('query strings', () => {
-    it('supports adding a query string', async () => {
-      api.get('/?a=1').reply(200, simpleResponseBody);
+  describe.only('query strings', () => {
+    it.only('supports adding a query string', async () => {
+      api.get('/?a=1').reply(200, simpleResponseBody, { 'content-type': 'application/json'});
 
       const body = await HttpTransport.createClient()
         .get(url)
