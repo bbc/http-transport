@@ -39,7 +39,7 @@ function nockRetries(retry, opts) {
   nock.cleanAll();
   api[httpMethod](path)
     .times(retry)
-    .reply(500);
+    .reply(500)
   api[httpMethod](path).reply(successCode);
 }
 
@@ -72,7 +72,7 @@ describe('HttpTransportClient', () => {
   });
 
   describe('.get', () => {
-    it.only('returns a response', async () => {
+    it('returns a response', async () => {
       const res = await HttpTransport.createClient()
         .get(url)
         .asResponse();
@@ -83,10 +83,9 @@ describe('HttpTransportClient', () => {
     it('sets a default User-agent for every request', async () => {
       nock.cleanAll();
 
-      const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
         reqheaders: {
-          'User-Agent': HeaderValue
+          'User-Agent': `${packageInfo.name}/${packageInfo.version}`
         }
       })
         .get(path)
@@ -95,8 +94,6 @@ describe('HttpTransportClient', () => {
 
       const client = HttpTransport.createClient();
       await client.get(url).asResponse();
-
-      return client.get(url).asResponse();
     });
 
     it('overrides the default User-agent for every request', async () => {
@@ -116,8 +113,6 @@ describe('HttpTransportClient', () => {
         .createClient();
 
       await client.get(url).asResponse();
-
-      return client.get(url).asResponse();
     });
   });
 
@@ -142,7 +137,7 @@ describe('HttpTransportClient', () => {
   });
 
   describe('.retries', () => {
-    it('retries a given number of times for failed requests', async () => {
+    it.only('retries a given number of times for failed requests', async () => {
       nockRetries(2);
 
       const client = HttpTransport.createBuilder()
@@ -154,7 +149,7 @@ describe('HttpTransportClient', () => {
         .retry(2)
         .asResponse();
 
-      assert.equal(res.statusCode, 200);
+      assert.equal(res.status, 200);
     });
 
     it('retries a given number of times for requests that timed out', async () => {
