@@ -39,7 +39,7 @@ function nockRetries(retry, opts) {
   nock.cleanAll();
   api[httpMethod](path)
     .times(retry)
-    .reply(500)
+    .reply(500);
   api[httpMethod](path).reply(successCode);
 }
 
@@ -168,7 +168,7 @@ describe('HttpTransportClient', () => {
       assert.equal(res.status, 200);
     });
 
-    it.only('waits a minimum of 100ms between retries by default', async () => {
+    it('waits a minimum of 100ms between retries by default', async () => {
       nockRetries(1);
       const startTime = Date.now();
 
@@ -201,7 +201,7 @@ describe('HttpTransportClient', () => {
           .retryDelay(10000)
           .asResponse();
       } catch (e) {
-        return assert.equal(e.message, 'something bad happend.');
+        return assert.equal(e.message, 'something bad happened.');
       }
 
       assert.fail('Should have thrown');
@@ -224,7 +224,7 @@ describe('HttpTransportClient', () => {
 
       const timeTaken = Date.now() - startTime;
       assert(timeTaken > retryDelay);
-      assert.equal(res.statusCode, 200);
+      assert.equal(res.status, 200);
     });
 
     it('does not retry 4XX errors', async () => {
@@ -244,15 +244,15 @@ describe('HttpTransportClient', () => {
           .retry(1)
           .asResponse();
       } catch (err) {
-        return assert.equal(err.statusCode, 400);
+        return assert.equal(err.status, 400);
       }
       assert.fail('Should have thrown');
     });
   });
 
   describe('.post', () => {
-    it('makes a POST request', async () => {
-      api.post(path, requestBody).reply(201, responseBody);
+    it.only('makes a POST request', async () => {
+      const nock = api.post(path, requestBody).reply(201, responseBody);
 
       const body = await HttpTransport.createClient()
         .post(url, requestBody)
@@ -270,7 +270,7 @@ describe('HttpTransportClient', () => {
           .post(url, requestBody)
           .asResponse();
       } catch (err) {
-        return assert.equal(err.statusCode, 500);
+        return assert.equal(err.status, 500);
       }
 
       assert.fail('Should have thrown');
@@ -297,7 +297,7 @@ describe('HttpTransportClient', () => {
           .put(url, requestBody)
           .asResponse();
       } catch (err) {
-        return assert.equal(err.statusCode, 500);
+        return assert.equal(err.status, 500);
       }
 
       assert.fail('Should have thrown');
@@ -319,7 +319,7 @@ describe('HttpTransportClient', () => {
           .delete(url)
           .asResponse();
       } catch (err) {
-        return assert.equal(err.statusCode, 500);
+        return assert.equal(err.status, 500);
       }
 
       assert.fail('Should have thrown');
@@ -343,7 +343,7 @@ describe('HttpTransportClient', () => {
           .patch(url, requestBody)
           .asResponse();
       } catch (err) {
-        return assert.equal(err.statusCode, 500);
+        return assert.equal(err.status, 500);
       }
       assert.fail('Should have thrown');
     });
@@ -357,7 +357,7 @@ describe('HttpTransportClient', () => {
         .head(url)
         .asResponse();
 
-      assert.strictEqual(res.statusCode, 200);
+      assert.strictEqual(res.status, 200);
     });
 
     it('returns an error when the API returns a 5XX status code', async () => {
@@ -369,7 +369,7 @@ describe('HttpTransportClient', () => {
           .head(url)
           .asResponse();
       } catch (err) {
-        return assert.strictEqual(err.statusCode, 500);
+        return assert.strictEqual(err.status, 500);
       }
       assert.fail('Should have thrown');
     });
@@ -397,7 +397,7 @@ describe('HttpTransportClient', () => {
         })
         .asResponse();
 
-      assert.equal(res.statusCode, 200);
+      assert.equal(res.status, 200);
     });
 
     it('ignores an empty header object', async () => {

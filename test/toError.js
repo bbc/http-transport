@@ -6,7 +6,7 @@ function toError() {
 
     if (ctx.res.status >= 400) {
       const err = new Error('something bad happened.');
-      err.statusCode = ctx.res.status;
+      err.status = ctx.res.status;
       err.headers = ctx.res.headers;
       throw err;
     }
