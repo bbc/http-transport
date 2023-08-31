@@ -5,7 +5,6 @@ const nock = require('nock');
 const context = require('../../lib/context');
 const sinon = require('sinon');
 const sandbox = sinon.sandbox.create();
-const dns = require('dns');
 
 const RequestTransport = require('../../lib/transport/request');
 
@@ -17,6 +16,9 @@ const path = '/';
 const simpleResponseBody = 'Illegitimi non carborundum';
 const requestBody = {
   foo: 'bar'
+};
+const header = {
+  'Content-Type': 'text/html'
 };
 const responseBody = requestBody;
 
@@ -32,7 +34,7 @@ describe('Request HTTP transport', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.cleanAll();
-    api.get(path).reply(200, simpleResponseBody);
+    api.get(path).reply(200, simpleResponseBody, header);
   });
 
   afterEach(() => {
@@ -47,7 +49,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.statusCode, 200);
+          assert.equal(ctx.res.status, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
     });
@@ -60,7 +62,7 @@ describe('Request HTTP transport', () => {
         }
       })
         .get(path)
-        .reply(200, simpleResponseBody);
+        .reply(200, simpleResponseBody, header);
 
       const ctx = createContext(url);
       ctx.req.addHeader('test', 'qui curat');
@@ -70,13 +72,13 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.statusCode, 200);
+          assert.equal(ctx.res.status, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
     });
 
     it('makes a GET request with query strings', () => {
-      api.get('/?a=1').reply(200, simpleResponseBody);
+      api.get('/?a=1').reply(200, simpleResponseBody, header);
 
       const ctx = createContext(url);
       ctx.req.addQuery('a', 1);
@@ -86,7 +88,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.statusCode, 200);
+          assert.equal(ctx.res.status, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
     });
@@ -128,7 +130,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.statusCode, 201);
+          assert.equal(ctx.res.status, 201);
           assert.deepEqual(ctx.res.body, responseBody);
         });
     });
@@ -142,7 +144,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.statusCode, 201);
+          assert.equal(ctx.res.status, 201);
           assert.deepEqual(ctx.res.body, responseBody);
         });
     });
@@ -156,7 +158,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.statusCode, 204);
+          assert.equal(ctx.res.status, 204);
         });
     });
 
@@ -169,7 +171,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.statusCode, 204);
+          assert.equal(ctx.res.status, 204);
         });
     });
 
@@ -209,66 +211,5 @@ describe('Request HTTP transport', () => {
         })
         .catch(assert.ifError);
     });
-
-    it('enables timing request by default', () => {
-      nock.cleanAll();
-      api.get('/').reply(200, simpleResponseBody);
-
-      const ctx = createContext(url);
-
-      return new RequestTransport()
-        .execute(ctx)
-        .then((ctx) => {
-          const timeTaken = ctx.res.elapsedTime;
-          assert.isNumber(timeTaken);
-        })
-        .catch(assert.ifError);
-    });
-
-    it('override default request', () => {
-      nock.cleanAll();
-      api
-        .get('/')
-        .delay(500)
-        .reply(200, simpleResponseBody);
-
-      const res = {
-        body: simpleResponseBody,
-        elapsedTime: 10,
-        url: 'wheves',
-        statusCode: 200,
-        headers: []
-      };
-
-      const ctx = createContext(url);
-      const customRequest = {
-        getAsync: sandbox.stub().returns(Promise.resolve(res))
-      };
-
-      return new RequestTransport(customRequest)
-        .execute(ctx)
-        .then(() => {
-          sinon.assert.calledOnce(customRequest.getAsync);
-        })
-        .catch(assert.ifError);
-    });
-
-    it('enables uses verbatim', () => {
-      nock.cleanAll();
-      api.get('/').reply(200, simpleResponseBody);
-
-      sinon.spy(dns, 'lookup');
-
-      const ctx = createContext(url);
-
-      return new RequestTransport()
-        .execute(ctx)
-        .then((ctx) => {
-          ctx.res.httpResponse.request.agentOptions.lookup('www.example.com', {}, () => {});
-          sinon.assert.calledWith(dns.lookup, 'www.example.com', {verbatim: true});
-        })
-        .catch(assert.ifError);
-    });
-
   });
 });

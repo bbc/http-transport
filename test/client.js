@@ -19,7 +19,7 @@ const host = 'http://www.example.com';
 const api = nock(host);
 const path = '/';
 
-const simpleResponseBody = { 'blobbus': 'Illegitimi non carborundum' };
+const simpleResponseBody = { blobbus: 'Illegitimi non carborundum' };
 const requestBody = {
   foo: 'bar'
 };
@@ -252,7 +252,7 @@ describe('HttpTransportClient', () => {
 
   describe('.post', () => {
     it('makes a POST request', async () => {
-      const nock = api.post(path, requestBody).reply(201, responseBody, { 'content-type': 'application/json'});
+      api.post(path, requestBody).reply(201, responseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .post(url, requestBody)
@@ -279,7 +279,7 @@ describe('HttpTransportClient', () => {
 
   describe('.put', () => {
     it('makes a PUT request with a JSON body', async () => {
-      api.put(path, requestBody).reply(201, responseBody, { 'content-type': 'application/json'});
+      api.put(path, requestBody).reply(201, responseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .put(url, requestBody)
@@ -402,7 +402,7 @@ describe('HttpTransportClient', () => {
 
     it('ignores an empty header object', async () => {
       nock.cleanAll();
-      api.get(path).reply(200, simpleResponseBody, { 'content-type': 'application/json'});
+      api.get(path).reply(200, simpleResponseBody, { 'content-type': 'application/json' });
 
       const res = await HttpTransport.createClient()
         .headers({})
@@ -415,7 +415,7 @@ describe('HttpTransportClient', () => {
 
   describe('query strings', () => {
     it('supports adding a query string', async () => {
-      api.get('/?a=1').reply(200, simpleResponseBody, { 'content-type': 'application/json'});
+      api.get('/?a=1').reply(200, simpleResponseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .get(url)
@@ -427,7 +427,7 @@ describe('HttpTransportClient', () => {
 
     it('supports multiple query strings', async () => {
       nock.cleanAll();
-      api.get('/?a=1&b=2&c=3').reply(200, simpleResponseBody, { 'content-type': 'application/json'});
+      api.get('/?a=1&b=2&c=3').reply(200, simpleResponseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .get(url)
@@ -649,7 +649,7 @@ describe('HttpTransportClient', () => {
       });
 
       it('logs retry attempts as warnings when they return a critical error', async () => {
-        nock.cleanAll()
+        nock.cleanAll();
         sandbox.stub(console, 'info');
         sandbox.stub(console, 'warn');
         nockRetries(2);

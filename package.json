@@ -7,7 +7,7 @@
   "scripts": {
     "test": "mocha",
     "jsdoc": "jsdoc -c ./docconfig/jsdoc.json",
-    "lint": "eslint ./src ./test",
+    "lint": "eslint ./lib ./test",
     "coverage": "nyc mocha && nyc report --reporter=html && nyc report --reporter=json-summary",
     "posttest": "npm run lint"
   },
@@ -38,9 +38,9 @@
     "chai": "^3.5.0",
     "codeclimate-test-reporter": "^0.5.1",
     "coveralls": "^3.0.2",
-    "eslint": "^4.1.1",
-    "eslint-config-iplayer-es6": "^3.1.0",
-    "eslint-plugin-mocha": "^4.11.0",
+    "eslint": "^8.48.0",
+    "eslint-config-iplayer": "^8.0.0",
+    "eslint-plugin-mocha": "^10.1.0",
     "jsdoc": "^3.5.5",
     "mocha": "^7.2.0",
     "nock": "^11.9.1",
@@ -62,7 +62,7 @@
     "exit": true
   },
   "eslintConfig": {
-    "extends": "iplayer-es6",
+    "extends": "iplayer",
     "parserOptions": {
       "ecmaVersion": 2017
     },
