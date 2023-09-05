@@ -23,6 +23,7 @@ export declare type ErrorObject = {
 
 export declare type JsonResponse = {
   body: string;
+  elapsedTime: number;
   url: string;
   headers: Object;
   statusCode: number;
@@ -80,6 +81,7 @@ export declare class Request {
 
 export declare class Response {
   headers: Header[];
+  elapsedTime: number;
   url: string;
   statusCode: number;
   body: Body;
