@@ -90,7 +90,8 @@ describe('Response', () => {
     const state = {
       url: 'https://www.example.com',
       body: 'body content',
-      statusCode: 200
+      statusCode: 200,
+      elapsedTime: 10
     };
 
     const response = Response.create(state);
