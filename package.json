@@ -64,7 +64,7 @@
   "eslintConfig": {
     "extends": "iplayer",
     "parserOptions": {
-      "ecmaVersion": 2017
+      "ecmaVersion": "latest"
     },
     "rules": {
       "space-before-function-paren": 0

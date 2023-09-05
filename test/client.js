@@ -629,7 +629,7 @@ describe('HttpTransportClient', () => {
           .asBody();
 
         const message = stubbedLogger.info.getCall(0).args[0];
-        assert.match(message, /GET http:\/\/www.example.com\/ 200/);
+        assert.match(message, /GET http:\/\/www.example.com\/ 200 \d+ ms/);
       });
 
       it('uses default logger', async () => {
@@ -645,7 +645,7 @@ describe('HttpTransportClient', () => {
 
         /*eslint no-console: ["error", { allow: ["info"] }] */
         const message = console.info.getCall(0).args[0];
-        assert.match(message, /GET http:\/\/www.example.com\/ 200/);
+        assert.match(message, /GET http:\/\/www.example.com\/ 200 \d+ ms/);
       });
 
       it('logs retry attempts as warnings when they return a critical error', async () => {
@@ -668,8 +668,8 @@ describe('HttpTransportClient', () => {
         sinon.assert.calledOnce(console.warn);
         const intial = console.info.getCall(0).args[0];
         const attempt1 = console.warn.getCall(0).args[0];
-        assert.match(intial, /GET http:\/\/www.example.com\/ 500/);
-        assert.match(attempt1, /Attempt 1 GET http:\/\/www.example.com\/ 500/);
+        assert.match(intial, /GET http:\/\/www.example.com\/ 500 \d+ ms/);
+        assert.match(attempt1, /Attempt 1 GET http:\/\/www.example.com\/ 500 \d+ ms/);
       });
     });
   });

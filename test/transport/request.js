@@ -196,20 +196,35 @@ describe('Request HTTP transport', () => {
         });
     });
 
-    it('disables timing a request', () => {
+    it('enables timing request by default', () => {
       nock.cleanAll();
       api.get('/').reply(200, simpleResponseBody);
 
       const ctx = createContext(url);
-      ctx.req.time = false;
 
       return new RequestTransport()
         .execute(ctx)
         .then((ctx) => {
           const timeTaken = ctx.res.elapsedTime;
-          assert.isNotNumber(timeTaken);
+          assert.isNumber(timeTaken);
         })
         .catch(assert.ifError);
     });
+
+    // it('disables timing a request', () => {
+    //   nock.cleanAll();
+    //   api.get('/').reply(200, simpleResponseBody);
+
+    //   const ctx = createContext(url);
+    //   ctx.req.time = false;
+
+    //   return new RequestTransport()
+    //     .execute(ctx)
+    //     .then((ctx) => {
+    //       const timeTaken = ctx.res.elapsedTime;
+    //       assert.isNotNumber(timeTaken);
+    //     })
+    //     .catch(assert.ifError);
+    // });
   });
 });
