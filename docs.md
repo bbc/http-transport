@@ -1,4 +1,4 @@
-# HttpTranport
+# HttpTransport
 
 >  A flexible, modular REST client built for ease-of-use and resilience
 
@@ -32,7 +32,7 @@ PATCH, DELETE, HEAD are also supported.
 
 #### Query strings
 
-Make a HTTP GET request specifiying query strings using `.query`
+Make a HTTP GET request specifying query strings using `.query`
 
 Single query string
 ```js
@@ -62,7 +62,7 @@ Multiple query strings:
 
 #### Headers
 
-Make a HTTP GET request specifiying request headers using `.headers`
+Make a HTTP GET request specifying request headers using `.headers`
 
 Add a single header:
 ```js
@@ -176,7 +176,7 @@ Middleware are functions that can be executed with before and after a request. M
 * Terminate a request early e.g for caching purposes
 * Modify the response object e.g format the response body 
 
-Middlware can be executed **per request** using the `.use` method:
+Middleware can be executed **per request** using the `.use` method:
 ```js
     const exampleMiddleware = require('exampleMiddleware');
 
@@ -193,7 +193,7 @@ Middlware can be executed **per request** using the `.use` method:
     }
 ```
 
-Middlware can also be executed **for every request** using the `.use` of the client builder. The client builder is created using the `createBuilder` method:
+Middleware can also be executed **for every request** using the `.use` of the client builder. The client builder is created using the `createBuilder` method:
 
 ```js
     const exampleMiddleware = require('exampleMiddleware');
@@ -214,7 +214,7 @@ Middlware can also be executed **for every request** using the `.use` of the cli
 
 For writing middleware, see the [offical guide](https://github.com/koajs/koa/blob/master/docs/guide.md)
 
-#### Offical HttpTransport middleware
+#### Official HttpTransport middleware
 See [Caching](https://github.com/bbc/http-transport-cache)
 
 See [Collapsing](https://github.com/bbc/http-transport-request-collapse)
