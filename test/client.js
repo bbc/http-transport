@@ -149,7 +149,7 @@ describe('HttpTransportClient', () => {
         .retry(2)
         .asResponse();
 
-      assert.equal(res.status, 200);
+      assert.equal(res.statusCode, 200);
     });
 
     it('retries a given number of times for requests that timed out', async () => {
@@ -165,7 +165,7 @@ describe('HttpTransportClient', () => {
         .retry(2)
         .asResponse();
 
-      assert.equal(res.status, 200);
+      assert.equal(res.statusCode, 200);
     });
 
     it('waits a minimum of 100ms between retries by default', async () => {
@@ -183,7 +183,7 @@ describe('HttpTransportClient', () => {
 
       const timeTaken = Date.now() - startTime;
       assert(timeTaken > 100);
-      assert.equal(res.status, 200);
+      assert.equal(res.statusCode, 200);
     });
 
     it('disables retryDelay if retries if set to zero', async () => {
@@ -224,7 +224,7 @@ describe('HttpTransportClient', () => {
 
       const timeTaken = Date.now() - startTime;
       assert(timeTaken > retryDelay);
-      assert.equal(res.status, 200);
+      assert.equal(res.statusCode, 200);
     });
 
     it('does not retry 4XX errors', async () => {
@@ -244,7 +244,7 @@ describe('HttpTransportClient', () => {
           .retry(1)
           .asResponse();
       } catch (err) {
-        return assert.equal(err.status, 400);
+        return assert.equal(err.statusCode, 400);
       }
       assert.fail('Should have thrown');
     });
@@ -261,7 +261,7 @@ describe('HttpTransportClient', () => {
       assert.deepEqual(body, responseBody);
     });
 
-    it('returns an error when the API returns a 5XX status code', async () => {
+    it('returns an error when the API returns a 5XX statusCode code', async () => {
       api.post(path, requestBody).reply(500);
 
       try {
@@ -270,7 +270,7 @@ describe('HttpTransportClient', () => {
           .post(url, requestBody)
           .asResponse();
       } catch (err) {
-        return assert.equal(err.status, 500);
+        return assert.equal(err.statusCode, 500);
       }
 
       assert.fail('Should have thrown');
@@ -288,7 +288,7 @@ describe('HttpTransportClient', () => {
       assert.deepEqual(body, responseBody);
     });
 
-    it('returns an error when the API returns a 5XX status code', async () => {
+    it('returns an error when the API returns a 5XX statusCode code', async () => {
       api.put(path, requestBody).reply(500);
 
       try {
@@ -297,7 +297,7 @@ describe('HttpTransportClient', () => {
           .put(url, requestBody)
           .asResponse();
       } catch (err) {
-        return assert.equal(err.status, 500);
+        return assert.equal(err.statusCode, 500);
       }
 
       assert.fail('Should have thrown');
@@ -310,7 +310,7 @@ describe('HttpTransportClient', () => {
       return HttpTransport.createClient().delete(url);
     });
 
-    it('returns an error when the API returns a 5XX status code', async () => {
+    it('returns an error when the API returns a 5XX statusCode code', async () => {
       api.delete(path).reply(500);
 
       try {
@@ -319,7 +319,7 @@ describe('HttpTransportClient', () => {
           .delete(url)
           .asResponse();
       } catch (err) {
-        return assert.equal(err.status, 500);
+        return assert.equal(err.statusCode, 500);
       }
 
       assert.fail('Should have thrown');
@@ -334,7 +334,7 @@ describe('HttpTransportClient', () => {
         .asResponse();
     });
 
-    it('returns an error when the API returns a 5XX status code', async () => {
+    it('returns an error when the API returns a 5XX statusCode code', async () => {
       api.patch(path, requestBody).reply(500);
 
       try {
@@ -343,7 +343,7 @@ describe('HttpTransportClient', () => {
           .patch(url, requestBody)
           .asResponse();
       } catch (err) {
-        return assert.equal(err.status, 500);
+        return assert.equal(err.statusCode, 500);
       }
       assert.fail('Should have thrown');
     });
@@ -357,10 +357,10 @@ describe('HttpTransportClient', () => {
         .head(url)
         .asResponse();
 
-      assert.strictEqual(res.status, 200);
+      assert.strictEqual(res.statusCode, 200);
     });
 
-    it('returns an error when the API returns a 5XX status code', async () => {
+    it('returns an error when the API returns a 5XX statusCode code', async () => {
       api.head(path).reply(500);
 
       try {
@@ -369,7 +369,7 @@ describe('HttpTransportClient', () => {
           .head(url)
           .asResponse();
       } catch (err) {
-        return assert.strictEqual(err.status, 500);
+        return assert.strictEqual(err.statusCode, 500);
       }
       assert.fail('Should have thrown');
     });
@@ -397,7 +397,7 @@ describe('HttpTransportClient', () => {
         })
         .asResponse();
 
-      assert.equal(res.status, 200);
+      assert.equal(res.statusCode, 200);
     });
 
     it('ignores an empty header object', async () => {

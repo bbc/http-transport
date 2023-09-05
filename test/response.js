@@ -8,12 +8,12 @@ describe('Response', () => {
     const properties = {
       url: 'https://www.example.com',
       body: 'body content',
-      status: 200
+      statusCode: 200
     };
 
     const response = Response.create(properties);
     assert.equal(response.url, properties.url);
-    assert.equal(response.status, properties.status);
+    assert.equal(response.statusCode, properties.statusCode);
     assert.equal(response.body, properties.body);
   });
 
@@ -90,7 +90,7 @@ describe('Response', () => {
     const state = {
       url: 'https://www.example.com',
       body: 'body content',
-      status: 200
+      statusCode: 200
     };
 
     const response = Response.create(state);

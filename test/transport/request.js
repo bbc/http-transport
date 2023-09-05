@@ -49,7 +49,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.status, 200);
+          assert.equal(ctx.res.statusCode, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
     });
@@ -72,7 +72,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.status, 200);
+          assert.equal(ctx.res.statusCode, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
     });
@@ -88,7 +88,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.status, 200);
+          assert.equal(ctx.res.statusCode, 200);
           assert.equal(ctx.res.body, simpleResponseBody);
         });
     });
@@ -130,7 +130,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.status, 201);
+          assert.equal(ctx.res.statusCode, 201);
           assert.deepEqual(ctx.res.body, responseBody);
         });
     });
@@ -144,7 +144,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.status, 201);
+          assert.equal(ctx.res.statusCode, 201);
           assert.deepEqual(ctx.res.body, responseBody);
         });
     });
@@ -158,7 +158,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.status, 204);
+          assert.equal(ctx.res.statusCode, 204);
         });
     });
 
@@ -171,7 +171,7 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
-          assert.equal(ctx.res.status, 204);
+          assert.equal(ctx.res.statusCode, 204);
         });
     });
 
@@ -210,21 +210,5 @@ describe('Request HTTP transport', () => {
         })
         .catch(assert.ifError);
     });
-
-    // it('disables timing a request', () => {
-    //   nock.cleanAll();
-    //   api.get('/').reply(200, simpleResponseBody);
-
-    //   const ctx = createContext(url);
-    //   ctx.req.time = false;
-
-    //   return new RequestTransport()
-    //     .execute(ctx)
-    //     .then((ctx) => {
-    //       const timeTaken = ctx.res.elapsedTime;
-    //       assert.isNotNumber(timeTaken);
-    //     })
-    //     .catch(assert.ifError);
-    // });
   });
 });
