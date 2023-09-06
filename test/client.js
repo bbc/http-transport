@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const assert = require('chai').assert;
 const nock = require('nock');
 const sinon = require('sinon');
@@ -33,8 +32,8 @@ function toUpperCase() {
 }
 
 function nockRetries(retry, opts) {
-  const httpMethod = _.get(opts, 'httpMethod') || 'get';
-  const successCode = _.get(opts, 'successCode') || 200;
+  const httpMethod = opts?.httpMethod || 'get';
+  const successCode = opts?.successCode || 200;
 
   nock.cleanAll();
   api[httpMethod](path)
@@ -44,8 +43,8 @@ function nockRetries(retry, opts) {
 }
 
 function nockTimeouts(number, opts) {
-  const httpMethod = _.get(opts, 'httpMethod') || 'get';
-  const successCode = _.get(opts, 'successCode') || 200;
+  const httpMethod = opts?.httpMethod || 'get';
+  const successCode = opts?.successCode || 200;
 
   nock.cleanAll();
   api[httpMethod](path)
