@@ -6,7 +6,7 @@ const context = require('../../lib/context');
 const sinon = require('sinon');
 const sandbox = sinon.sandbox.create();
 
-const RequestTransport = require('../../lib/transport/request');
+const FetchTransport = require('../../lib/transport/node-fetch');
 
 const url = 'http://www.example.com/';
 const host = 'http://www.example.com';
@@ -44,7 +44,7 @@ describe('Request HTTP transport', () => {
   describe('.createRequest', () => {
     it('makes a GET request', () => {
       const ctx = createContext(url);
-      const request = new RequestTransport();
+      const request = new FetchTransport();
       return request
         .execute(ctx)
         .catch(assert.ifError)
@@ -67,7 +67,7 @@ describe('Request HTTP transport', () => {
       const ctx = createContext(url);
       ctx.req.addHeader('test', 'qui curat');
 
-      const request = new RequestTransport();
+      const request = new FetchTransport();
       return request
         .execute(ctx)
         .catch(assert.ifError)
@@ -83,7 +83,7 @@ describe('Request HTTP transport', () => {
       const ctx = createContext(url);
       ctx.req.addQuery('a', 1);
 
-      const request = new RequestTransport();
+      const request = new FetchTransport();
       return request
         .execute(ctx)
         .catch(assert.ifError)
@@ -96,7 +96,7 @@ describe('Request HTTP transport', () => {
     it('does not allow adding an empty query string', () => {
       const ctx = createContext(url);
       ctx.req.addQuery();
-      const request = new RequestTransport();
+      const request = new FetchTransport();
 
       return request
         .execute(ctx)
@@ -110,7 +110,7 @@ describe('Request HTTP transport', () => {
     it('does not allow adding an empty header', () => {
       const ctx = createContext(url);
       ctx.req.addHeader();
-      const request = new RequestTransport();
+      const request = new FetchTransport();
 
       return request
         .execute(ctx)
@@ -126,7 +126,7 @@ describe('Request HTTP transport', () => {
       const ctx = createContext(url, 'put');
       ctx.req.body(requestBody);
 
-      return new RequestTransport()
+      return new FetchTransport()
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
@@ -140,7 +140,7 @@ describe('Request HTTP transport', () => {
       const ctx = createContext(url, 'post');
       ctx.req.body(requestBody);
 
-      return new RequestTransport()
+      return new FetchTransport()
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
@@ -154,7 +154,7 @@ describe('Request HTTP transport', () => {
       const ctx = createContext(url, 'delete');
       ctx.req.body(requestBody);
 
-      return new RequestTransport()
+      return new FetchTransport()
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
@@ -167,7 +167,7 @@ describe('Request HTTP transport', () => {
       const ctx = createContext(url, 'patch');
       ctx.req.body(requestBody);
 
-      return new RequestTransport()
+      return new FetchTransport()
         .execute(ctx)
         .catch(assert.ifError)
         .then((ctx) => {
@@ -185,7 +185,7 @@ describe('Request HTTP transport', () => {
       const ctx = createContext(url);
       ctx.req.timeout(20);
 
-      return new RequestTransport()
+      return new FetchTransport()
         .execute(ctx)
         .then(() => {
           assert.fail('Expected request to timeout');
@@ -202,7 +202,7 @@ describe('Request HTTP transport', () => {
 
       const ctx = createContext(url);
 
-      return new RequestTransport()
+      return new FetchTransport()
         .execute(ctx)
         .then((ctx) => {
           const timeTaken = ctx.res.elapsedTime;

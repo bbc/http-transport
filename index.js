@@ -1,10 +1,10 @@
 'use strict';
 
 const HttpTransportBuilder = require('./lib/builder');
-const DefaultTransport = require('./lib/transport/request');
+const DefaultTransport = require('./lib/transport/node-fetch');
 
 module.exports.defaultTransport = DefaultTransport;
-module.exports.RequestTransport = DefaultTransport;
+module.exports.FetchTransport = DefaultTransport;
 module.exports.builder = HttpTransportBuilder;
 module.exports.transport = require('./lib/transport/transport');
 module.exports.context = require('./lib/context');
