@@ -196,6 +196,30 @@ describe('Request HTTP transport', () => {
         });
     });
 
+    it('sets a default timeout', () => {
+      nock.cleanAll();
+      api
+        .get('/')
+        .delay(500)
+        .reply(200, simpleResponseBody);
+
+      const ctx = createContext(url);
+
+      return new FetchTransport({
+        defaults: {
+          timeout: 50
+        }
+      })
+        .execute(ctx)
+        .then(() => {
+          assert.fail('Expected request to timeout');
+        })
+        .catch((e) => {
+          assert.ok(e);
+          assert.equal(e.message, 'Request failed for get http://www.example.com/: ESOCKETTIMEDOUT');
+        });
+    });
+
     it('enables timing request by default', () => {
       nock.cleanAll();
       api.get('/').reply(200, simpleResponseBody);
