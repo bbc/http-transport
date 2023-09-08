@@ -1,5 +1,6 @@
-import * as fetch from "node-fetch";
-import FetchTransport from "./lib/transport/node-fetch";
+import * as fetch from 'node-fetch';
+import * as https from 'node:https';
+import FetchTransport from './lib/transport/node-fetch';
 
 export declare function createBuilder(
   transport?: Transport
@@ -146,26 +147,19 @@ declare class Context {
   addPlugin(plugin: Plugin): Context;
 }
 
+type TransportOptions = {
+    agentOpts: https.AgentOptions,
+    defaults?: {
+      timeout?: number
+      compress?: boolean
+    }
+}
+
 export declare class defaultTransport extends FetchTransport {
-  constructor(
-    params: request.RequestAPI<
-      request.Request,
-      request.CoreOptions,
-      request.RequiredUriUrl
-    >
-  );
+  constructor(TransportOptions);
 }
 export declare class FetchTransport extends Transport {
-  constructor(
-    agentOpts: {
-      
-    }
-    params: request.RequestAPI<
-      request.Request,
-      request.CoreOptions,
-      request.RequiredUriUrl
-    >
-  );
+  constructor(TransportOptions);
 }
 
 export declare class Transport {
