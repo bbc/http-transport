@@ -148,11 +148,11 @@ declare class Context {
 }
 
 type TransportOptions = {
-    agentOpts: https.AgentOptions,
-    defaults?: {
-      timeout?: number
-      compress?: boolean
-    }
+  agentOpts?: https.AgentOptions,
+  defaults?: {
+    timeout?: number
+    compress?: boolean
+  }
 }
 
 export declare class defaultTransport extends FetchTransport {
