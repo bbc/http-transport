@@ -108,7 +108,7 @@ Convert `Internal Server` responses (500) to errors:
 ```
 
 `toError` is **only** required if the underlying client does not support HTTP error conversion. 
-The default transport is `request`, which does **not** convert errors. 
+The default transport is `node-fetch`, which does **not** convert errors. 
 
 #### Retries
 
@@ -227,46 +227,7 @@ See [Ratelimiting](https://github.com/bbc/http-transport-rate-limiter)
 
 See [xray](https://github.com/bbc/http-transport-xray)
 
-#### Using alternative HTTP clients via transport decorators
-
-Make a HTTP GET request and supply an alternative HTTP transport via `.createClient`
-
-```js
-const url = 'http://example.com/';
-const HttpTransport = require('@bbc/http-transport');
-const OtherTransport = require('some-other-transport');
-
-const res = await HttpTransport.createClient(OtherTransport)
-   .get(url)
-   .asResponse();
-
-    if (res.statusCode === 200) {
-        console.log(res.body);
-    }
-```
-
-Make a HTTP GET request by configuring an alternative request instance and supplying it in RequestTransport transport via `.createClient`
-
-```js
-const url = 'http://example.com/';
-const HttpTransport = require('@bbc/http-transport');
-const request = require('request');
-
-const requestDefaults = {
-    headers: {
-        special: 'special value'
-    }
-};
-const requestTransport = new HttpTransport.RequestTransport(request.defaults(requestDefaults));
-
-const res = await HttpTransport.createClient(requestTransport);
-    .get(url)
-    .asResponse();
-
-    if (res.statusCode === 200) {
-        console.log(res.body);
-    }
-```
+#### TODO: Client Setup
 
 #### Callback support
 HttpTransport does not support callbacks. However, to integrate with legacy code, use the [callback adapter](https://github.com/bbc/http-transport-callbacks)

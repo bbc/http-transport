@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#asCallback">asCallback</a></li><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li><li><a href="HttpTransportClient.html">HttpTransportClient</a><ul class='methods'><li data-type='method'><a href="HttpTransportClient.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransportClient.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransportClient.html#delete">delete</a></li><li data-type='method'><a href="HttpTransportClient.html#get">get</a></li><li data-type='method'><a href="HttpTransportClient.html#head">head</a></li><li data-type='method'><a href="HttpTransportClient.html#headers">headers</a></li><li data-type='method'><a href="HttpTransportClient.html#patch">patch</a></li><li data-type='method'><a href="HttpTransportClient.html#post">post</a></li><li data-type='method'><a href="HttpTransportClient.html#put">put</a></li><li data-type='method'><a href="HttpTransportClient.html#query">query</a></li><li data-type='method'><a href="HttpTransportClient.html#retry">retry</a></li><li data-type='method'><a href="HttpTransportClient.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportClient.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransportClient.html#use">use</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li><li><a href="HttpTransportClient.html">HttpTransportClient</a><ul class='methods'><li data-type='method'><a href="HttpTransportClient.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransportClient.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransportClient.html#delete">delete</a></li><li data-type='method'><a href="HttpTransportClient.html#get">get</a></li><li data-type='method'><a href="HttpTransportClient.html#head">head</a></li><li data-type='method'><a href="HttpTransportClient.html#headers">headers</a></li><li data-type='method'><a href="HttpTransportClient.html#patch">patch</a></li><li data-type='method'><a href="HttpTransportClient.html#post">post</a></li><li data-type='method'><a href="HttpTransportClient.html#put">put</a></li><li data-type='method'><a href="HttpTransportClient.html#query">query</a></li><li data-type='method'><a href="HttpTransportClient.html#retry">retry</a></li><li data-type='method'><a href="HttpTransportClient.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportClient.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransportClient.html#use">use</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -42,7 +42,6 @@
 
 const _ = require('lodash');
 
-const CallbackDecorator = require('./callbacks/decorator');
 const HttpTransportClient = require('./client');
 
 function validatePlugin(plugin) {
@@ -56,7 +55,6 @@ class HttpTransportBuilder {
    * @param {Transport} transport - Transport instance.
    */
   constructor(transport) {
-    this._callback = false;
     this._transport = transport;
     this._defaults = {
       plugins: []
@@ -66,7 +64,7 @@ class HttpTransportBuilder {
   /**
    * Sets a default user agent
    *
-   * @param {string} agent - user agant
+   * @param {string} agent - user agent
    * @return a HttpTransportBuilder instance
    * @example
    * const httpTransport = require('@bbc/http-transport');
@@ -130,19 +128,6 @@ class HttpTransportBuilder {
   }
 
   /**
-   * Callbackify the client
-   *
-   * @return a HttpTransport instance supporting callbacks
-   * @example
-   *
-   * const client = httpTransport.asCallback().createClient();
-   */
-  asCallback() {
-    this._callback = true;
-    return this;
-  }
-
-  /**
    * Instantiates a HttpTransport
    *
    * @param {function} fn - a global plugin
@@ -152,11 +137,7 @@ class HttpTransportBuilder {
    * const client = httpTransport.createClient();
    */
   createClient() {
-    const transportClient = new HttpTransportClient(this._transport, this._defaults);
-    if (this._callback) {
-      return new CallbackDecorator(transportClient);
-    }
-    return transportClient;
+    return new HttpTransportClient(this._transport, this._defaults);
   }
 }
 
@@ -173,7 +154,7 @@ module.exports = HttpTransportBuilder;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 07 2019 15:28:34 GMT+0000 (Greenwich Mean Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Mon Sep 11 2023 12:15:14 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
