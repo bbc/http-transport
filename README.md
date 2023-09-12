@@ -64,7 +64,7 @@ console.log(res.random); // number
 ```
 
 ## Opting Out
-If you don't want to type your plugin, simply use `any` as the type. This is not recomemnded though as it means all plugins later in the chain will loose the types too, because they have no idea what changes were made.
+If you don't want to type your plugin, simply use `any` as the type. This is not recommended though as it means all plugins later in the chain will lose the types too, because they have no idea what changes were made.
 
 ```ts
 const myPlugin: Plugin<any> = (context, next) => {};
