@@ -324,7 +324,8 @@ const body = await httpTransport.createClient()
         
 <div class="param-desc">
     <p>a Promise. If the Promise fulfils,
-the fulfilment value is the response body, as a string by default.</p>
+the fulfilment value is the response body. If the content-type response header contains 'json' or 'text',
+then the body type will be json or text respectively. Otherwise, the body will not be altered.</p>
 </div>
 
 
@@ -442,7 +443,7 @@ the fulfilment value is response object.</p>
 
     
 
-    <h4 class="name" id="delete"><span class="type-signature"></span>delete<span class="signature">(url, request)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="delete"><span class="type-signature"></span>delete<span class="signature">(baseUrl)</span><span class="type-signature"></span></h4>
 
     
 
@@ -454,7 +455,7 @@ the fulfilment value is response object.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line113">line 113</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line112">line 112</a>
     </li></ul></dd>
     
 
@@ -510,7 +511,7 @@ the fulfilment value is response object.</p>
     <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
 const response = await httpTransport.createClient()
-   .delete(url)
+   .delete(baseUrl)
    .asResponse();</code></pre>
 
 
@@ -541,7 +542,7 @@ const response = await httpTransport.createClient()
 
         <tr>
             
-                <td class="name"><code>url</code></td>
+                <td class="name"><code>baseUrl</code></td>
             
 
             <td class="type">
@@ -558,29 +559,6 @@ const response = await httpTransport.createClient()
             
 
             <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>request</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>body</p></td>
         </tr>
 
     
@@ -617,7 +595,7 @@ const response = await httpTransport.createClient()
 
     
 
-    <h4 class="name" id="get"><span class="type-signature"></span>get<span class="signature">(url)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="get"><span class="type-signature"></span>get<span class="signature">(baseUrl)</span><span class="type-signature"></span></h4>
 
     
 
@@ -716,7 +694,7 @@ const response = await httpTransport.createClient()
 
         <tr>
             
-                <td class="name"><code>url</code></td>
+                <td class="name"><code>baseUrl</code></td>
             
 
             <td class="type">
@@ -769,7 +747,7 @@ const response = await httpTransport.createClient()
 
     
 
-    <h4 class="name" id="head"><span class="type-signature"></span>head<span class="signature">(url)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="head"><span class="type-signature"></span>head<span class="signature">(baseUrl)</span><span class="type-signature"></span></h4>
 
     
 
@@ -781,7 +759,7 @@ const response = await httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line151">line 151</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line150">line 150</a>
     </li></ul></dd>
     
 
@@ -837,7 +815,7 @@ const response = await httpTransport.createClient()
     <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
 const response = await httpTransport.createClient()
-   .head(url)
+   .head(baseUrl)
    .asResponse();</code></pre>
 
 
@@ -868,7 +846,7 @@ const response = await httpTransport.createClient()
 
         <tr>
             
-                <td class="name"><code>url</code></td>
+                <td class="name"><code>baseUrl</code></td>
             
 
             <td class="type">
@@ -933,7 +911,7 @@ const response = await httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line171">line 171</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line170">line 170</a>
     </li></ul></dd>
     
 
@@ -1104,7 +1082,7 @@ const response = await httpTransport.createClient()
 
     
 
-    <h4 class="name" id="patch"><span class="type-signature"></span>patch<span class="signature">(url, request)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="patch"><span class="type-signature"></span>patch<span class="signature">(baseUrl, request)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1116,7 +1094,7 @@ const response = await httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line131">line 131</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line130">line 130</a>
     </li></ul></dd>
     
 
@@ -1172,7 +1150,7 @@ const response = await httpTransport.createClient()
     <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
 const response = await httpTransport.createClient()
-   .put(url, requestBody)
+   .put(baseUrl, requestBody)
    .asResponse();</code></pre>
 
 
@@ -1203,7 +1181,7 @@ const response = await httpTransport.createClient()
 
         <tr>
             
-                <td class="name"><code>url</code></td>
+                <td class="name"><code>baseUrl</code></td>
             
 
             <td class="type">
@@ -1279,7 +1257,7 @@ const response = await httpTransport.createClient()
 
     
 
-    <h4 class="name" id="post"><span class="type-signature"></span>post<span class="signature">(url, request)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="post"><span class="type-signature"></span>post<span class="signature">(baseUrl, request)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1347,7 +1325,7 @@ const response = await httpTransport.createClient()
     <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
 const response = await httpTransport.createClient()
-   .post(url, requestBody)
+   .post(baseUrl, requestBody)
    .asResponse();</code></pre>
 
 
@@ -1378,7 +1356,7 @@ const response = await httpTransport.createClient()
 
         <tr>
             
-                <td class="name"><code>url</code></td>
+                <td class="name"><code>baseUrl</code></td>
             
 
             <td class="type">
@@ -1454,7 +1432,7 @@ const response = await httpTransport.createClient()
 
     
 
-    <h4 class="name" id="put"><span class="type-signature"></span>put<span class="signature">(url, request)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="put"><span class="type-signature"></span>put<span class="signature">(baseUrl, request)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1522,7 +1500,7 @@ const response = await httpTransport.createClient()
     <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
 
 const response = await httpTransport.createClient()
-   .put(url, requestBody)
+   .put(baseUrl, requestBody)
    .asResponse();</code></pre>
 
 
@@ -1553,7 +1531,7 @@ const response = await httpTransport.createClient()
 
         <tr>
             
-                <td class="name"><code>url</code></td>
+                <td class="name"><code>baseUrl</code></td>
             
 
             <td class="type">
@@ -1641,7 +1619,7 @@ const response = await httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line194">line 194</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line193">line 193</a>
     </li></ul></dd>
     
 
@@ -1812,7 +1790,7 @@ const response = await httpTransport.createClient()
 
     
 
-    <h4 class="name" id="retry"><span class="type-signature"></span>retry<span class="signature">(timeout)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="retry"><span class="type-signature"></span>retry<span class="signature">(retries)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1824,7 +1802,7 @@ const response = await httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line231">line 231</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line230">line 230</a>
     </li></ul></dd>
     
 
@@ -1911,7 +1889,7 @@ const response = await httpTransport.createClient()
 
         <tr>
             
-                <td class="name"><code>timeout</code></td>
+                <td class="name"><code>retries</code></td>
             
 
             <td class="type">
@@ -1964,7 +1942,7 @@ const response = await httpTransport.createClient()
 
     
 
-    <h4 class="name" id="retryDelay"><span class="type-signature"></span>retryDelay<span class="signature">(timeout)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="retryDelay"><span class="type-signature"></span>retryDelay<span class="signature">(delay)</span><span class="type-signature"></span></h4>
 
     
 
@@ -1976,7 +1954,7 @@ const response = await httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line249">line 249</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line248">line 248</a>
     </li></ul></dd>
     
 
@@ -2064,7 +2042,7 @@ const response = await httpTransport.createClient()
 
         <tr>
             
-                <td class="name"><code>timeout</code></td>
+                <td class="name"><code>delay</code></td>
             
 
             <td class="type">
@@ -2117,7 +2095,7 @@ const response = await httpTransport.createClient()
 
     
 
-    <h4 class="name" id="timeout"><span class="type-signature"></span>timeout<span class="signature">(timeout)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="timeout"><span class="type-signature"></span>timeout<span class="signature">(time)</span><span class="type-signature"></span></h4>
 
     
 
@@ -2129,7 +2107,7 @@ const response = await httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line214">line 214</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line213">line 213</a>
     </li></ul></dd>
     
 
@@ -2216,7 +2194,7 @@ const response = await httpTransport.createClient()
 
         <tr>
             
-                <td class="name"><code>timeout</code></td>
+                <td class="name"><code>time</code></td>
             
 
             <td class="type">
@@ -2434,7 +2412,7 @@ httpTransport.createClient()
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Mon Sep 11 2023 12:15:14 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Tue Sep 12 2023 10:41:25 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

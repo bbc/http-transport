@@ -227,7 +227,35 @@ See [Ratelimiting](https://github.com/bbc/http-transport-rate-limiter)
 
 See [xray](https://github.com/bbc/http-transport-xray)
 
-#### TODO: Client Setup
-
 #### Callback support
 HttpTransport does not support callbacks. However, to integrate with legacy code, use the [callback adapter](https://github.com/bbc/http-transport-callbacks)
+
+#### Setting default behaviour of underlying http transport
+
+Make a HTTP GET request by passing default configuration to RequestTransport, and supplying the configured RequestTransport to `.createClient`
+
+```js
+const url = 'http://example.com/';
+const HttpTransport = require('@bbc/http-transport');
+
+const defaultConfig = {
+    agentOpts: { // Here you can pass in any options for the https agent https://nodejs.org/api/https.html#class-httpsagent
+        keepAlive: true,
+        maxSockets: 1000
+    }, 
+    defaults: {
+        timeout: 2000
+        compress: true // support gzip/deflate content encoding. false to disable
+    }
+};
+
+const requestTransport = new HttpTransport.RequestTransport(defaultConfig);
+
+const res = await HttpTransport.createClient(requestTransport);
+    .get(url)
+    .asResponse();
+
+    if (res.statusCode === 200) {
+        console.log(res.body);
+    }
+```
