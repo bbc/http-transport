@@ -2,6 +2,7 @@
 
 const assert = require('chai').assert;
 const nock = require('nock');
+const nodeFetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 const context = require('../../lib/context');
 const sinon = require('sinon');
 const sandbox = sinon.sandbox.create();
@@ -9,8 +10,11 @@ const sandbox = sinon.sandbox.create();
 const FetchTransport = require('../../lib/transport/node-fetch');
 
 const url = 'http://www.example.com/';
+const httpsUrl = 'https://www.example.com/';
 const host = 'http://www.example.com';
+const httpsHost = 'https://www.example.com';
 const api = nock(host);
+const httpsApi = nock(httpsHost);
 const path = '/';
 
 const simpleResponseBody = 'Illegitimi non carborundum';
@@ -35,6 +39,7 @@ describe('Request HTTP transport', () => {
     nock.disableNetConnect();
     nock.cleanAll();
     api.get(path).reply(200, simpleResponseBody, header);
+    httpsApi.get(path).reply(200, simpleResponseBody, header);
   });
 
   afterEach(() => {
@@ -233,6 +238,32 @@ describe('Request HTTP transport', () => {
           assert.isNumber(timeTaken);
         })
         .catch(assert.ifError);
+    });
+
+    it.only('selects httpsAgent when protocol is https and agent options have been provided', () => {
+      sandbox.stub(nodeFetch).returns({});
+      
+      const ctx = createContext(httpsUrl);
+      const options = {
+        agentOpts: {
+          keepAlive: true,
+          maxSockets: 1000
+        }
+      }
+      const fetch = new FetchTransport(options);
+      const reqOpts = {
+        timeout: undefined,
+        compress: undefined,
+        method: 'get',
+        agent: undefined
+      }
+      
+      return fetch
+        .execute(ctx)
+        .catch(assert.ifError)
+        .then((ctx) => {
+          sinon.assert.calledWith(fetch._fetch, reqOpts);
+        });
     });
   });
 });
