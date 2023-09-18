@@ -1,8 +1,6 @@
-'use strict';
-
-const asJsonPlugin = require('../../lib/middleware/asJson');
-const assert = require('chai').assert;
-const sinon = require('sinon');
+import asJsonPlugin from '../../lib/middleware/asJson.js';
+import assert from 'assert';
+import sinon from 'sinon';
 const sandbox = sinon.sandbox.create();
 
 const ctx = {

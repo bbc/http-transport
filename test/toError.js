@@ -1,5 +1,3 @@
-'use strict';
-
 function toError() {
   return async (ctx, next) => {
     await next();
@@ -13,4 +11,4 @@ function toError() {
   };
 }
 
-module.exports = toError;
+export default toError;
