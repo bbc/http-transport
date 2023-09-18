@@ -1,6 +1,5 @@
 import chai from 'chai';
 import nock from 'nock';
-import http from 'node:http';
 import https from 'node:https';
 import sinon from 'sinon';
 import context from '../../lib/context.js';
@@ -275,9 +274,6 @@ describe('Request HTTP transport', () => {
       };
 
       const fetchTransport = new FetchTransport(options);
-      const reqOpts = {
-        agent: new http.Agent(options.agentOpts)
-      };
 
       const spy = sinon.spy(fetchTransport, '_fetch');
 
@@ -285,7 +281,36 @@ describe('Request HTTP transport', () => {
         .execute(ctx)
         .catch(assert.ifError)
         .then(() => {
-          sinon.assert.calledWith(spy, sinon.match(url, { ...reqOpts }));
+          sinon.assert.calledWithMatch(spy, url, { agent: {
+            protocol: 'http:',
+            keepAlive: true,
+            maxSockets: 1000
+          } });
+        });
+    });
+
+    it('selects httpsAgent when protocol is https and agent options have been provided', () => {
+      const ctx = createContext(httpsUrl);
+      const options = {
+        agentOpts: {
+          keepAlive: true,
+          maxSockets: 1000
+        }
+      };
+
+      const fetchTransport = new FetchTransport(options);
+
+      const spy = sinon.spy(fetchTransport, '_fetch');
+
+      return fetchTransport
+        .execute(ctx)
+        .catch(assert.ifError)
+        .then(() => {
+          sinon.assert.calledWithMatch(spy, httpsUrl, { agent: {
+            protocol: 'https:',
+            keepAlive: true,
+            maxSockets: 1000
+          } });
         });
     });
   });
