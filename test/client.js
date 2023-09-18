@@ -547,7 +547,7 @@ describe('HttpTransportClient', () => {
     });
 
     describe('setContextProperty', () => {
-      it('sets an option in the context', async () => { // double check this test
+      it('sets an option in the context', async () => {
         nock.cleanAll();
         api.get(path).reply(200, responseBody);
 
@@ -555,7 +555,7 @@ describe('HttpTransportClient', () => {
           .use(toJson())
           .createClient();
 
-        const res = client
+        const res = await client
           .use(setContextProperty({
             time: false
           },
