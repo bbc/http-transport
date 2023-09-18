@@ -1,17 +1,19 @@
 import chai from 'chai';
 import nock from 'nock';
-// import * as nodeFetch from 'node-fetch';
-import context from '../../lib/context.js';
+import http from 'node:http';
+import https from 'node:https';
 import sinon from 'sinon';
+import context from '../../lib/context.js';
+import FetchTransport from '../../lib/transport/node-fetch.js';
+
 const sandbox = sinon.sandbox.create();
 const assert = chai.assert;
 
-import FetchTransport from '../../lib/transport/node-fetch.js';
-
 const url = 'http://www.example.com/';
-// const httpsUrl = 'https://www.example.com/';
+const httpsUrl = 'https://www.example.com/';
 const host = 'http://www.example.com';
 const httpsHost = 'https://www.example.com';
+
 const api = nock(host);
 const httpsApi = nock(httpsHost);
 const path = '/';
@@ -239,32 +241,52 @@ describe('Request HTTP transport', () => {
         .catch(assert.ifError);
     });
 
-    // it.only('selects httpsAgent when protocol is https and agent options have been provided', () => {
-    //   console.log({fetch})
-    //   console.log('nodeFetch', nodeFetch)
-    //   sandbox.stub(nodeFetch, 'default').returns(Promise.resolve(responseObject));
+    it('selects httpsAgent when protocol is https and agent options have been provided', () => {
+      const ctx = createContext(httpsUrl);
+      const options = {
+        agentOpts: {
+          keepAlive: true,
+          maxSockets: 1000
+        }
+      };
 
-    //   const ctx = createContext(httpsUrl);
-    //   const options = {
-    //     agentOpts: {
-    //       keepAlive: true,
-    //       maxSockets: 1000
-    //     }
-    //   }
-    //   const fetchTransport = new FetchTransport(options);
-    //   const reqOpts = {
-    //     timeout: undefined,
-    //     compress: undefined,
-    //     method: 'get',
-    //     agent: undefined
-    //   }
+      const fetchTransport = new FetchTransport(options);
+      const reqOpts = {
+        agent: new https.Agent(options.agentOpts)
+      };
 
-    //   return fetchTransport
-    //     .execute(ctx)
-    //     .catch(assert.ifError)
-    //     .then((ctx) => {
-    //       sinon.assert.calledWith(fetchTransport._fetch, reqOpts);
-    //     });
-    // });
+      const spy = sinon.spy(fetchTransport, '_fetch');
+
+      return fetchTransport
+        .execute(ctx)
+        .catch(assert.ifError)
+        .then(() => {
+          sinon.assert.calledWith(spy, sinon.match(httpsUrl, { ...reqOpts }));
+        });
+    });
+
+    it('selects httpAgent when protocol is http and agent options have been provided', () => {
+      const ctx = createContext(url);
+      const options = {
+        agentOpts: {
+          keepAlive: true,
+          maxSockets: 1000
+        }
+      };
+
+      const fetchTransport = new FetchTransport(options);
+      const reqOpts = {
+        agent: new http.Agent(options.agentOpts)
+      };
+
+      const spy = sinon.spy(fetchTransport, '_fetch');
+
+      return fetchTransport
+        .execute(ctx)
+        .catch(assert.ifError)
+        .then(() => {
+          sinon.assert.calledWith(spy, sinon.match(url, { ...reqOpts }));
+        });
+    });
   });
 });
