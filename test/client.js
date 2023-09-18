@@ -1,19 +1,17 @@
-import chai from 'chai';
-import nock from 'nock';
-import sinon from 'sinon';
-import { readFile } from 'fs/promises';
+'use strict';
 
-import HttpTransport from '../index.js';
-import Transport from '../lib/transport/transport.js';
-import toJson from '../lib/middleware/asJson.js';
-import setContextProperty from '../lib/middleware/setContextProperty.js';
-import log from '../lib/middleware/logger.js';
-import toError from './toError.js';
+const assert = require('chai').assert;
+const nock = require('nock');
+const sinon = require('sinon');
+
+const HttpTransport = require('..');
+const Transport = require('../lib/transport/transport');
+const toJson = require('../lib/middleware/asJson');
+const setContextProperty = require('../lib/middleware/setContextProperty');
+const log = require('../lib/middleware/logger');
+const packageInfo = require('../package');
+const toError = require('./toError');
 const sandbox = sinon.sandbox.create();
-const { name, version } = JSON.parse(
-  await readFile(new URL('../package.json', import.meta.url))
-);
-const assert = chai.assert;
 
 const url = 'http://www.example.com/';
 const host = 'http://www.example.com';
@@ -86,7 +84,7 @@ describe('HttpTransportClient', () => {
 
       nock(host, {
         reqheaders: {
-          'User-Agent': `${name}/${version}`
+          'User-Agent': `${packageInfo.name}/${packageInfo.version}`
         }
       })
         .get(path)
@@ -380,7 +378,7 @@ describe('HttpTransportClient', () => {
     it('sends a custom headers', async () => {
       nock.cleanAll();
 
-      const HeaderValue = `${name}/${version}`;
+      const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
         reqheaders: {
           'User-Agent': HeaderValue,
@@ -443,12 +441,12 @@ describe('HttpTransportClient', () => {
     });
 
     it('ignores empty query objects', async () => {
-      const body = await HttpTransport.createClient()
+      const res = await HttpTransport.createClient()
         .query({})
         .get(url)
-        .asBody();
+        .asResponse();
 
-      assert.deepEqual(body, simpleResponseBody);
+      assert.deepEqual(res.body, simpleResponseBody);
     });
   });
 

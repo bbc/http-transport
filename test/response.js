@@ -1,5 +1,7 @@
-import assert from 'assert';
-import Response from '../lib/response.js';
+'use strict';
+
+const assert = require('assert');
+const Response = require('../lib/response');
 
 describe('Response', () => {
   it('creates response from static factory', () => {

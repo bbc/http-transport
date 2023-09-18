@@ -1,5 +1,7 @@
-import assert from 'assert';
-import Context from '../lib/context.js';
+'use strict';
+
+const assert = require('assert');
+const Context = require('../lib/context');
 
 describe('Context', () => {
   it('defaults retries to an empty array', () => {

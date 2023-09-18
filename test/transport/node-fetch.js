@@ -1,11 +1,12 @@
-import chai from 'chai';
-import nock from 'nock';
-import sinon from 'sinon';
-import context from '../../lib/context.js';
-import FetchTransport from '../../lib/transport/node-fetch.js';
+'use strict';
 
+const assert = require('chai').assert;
+const nock = require('nock');
+const context = require('../../lib/context');
+const sinon = require('sinon');
 const sandbox = sinon.sandbox.create();
-const assert = chai.assert;
+
+const FetchTransport = require('../../lib/transport/node-fetch');
 
 const url = 'http://www.example.com/';
 const httpsUrl = 'https://www.example.com/';

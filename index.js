@@ -1,24 +1,21 @@
-import HttpTransportBuilder from './lib/builder.js';
-import DefaultTransport from './lib/transport/node-fetch.js';
-import transport from './lib/transport/transport.js';
-import context from './lib/context.js';
-import toJson from './lib/middleware/asJson.js';
-import logger from './lib/middleware/logger.js';
-import setContextProperty from './lib/middleware/setContextProperty.js';
+'use strict';
 
-export default {
-  defaultTransport: DefaultTransport,
-  FetchTransport: DefaultTransport,
-  builder: HttpTransportBuilder,
-  transport,
-  context,
-  toJson,
-  logger,
-  setContextProperty,
-  createClient: () => {
-    return new HttpTransportBuilder(new DefaultTransport()).createClient();
-  },
-  createBuilder: (transport) => {
-    return new HttpTransportBuilder(transport || new DefaultTransport());
-  }
-}
+const HttpTransportBuilder = require('./lib/builder');
+const DefaultTransport = require('./lib/transport/node-fetch');
+
+module.exports.defaultTransport = DefaultTransport;
+module.exports.FetchTransport = DefaultTransport;
+module.exports.builder = HttpTransportBuilder;
+module.exports.transport = require('./lib/transport/transport');
+module.exports.context = require('./lib/context');
+module.exports.toJson = require('./lib/middleware/asJson');
+module.exports.logger = require('./lib/middleware/logger');
+module.exports.setContextProperty = require('./lib/middleware/setContextProperty');
+
+module.exports.createClient = () => {
+  return new HttpTransportBuilder(new DefaultTransport()).createClient();
+};
+
+module.exports.createBuilder = (transport) => {
+  return new HttpTransportBuilder(transport || new DefaultTransport());
+};

@@ -2,9 +2,8 @@
   "name": "@bbc/http-transport",
   "version": "3.5.7-1",
   "description": "A flexible, modular REST client built for ease-of-use and resilience.",
-  "exports": "./index.js",
+  "main": "index.js",
   "types": "index.d.ts",
-  "type": "module",
   "scripts": {
     "test": "mocha",
     "jsdoc": "jsdoc -c ./docconfig/jsdoc.json",
@@ -61,8 +60,7 @@
   "eslintConfig": {
     "extends": "iplayer",
     "parserOptions": {
-      "ecmaVersion": "latest",
-      "sourceType": "module"
+      "ecmaVersion": "latest"
     },
     "rules": {
       "space-before-function-paren": 0

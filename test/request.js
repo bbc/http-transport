@@ -1,5 +1,7 @@
-import assert from 'assert';
-import Request from '../lib/request.js';
+'use strict';
+
+const assert = require('assert');
+const Request = require('../lib/request');
 
 const HOST = 'https://example.com';
 
