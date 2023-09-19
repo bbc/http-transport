@@ -23,6 +23,7 @@ const requestBody = {
   foo: 'bar'
 };
 const responseBody = requestBody;
+const defaultHeaders = { 'Content-Type': 'application/json' };
 
 function toUpperCase() {
   return async (ctx, next) => {
@@ -39,7 +40,7 @@ function nockRetries(retry, opts) {
   api[httpMethod](path)
     .times(retry)
     .reply(500);
-  api[httpMethod](path).reply(successCode, simpleResponseBody);
+  api[httpMethod](path).reply(successCode, simpleResponseBody, defaultHeaders);
 }
 
 function nockTimeouts(number, opts) {
@@ -51,19 +52,14 @@ function nockTimeouts(number, opts) {
     .times(number)
     .delay(10000)
     .reply(200);
-  api[httpMethod](path).reply(successCode, simpleResponseBody);
+  api[httpMethod](path).reply(successCode, simpleResponseBody, defaultHeaders);
 }
 
 describe('HttpTransportClient', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.cleanAll();
-    api
-      .get(path)
-      .reply(200, simpleResponseBody)
-      .defaultReplyHeaders({
-        'Content-Type': 'application/json'
-      });
+    api.get(path).reply(200, simpleResponseBody, defaultHeaders);
   });
 
   afterEach(() => {
@@ -591,12 +587,7 @@ describe('HttpTransportClient', () => {
     describe('toJson', () => {
       it('returns body of a JSON response', async () => {
         nock.cleanAll();
-        api
-          .defaultReplyHeaders({
-            'Content-Type': 'application/json'
-          })
-          .get(path)
-          .reply(200, responseBody);
+        api.get(path).reply(200, responseBody, defaultHeaders);
 
         const client = HttpTransport.createBuilder()
           .use(toJson())
