@@ -75,6 +75,17 @@ describe('HttpTransportClient', () => {
       assert.deepEqual(res.body, simpleResponseBody);
     });
 
+    it('handles an empty response body when parsing as JSON', async () => {
+      nock.cleanAll();
+      api.get(path).reply(200, undefined, defaultHeaders);
+
+      const res = await HttpTransport.createClient()
+        .get(url)
+        .asResponse();
+
+      assert.deepEqual(res.body, '');
+    });
+
     it('sets a default User-agent for every request', async () => {
       nock.cleanAll();
 
