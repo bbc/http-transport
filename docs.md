@@ -244,7 +244,8 @@ const defaultConfig = {
         maxSockets: 1000
     }, 
     defaults: {
-        timeout: 2000
+        json: true, // parses the response body as json
+        timeout: 2000 // sets timeout for each request
         compress: true // support gzip/deflate content encoding. false to disable
     }
 };
