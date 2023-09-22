@@ -1,4 +1,6 @@
-import * as request from "request";
+import * as fetch from 'node-fetch';
+import * as https from 'node:https';
+import FetchTransport from './lib/transport/node-fetch';
 
 export declare function createBuilder(
   transport?: Transport
@@ -85,7 +87,7 @@ export declare class Response {
   url: string;
   statusCode: number;
   body: Body;
-  httpResponse?: request.Response;
+  httpResponse?: fetch.Response;
   readonly length: number;
   static create(opts?: JsonResponse): Response;
   addHeader(key: string, value: string): Request;
@@ -102,7 +104,6 @@ export declare class HttpTransportBuilder<
   use<ContextExtra = {}>(
     fn: Plugin<ContextExtra, ContextCurrent>
   ): HttpTransportBuilder<ContextExtra & ContextCurrent>;
-  asCallback(): HttpTransportBuilder<ContextCurrent>;
   createClient(): HttpTransportClient<ContextCurrent>;
 }
 
@@ -146,32 +147,28 @@ declare class Context {
   addPlugin(plugin: Plugin): Context;
 }
 
-export declare class defaultTransport extends RequestTransport {
-  constructor(
-    params: request.RequestAPI<
-      request.Request,
-      request.CoreOptions,
-      request.RequiredUriUrl
-    >
-  );
+type TransportOptions = {
+  agentOpts?: https.AgentOptions,
+  defaults?: {
+    timeout?: number
+    compress?: boolean
+  }
 }
-export declare class RequestTransport extends Transport {
-  constructor(
-    params: request.RequestAPI<
-      request.Request,
-      request.CoreOptions,
-      request.RequiredUriUrl
-    >
-  );
+
+export declare class defaultTransport extends FetchTransport {
+  constructor(TransportOptions);
+}
+export declare class FetchTransport extends Transport {
+  constructor(TransportOptions);
 }
 
 export declare class Transport {
   toError(err: ErrorObject, ctx: Context): Error;
   createError(err: ErrorObject, ctx: Context): Error;
-  execute(ctx: Context): Promise<RequestTransport>;
+  execute(ctx: Context): Promise<FetchTransport>;
   onError(ctx: Context): Function;
   toOptions(ctx: Context): RequestOptions;
-  toResponse(ctx: Context, from: request.Response): Response;
+  toResponse(ctx: Context, from: fetch.Response): Response;
   makeRequest(ctx: Context, opts: RequestOptions): Promise<Response>;
 }
 

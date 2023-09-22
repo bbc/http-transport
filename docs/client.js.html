@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#asCallback">asCallback</a></li><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li><li><a href="HttpTransportClient.html">HttpTransportClient</a><ul class='methods'><li data-type='method'><a href="HttpTransportClient.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransportClient.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransportClient.html#delete">delete</a></li><li data-type='method'><a href="HttpTransportClient.html#get">get</a></li><li data-type='method'><a href="HttpTransportClient.html#head">head</a></li><li data-type='method'><a href="HttpTransportClient.html#headers">headers</a></li><li data-type='method'><a href="HttpTransportClient.html#patch">patch</a></li><li data-type='method'><a href="HttpTransportClient.html#post">post</a></li><li data-type='method'><a href="HttpTransportClient.html#put">put</a></li><li data-type='method'><a href="HttpTransportClient.html#query">query</a></li><li data-type='method'><a href="HttpTransportClient.html#retry">retry</a></li><li data-type='method'><a href="HttpTransportClient.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportClient.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransportClient.html#use">use</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li><li><a href="HttpTransportClient.html">HttpTransportClient</a><ul class='methods'><li data-type='method'><a href="HttpTransportClient.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransportClient.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransportClient.html#delete">delete</a></li><li data-type='method'><a href="HttpTransportClient.html#get">get</a></li><li data-type='method'><a href="HttpTransportClient.html#head">head</a></li><li data-type='method'><a href="HttpTransportClient.html#headers">headers</a></li><li data-type='method'><a href="HttpTransportClient.html#patch">patch</a></li><li data-type='method'><a href="HttpTransportClient.html#post">post</a></li><li data-type='method'><a href="HttpTransportClient.html#put">put</a></li><li data-type='method'><a href="HttpTransportClient.html#query">query</a></li><li data-type='method'><a href="HttpTransportClient.html#retry">retry</a></li><li data-type='method'><a href="HttpTransportClient.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportClient.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransportClient.html#use">use</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -40,7 +40,6 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const _ = require('lodash');
 const compose = require('koa-compose');
 const context = require('./context');
 const rejectedPromise = require('./rejectedPromise');
@@ -51,11 +50,11 @@ class HttpTransportClient {
   /**
    * Create a HttpTransport.
    * @param {Transport} transport - Transport instance.
-   * @param {object} defaults - default configutation
+   * @param {object} defaults - default configuration
    */
   constructor(transport, defaults) {
     this._transport = transport;
-    this._instancePlugins = _.get(defaults, 'plugins', []);
+    this._instancePlugins = defaults.plugins || [];
     this._defaults = defaults;
     this._initContext();
     bind(this);
@@ -82,7 +81,7 @@ class HttpTransportClient {
   /**
    * Make a HTTP GET request
    *
-   * @param {string} url
+   * @param {string} baseUrl
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('@bbc/http-transport');
@@ -99,98 +98,97 @@ class HttpTransportClient {
   /**
    * Make a HTTP POST request
    *
-   * @param {string} url
+   * @param {string} baseUrl
    * @param {object} request body
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('@bbc/http-transport');
    *
    * const response = await httpTransport.createClient()
-   *    .post(url, requestBody)
+   *    .post(baseUrl, requestBody)
    *    .asResponse();
    */
-  post(url, body) {
+  post(baseUrl, body) {
     this._ctx.req
       .method('POST')
       .body(body)
-      .baseUrl(url);
+      .baseUrl(baseUrl);
     return this;
   }
 
   /**
    * Make a HTTP PUT request
    *
-   * @param {string} url
+   * @param {string} baseUrl
    * @param {object} request body
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('@bbc/http-transport');
    *
    * const response = await httpTransport.createClient()
-   *    .put(url, requestBody)
+   *    .put(baseUrl, requestBody)
    *    .asResponse();
    */
-  put(url, body) {
+  put(baseUrl, body) {
     this._ctx.req
       .method('PUT')
       .body(body)
-      .baseUrl(url);
+      .baseUrl(baseUrl);
     return this;
   }
 
   /**
    * Make a HTTP DELETE request
    *
-   * @param {string} url
-   * @param {object} request body
+   * @param {string} baseUrl
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('@bbc/http-transport');
    *
    * const response = await httpTransport.createClient()
-   *    .delete(url)
+   *    .delete(baseUrl)
    *    .asResponse();
    */
-  delete(url) {
-    this._ctx.req.method('DELETE').baseUrl(url);
+  delete(baseUrl) {
+    this._ctx.req.method('DELETE').baseUrl(baseUrl);
     return this;
   }
 
   /**
    * Make a HTTP PATCH request
    *
-   * @param {string} url
+   * @param {string} baseUrl
    * @param {object} request body
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('@bbc/http-transport');
    *
    * const response = await httpTransport.createClient()
-   *    .put(url, requestBody)
+   *    .put(baseUrl, requestBody)
    *    .asResponse();
    */
-  patch(url, body) {
+  patch(baseUrl, body) {
     this._ctx.req
       .method('PATCH')
       .body(body)
-      .baseUrl(url);
+      .baseUrl(baseUrl);
     return this;
   }
 
   /**
    * Make a HTTP HEAD request
    *
-   * @param {string} url
+   * @param {string} baseUrl
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('@bbc/http-transport');
    *
    * const response = await httpTransport.createClient()
-   *    .head(url)
+   *    .head(baseUrl)
    *    .asResponse();
    */
-  head(url) {
-    this._ctx.req.method('HEAD').baseUrl(url);
+  head(baseUrl) {
+    this._ctx.req.method('HEAD').baseUrl(baseUrl);
     return this;
   }
 
@@ -243,7 +241,7 @@ class HttpTransportClient {
   /**
    * Sets a request timeout
    *
-   * @param {integer} timeout - timeout in seconds
+   * @param {integer} time - timeout in seconds
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('@bbc/http-transport');
@@ -252,15 +250,15 @@ class HttpTransportClient {
    *    .timeout(1)
    *    .asResponse();
    */
-  timeout(secs) {
-    this._ctx.req.timeout(secs);
+  timeout(time) {
+    this._ctx.req.timeout(time);
     return this;
   }
 
   /**
    * Set the number of retries on failure for the request
    *
-   * @param {integer} timeout - number of times to retry a failed request
+   * @param {integer} retries - number of times to retry a failed request
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('@bbc/http-transport');
@@ -277,7 +275,7 @@ class HttpTransportClient {
   /**
    * Set the delay between retries in ms
    *
-   * @param {integer} timeout - number of ms to wait between retries (default: 100)
+   * @param {integer} delay - number of ms to wait between retries (default: 100)
    * @return a HttpTransport instance
    * @example
    * const httpTransport = require('@bbc/http-transport');
@@ -287,8 +285,8 @@ class HttpTransportClient {
    *    .retryDelay(200)
    *    .asResponse();
    */
-  retryDelay(ms) {
-    this._ctx.retryDelay = ms;
+  retryDelay(delay) {
+    this._ctx.retryDelay = delay;
     return this;
   }
 
@@ -296,7 +294,11 @@ class HttpTransportClient {
    * Initiates the request, returning the response body, if successful.
    *
    * @return a Promise. If the Promise fulfils,
-   * the fulfilment value is the response body, as a string by default.
+   * the fulfilment value is the response body. The body type defaults to string.
+   * If the content-type response header contains 'json'
+   * or the json: true option has been set on transport layer
+   * then the body type will be json.
+   * 
    * @example
    * const httpTransport = require('@bbc/http-transport');
    *
@@ -432,7 +434,7 @@ module.exports = HttpTransportClient;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Thu Feb 07 2019 15:28:34 GMT+0000 (Greenwich Mean Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Sep 22 2023 15:20:00 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

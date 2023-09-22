@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
 const assert = require('chai').assert;
 const nock = require('nock');
 const sinon = require('sinon');
@@ -19,52 +18,48 @@ const host = 'http://www.example.com';
 const api = nock(host);
 const path = '/';
 
-const simpleResponseBody = 'Illegitimi non carborundum';
+const simpleResponseBody = { blobbus: 'Illegitimi non carborundum' };
 const requestBody = {
   foo: 'bar'
 };
 const responseBody = requestBody;
+const defaultHeaders = { 'Content-Type': 'application/json' };
 
 function toUpperCase() {
   return async (ctx, next) => {
     await next();
-    ctx.res.body = ctx.res.body.toUpperCase();
+    ctx.res.body.blobbus = ctx.res.body.blobbus.toUpperCase();
   };
 }
 
 function nockRetries(retry, opts) {
-  const httpMethod = _.get(opts, 'httpMethod') || 'get';
-  const successCode = _.get(opts, 'successCode') || 200;
+  const httpMethod = opts?.httpMethod || 'get';
+  const successCode = opts?.successCode || 200;
 
   nock.cleanAll();
   api[httpMethod](path)
     .times(retry)
     .reply(500);
-  api[httpMethod](path).reply(successCode);
+  api[httpMethod](path).reply(successCode, simpleResponseBody, defaultHeaders);
 }
 
 function nockTimeouts(number, opts) {
-  const httpMethod = _.get(opts, 'httpMethod') || 'get';
-  const successCode = _.get(opts, 'successCode') || 200;
+  const httpMethod = opts?.httpMethod || 'get';
+  const successCode = opts?.successCode || 200;
 
   nock.cleanAll();
   api[httpMethod](path)
     .times(number)
     .delay(10000)
     .reply(200);
-  api[httpMethod](path).reply(successCode);
+  api[httpMethod](path).reply(successCode, simpleResponseBody, defaultHeaders);
 }
 
 describe('HttpTransportClient', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.cleanAll();
-    api
-      .get(path)
-      .reply(200, simpleResponseBody)
-      .defaultReplyHeaders({
-        'Content-Type': 'text/html'
-      });
+    api.get(path).reply(200, simpleResponseBody, defaultHeaders);
   });
 
   afterEach(() => {
@@ -77,16 +72,26 @@ describe('HttpTransportClient', () => {
         .get(url)
         .asResponse();
 
-      assert.equal(res.body, simpleResponseBody);
+      assert.deepEqual(res.body, simpleResponseBody);
+    });
+
+    it('handles an empty response body when parsing as JSON', async () => {
+      nock.cleanAll();
+      api.get(path).reply(200, undefined, defaultHeaders);
+
+      const res = await HttpTransport.createClient()
+        .get(url)
+        .asResponse();
+
+      assert.deepEqual(res.body, '');
     });
 
     it('sets a default User-agent for every request', async () => {
       nock.cleanAll();
 
-      const HeaderValue = `${packageInfo.name}/${packageInfo.version}`;
       nock(host, {
         reqheaders: {
-          'User-Agent': HeaderValue
+          'User-Agent': `${packageInfo.name}/${packageInfo.version}`
         }
       })
         .get(path)
@@ -95,8 +100,6 @@ describe('HttpTransportClient', () => {
 
       const client = HttpTransport.createClient();
       await client.get(url).asResponse();
-
-      return client.get(url).asResponse();
     });
 
     it('overrides the default User-agent for every request', async () => {
@@ -116,8 +119,6 @@ describe('HttpTransportClient', () => {
         .createClient();
 
       await client.get(url).asResponse();
-
-      return client.get(url).asResponse();
     });
   });
 
@@ -166,7 +167,7 @@ describe('HttpTransportClient', () => {
 
       const res = await client
         .get(url)
-        .timeout(2000)
+        .timeout(500)
         .retry(2)
         .asResponse();
 
@@ -206,7 +207,7 @@ describe('HttpTransportClient', () => {
           .retryDelay(10000)
           .asResponse();
       } catch (e) {
-        return assert.equal(e.message, 'something bad happend.');
+        return assert.equal(e.message, 'something bad happened.');
       }
 
       assert.fail('Should have thrown');
@@ -257,7 +258,7 @@ describe('HttpTransportClient', () => {
 
   describe('.post', () => {
     it('makes a POST request', async () => {
-      api.post(path, requestBody).reply(201, responseBody);
+      api.post(path, requestBody).reply(201, responseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .post(url, requestBody)
@@ -266,7 +267,7 @@ describe('HttpTransportClient', () => {
       assert.deepEqual(body, responseBody);
     });
 
-    it('returns an error when the API returns a 5XX status code', async () => {
+    it('returns an error when the API returns a 5XX statusCode code', async () => {
       api.post(path, requestBody).reply(500);
 
       try {
@@ -284,7 +285,7 @@ describe('HttpTransportClient', () => {
 
   describe('.put', () => {
     it('makes a PUT request with a JSON body', async () => {
-      api.put(path, requestBody).reply(201, responseBody);
+      api.put(path, requestBody).reply(201, responseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .put(url, requestBody)
@@ -293,7 +294,7 @@ describe('HttpTransportClient', () => {
       assert.deepEqual(body, responseBody);
     });
 
-    it('returns an error when the API returns a 5XX status code', async () => {
+    it('returns an error when the API returns a 5XX statusCode code', async () => {
       api.put(path, requestBody).reply(500);
 
       try {
@@ -315,7 +316,7 @@ describe('HttpTransportClient', () => {
       return HttpTransport.createClient().delete(url);
     });
 
-    it('returns an error when the API returns a 5XX status code', async () => {
+    it('returns an error when the API returns a 5XX statusCode code', async () => {
       api.delete(path).reply(500);
 
       try {
@@ -333,13 +334,13 @@ describe('HttpTransportClient', () => {
 
   describe('.patch', () => {
     it('makes a PATCH request', async () => {
-      api.patch(path).reply(204);
+      api.patch(path).reply(204, simpleResponseBody);
       await HttpTransport.createClient()
         .patch(url)
         .asResponse();
     });
 
-    it('returns an error when the API returns a 5XX status code', async () => {
+    it('returns an error when the API returns a 5XX statusCode code', async () => {
       api.patch(path, requestBody).reply(500);
 
       try {
@@ -356,7 +357,7 @@ describe('HttpTransportClient', () => {
 
   describe('.head', () => {
     it('makes a HEAD request', async () => {
-      api.head(path).reply(200);
+      api.head(path).reply(200, simpleResponseBody);
 
       const res = await HttpTransport.createClient()
         .head(url)
@@ -365,7 +366,7 @@ describe('HttpTransportClient', () => {
       assert.strictEqual(res.statusCode, 200);
     });
 
-    it('returns an error when the API returns a 5XX status code', async () => {
+    it('returns an error when the API returns a 5XX statusCode code', async () => {
       api.head(path).reply(500);
 
       try {
@@ -406,30 +407,33 @@ describe('HttpTransportClient', () => {
     });
 
     it('ignores an empty header object', async () => {
+      nock.cleanAll();
+      api.get(path).reply(200, simpleResponseBody, { 'content-type': 'application/json' });
+
       const res = await HttpTransport.createClient()
         .headers({})
         .get(url)
         .asResponse();
 
-      assert.equal(res.body, simpleResponseBody);
+      assert.deepEqual(res.body, simpleResponseBody);
     });
   });
 
   describe('query strings', () => {
     it('supports adding a query string', async () => {
-      api.get('/?a=1').reply(200, simpleResponseBody);
+      api.get('/?a=1').reply(200, simpleResponseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .get(url)
         .query('a', 1)
         .asBody();
 
-      assert.equal(body, simpleResponseBody);
+      assert.deepEqual(body, simpleResponseBody);
     });
 
     it('supports multiple query strings', async () => {
       nock.cleanAll();
-      api.get('/?a=1&b=2&c=3').reply(200, simpleResponseBody);
+      api.get('/?a=1&b=2&c=3').reply(200, simpleResponseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .get(url)
@@ -440,7 +444,7 @@ describe('HttpTransportClient', () => {
         })
         .asBody();
 
-      assert.equal(body, simpleResponseBody);
+      assert.deepEqual(body, simpleResponseBody);
     });
 
     it('ignores empty query objects', async () => {
@@ -449,7 +453,7 @@ describe('HttpTransportClient', () => {
         .get(url)
         .asResponse();
 
-      assert.equal(res.body, simpleResponseBody);
+      assert.deepEqual(res.body, simpleResponseBody);
     });
   });
 
@@ -492,8 +496,8 @@ describe('HttpTransportClient', () => {
         .get(url)
         .asBody();
 
-      assert.equal(upperCaseResponse, simpleResponseBody.toUpperCase());
-      assert.equal(lowerCaseResponse, simpleResponseBody);
+      assert.equal(upperCaseResponse.blobbus, 'ILLEGITIMI NON CARBORUNDUM');
+      assert.equal(lowerCaseResponse.blobbus, 'Illegitimi non carborundum');
     });
 
     it('executes global and per request plugins', async () => {
@@ -556,7 +560,7 @@ describe('HttpTransportClient', () => {
           .use(toJson())
           .createClient();
 
-        const res = client
+        const res = await client
           .use(setContextProperty({
             time: false
           },
@@ -594,12 +598,7 @@ describe('HttpTransportClient', () => {
     describe('toJson', () => {
       it('returns body of a JSON response', async () => {
         nock.cleanAll();
-        api
-          .defaultReplyHeaders({
-            'Content-Type': 'application/json'
-          })
-          .get(path)
-          .reply(200, responseBody);
+        api.get(path).reply(200, responseBody, defaultHeaders);
 
         const client = HttpTransport.createBuilder()
           .use(toJson())
@@ -650,28 +649,8 @@ describe('HttpTransportClient', () => {
         assert.match(message, /GET http:\/\/www.example.com\/ 200 \d+ ms/);
       });
 
-      it('doesnt log responseTime when undefined', async () => {
-        sandbox.stub(console, 'info');
-
-        const client = HttpTransport.createBuilder()
-          .use(log())
-          .createClient();
-
-        await client
-          .use(setContextProperty({
-            time: false
-          },
-          'opts'
-          ))
-          .get(url)
-          .asBody();
-
-        /*eslint no-console: ["error", { allow: ["info"] }] */
-        const message = console.info.getCall(0).args[0];
-        assert.match(message, /GET http:\/\/www.example.com\/ 200$/);
-      });
-
       it('logs retry attempts as warnings when they return a critical error', async () => {
+        nock.cleanAll();
         sandbox.stub(console, 'info');
         sandbox.stub(console, 'warn');
         nockRetries(2);

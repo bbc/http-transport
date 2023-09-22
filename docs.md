@@ -1,4 +1,4 @@
-# HttpTranport
+# HttpTransport
 
 >  A flexible, modular REST client built for ease-of-use and resilience
 
@@ -32,7 +32,7 @@ PATCH, DELETE, HEAD are also supported.
 
 #### Query strings
 
-Make a HTTP GET request specifiying query strings using `.query`
+Make a HTTP GET request specifying query strings using `.query`
 
 Single query string
 ```js
@@ -62,7 +62,7 @@ Multiple query strings:
 
 #### Headers
 
-Make a HTTP GET request specifiying request headers using `.headers`
+Make a HTTP GET request specifying request headers using `.headers`
 
 Add a single header:
 ```js
@@ -108,7 +108,7 @@ Convert `Internal Server` responses (500) to errors:
 ```
 
 `toError` is **only** required if the underlying client does not support HTTP error conversion. 
-The default transport is `request`, which does **not** convert errors. 
+The default transport is `node-fetch`, which does **not** convert errors. 
 
 #### Retries
 
@@ -176,7 +176,7 @@ Middleware are functions that can be executed with before and after a request. M
 * Terminate a request early e.g for caching purposes
 * Modify the response object e.g format the response body 
 
-Middlware can be executed **per request** using the `.use` method:
+Middleware can be executed **per request** using the `.use` method:
 ```js
     const exampleMiddleware = require('exampleMiddleware');
 
@@ -193,7 +193,7 @@ Middlware can be executed **per request** using the `.use` method:
     }
 ```
 
-Middlware can also be executed **for every request** using the `.use` of the client builder. The client builder is created using the `createBuilder` method:
+Middleware can also be executed **for every request** using the `.use` of the client builder. The client builder is created using the `createBuilder` method:
 
 ```js
     const exampleMiddleware = require('exampleMiddleware');
@@ -214,7 +214,7 @@ Middlware can also be executed **for every request** using the `.use` of the cli
 
 For writing middleware, see the [offical guide](https://github.com/koajs/koa/blob/master/docs/guide.md)
 
-#### Offical HttpTransport middleware
+#### Official HttpTransport middleware
 See [Caching](https://github.com/bbc/http-transport-cache)
 
 See [Collapsing](https://github.com/bbc/http-transport-request-collapse)
@@ -227,37 +227,30 @@ See [Ratelimiting](https://github.com/bbc/http-transport-rate-limiter)
 
 See [xray](https://github.com/bbc/http-transport-xray)
 
-#### Using alternative HTTP clients via transport decorators
+#### Callback support
+HttpTransport does not support callbacks. However, to integrate with legacy code, use the [callback adapter](https://github.com/bbc/http-transport-callbacks)
 
-Make a HTTP GET request and supply an alternative HTTP transport via `.createClient`
+#### Setting default behaviour of underlying http transport
 
-```js
-const url = 'http://example.com/';
-const HttpTransport = require('@bbc/http-transport');
-const OtherTransport = require('some-other-transport');
-
-const res = await HttpTransport.createClient(OtherTransport)
-   .get(url)
-   .asResponse();
-
-    if (res.statusCode === 200) {
-        console.log(res.body);
-    }
-```
-
-Make a HTTP GET request by configuring an alternative request instance and supplying it in RequestTransport transport via `.createClient`
+Make a HTTP GET request by passing default configuration to RequestTransport, and supplying the configured RequestTransport to `.createClient`
 
 ```js
 const url = 'http://example.com/';
 const HttpTransport = require('@bbc/http-transport');
-const request = require('request');
 
-const requestDefaults = {
-    headers: {
-        special: 'special value'
+const defaultConfig = {
+    agentOpts: { // Here you can pass in any options for the https agent https://nodejs.org/api/https.html#class-httpsagent
+        keepAlive: true,
+        maxSockets: 1000
+    }, 
+    defaults: {
+        json: true, // parses the response body as json
+        timeout: 2000 // sets timeout for each request
+        compress: true // support gzip/deflate content encoding. false to disable
     }
 };
-const requestTransport = new HttpTransport.RequestTransport(request.defaults(requestDefaults));
+
+const requestTransport = new HttpTransport.RequestTransport(defaultConfig);
 
 const res = await HttpTransport.createClient(requestTransport);
     .get(url)
@@ -267,6 +260,3 @@ const res = await HttpTransport.createClient(requestTransport);
         console.log(res.body);
     }
 ```
-
-#### Callback support
-HttpTransport does not support callbacks. However, to integrate with legacy code, use the [callback adapter](https://github.com/bbc/http-transport-callbacks)
