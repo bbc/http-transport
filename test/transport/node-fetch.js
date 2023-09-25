@@ -17,14 +17,18 @@ const api = nock(host);
 const httpsApi = nock(httpsHost);
 const path = '/';
 
-const simpleResponseBody = 'Illegitimi non carborundum';
+const responseBody = 'Illegitimi non carborundum';
+const JSONResponseBody = { body: 'Illegitimi non carborundum' };
 const requestBody = {
   foo: 'bar'
 };
 const header = {
   'Content-Type': 'text/html'
 };
-const responseBody = requestBody;
+const jsonHeader = {
+  'Content-Type': 'application/json'
+};
+const postResponseBody = requestBody;
 
 function createContext(url, method) {
   method = method || 'get';
@@ -38,8 +42,8 @@ describe('Request HTTP transport', () => {
   beforeEach(() => {
     nock.disableNetConnect();
     nock.cleanAll();
-    api.get(path).reply(200, simpleResponseBody, header);
-    httpsApi.get(path).reply(200, simpleResponseBody, header);
+    api.get(path).reply(200, responseBody, header);
+    httpsApi.get(path).reply(200, responseBody, header);
   });
 
   afterEach(() => {
@@ -55,7 +59,7 @@ describe('Request HTTP transport', () => {
         .catch(assert.ifError)
         .then((ctx) => {
           assert.equal(ctx.res.statusCode, 200);
-          assert.equal(ctx.res.body, simpleResponseBody);
+          assert.equal(ctx.res.body, responseBody);
         });
     });
 
@@ -67,7 +71,7 @@ describe('Request HTTP transport', () => {
         }
       })
         .get(path)
-        .reply(200, simpleResponseBody, header);
+        .reply(200, responseBody, header);
 
       const ctx = createContext(url);
       ctx.req.addHeader('test', 'qui curat');
@@ -78,12 +82,12 @@ describe('Request HTTP transport', () => {
         .catch(assert.ifError)
         .then((ctx) => {
           assert.equal(ctx.res.statusCode, 200);
-          assert.equal(ctx.res.body, simpleResponseBody);
+          assert.equal(ctx.res.body, responseBody);
         });
     });
 
     it('makes a GET request with query strings', () => {
-      api.get('/?a=1').reply(200, simpleResponseBody, header);
+      api.get('/?a=1').reply(200, responseBody, header);
 
       const ctx = createContext(url);
       ctx.req.addQuery('a', 1);
@@ -94,7 +98,7 @@ describe('Request HTTP transport', () => {
         .catch(assert.ifError)
         .then((ctx) => {
           assert.equal(ctx.res.statusCode, 200);
-          assert.equal(ctx.res.body, simpleResponseBody);
+          assert.equal(ctx.res.body, responseBody);
         });
     });
 
@@ -126,22 +130,8 @@ describe('Request HTTP transport', () => {
         });
     });
 
-    it('makes a PUT request with a JSON body', () => {
-      api.put(path, requestBody).reply(201, responseBody);
-      const ctx = createContext(url, 'put');
-      ctx.req.body(requestBody);
-
-      return new FetchTransport()
-        .execute(ctx)
-        .catch(assert.ifError)
-        .then((ctx) => {
-          assert.equal(ctx.res.statusCode, 201);
-          assert.deepEqual(ctx.res.body, responseBody);
-        });
-    });
-
     it('makes a POST request with a JSON body', () => {
-      api.post(path, requestBody).reply(201, responseBody);
+      api.post(path, requestBody).reply(201, postResponseBody);
       const ctx = createContext(url, 'post');
       ctx.req.body(requestBody);
 
@@ -150,7 +140,21 @@ describe('Request HTTP transport', () => {
         .catch(assert.ifError)
         .then((ctx) => {
           assert.equal(ctx.res.statusCode, 201);
-          assert.deepEqual(ctx.res.body, responseBody);
+          assert.deepEqual(ctx.res.body, postResponseBody);
+        });
+    });
+
+    it('makes a PUT request with a JSON body', () => {
+      api.put(path, requestBody).reply(201, postResponseBody);
+      const ctx = createContext(url, 'put');
+      ctx.req.body(requestBody);
+
+      return new FetchTransport()
+        .execute(ctx)
+        .catch(assert.ifError)
+        .then((ctx) => {
+          assert.equal(ctx.res.statusCode, 201);
+          assert.deepEqual(ctx.res.body, postResponseBody);
         });
     });
 
@@ -185,7 +189,7 @@ describe('Request HTTP transport', () => {
       api
         .get('/')
         .delay(500)
-        .reply(200, simpleResponseBody);
+        .reply(200, responseBody);
 
       const ctx = createContext(url);
       ctx.req.timeout(20);
@@ -206,7 +210,7 @@ describe('Request HTTP transport', () => {
       api
         .get('/')
         .delay(500)
-        .reply(200, simpleResponseBody);
+        .reply(200, responseBody);
 
       const ctx = createContext(url);
 
@@ -227,7 +231,7 @@ describe('Request HTTP transport', () => {
 
     it('enables timing request by default', () => {
       nock.cleanAll();
-      api.get('/').reply(200, simpleResponseBody);
+      api.get('/').reply(200, responseBody);
 
       const ctx = createContext(url);
 
@@ -238,6 +242,57 @@ describe('Request HTTP transport', () => {
           assert.isNumber(timeTaken);
         })
         .catch(assert.ifError);
+    });
+
+    it('if json true option is passed in, parse body as json', () => {
+      nock.cleanAll();
+      api.get(path).reply(200, JSONResponseBody);
+
+      const ctx = createContext(url);
+      const options = {
+        defaults: {
+          json: true
+        }
+      };
+
+      const fetchTransport = new FetchTransport(options);
+
+      return fetchTransport
+        .execute(ctx)
+        .catch(assert.ifError)
+        .then(() => {
+          assert.typeOf(ctx.res.body, 'object', 'we have an object');
+        });
+    });
+
+    it('if there is no json option passed, but the header includes json, then parse body as json', () => {
+      nock.cleanAll();
+      api.get(path).reply(200, JSONResponseBody, jsonHeader);
+
+      const ctx = createContext(url);
+      const fetchTransport = new FetchTransport();
+
+      return fetchTransport
+        .execute(ctx)
+        .catch(assert.ifError)
+        .then(() => {
+          assert.typeOf(ctx.res.body, 'object', 'we have an object');
+        });
+    });
+
+    it('if there is no json option passed, and no json header, then parse body as text', () => {
+      nock.cleanAll();
+      api.get(path).reply(200, responseBody);
+
+      const ctx = createContext(url);
+      const fetchTransport = new FetchTransport();
+
+      return fetchTransport
+        .execute(ctx)
+        .catch(assert.ifError)
+        .then(() => {
+          assert.typeOf(ctx.res.body, 'string', 'we have text');
+        });
     });
 
     it('selects httpAgent when protocol is http and agent options have been provided', () => {
