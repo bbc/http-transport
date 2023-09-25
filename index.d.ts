@@ -13,7 +13,7 @@ export declare type Plugin<
   ContextCurrent extends Context = Context
 > = (
   ctx: ContextCurrent & ContextExtra,
-  next: () => void | Promise<void>
+  next: () => (void | Promise<void>)
 ) => any;
 export declare type Header = Object;
 export declare type Querystring = Object;
@@ -92,7 +92,7 @@ export declare class Response {
   static create(opts?: JsonResponse): Response;
   addHeader(key: string, value: string): Request;
   getHeader(key: string): string;
-  toJson(): JsonResponse;
+  toJSON(): JsonResponse;
 }
 
 export declare class HttpTransportBuilder<
