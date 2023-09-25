@@ -13,7 +13,7 @@ export declare type Plugin<
   ContextCurrent extends Context = Context
 > = (
   ctx: ContextCurrent & ContextExtra,
-  next: () => void | Promise<void>
+  next: () => (void | Promise<void>)
 ) => any;
 export declare type Header = Object;
 export declare type Querystring = Object;
