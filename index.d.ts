@@ -1,6 +1,5 @@
 import * as fetch from 'node-fetch';
 import * as https from 'node:https';
-import FetchTransport from './lib/transport/node-fetch';
 
 export declare function createBuilder(
   transport?: Transport
@@ -156,10 +155,10 @@ type TransportOptions = {
 }
 
 export declare class defaultTransport extends FetchTransport {
-  constructor(TransportOptions);
+  constructor(options: TransportOptions);
 }
 export declare class FetchTransport extends Transport {
-  constructor(TransportOptions);
+  constructor(options: TransportOptions);
 }
 
 export declare class Transport {
