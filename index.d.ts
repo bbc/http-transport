@@ -92,7 +92,7 @@ export declare class Response {
   static create(opts?: JsonResponse): Response;
   addHeader(key: string, value: string): Request;
   getHeader(key: string): string;
-  toJson(): JsonResponse;
+  toJSON(): JsonResponse;
 }
 
 export declare class HttpTransportBuilder<
