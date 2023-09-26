@@ -50,7 +50,7 @@
   "dependencies": {
     "koa-compose": "^4.0.0",
     "lodash": "^4.17.4",
-    "node-fetch": "^3.3.2",
+    "node-fetch": "^2.7.0",
     "qs": "^6.5.1"
   },
   "mocha": {
