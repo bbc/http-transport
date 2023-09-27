@@ -149,6 +149,7 @@ declare class Context {
 export type TransportOptions = {
   agentOpts?: https.AgentOptions,
   defaults?: {
+    json?: boolean
     timeout?: number
     compress?: boolean
     proxy?: string

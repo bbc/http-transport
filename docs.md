@@ -247,6 +247,7 @@ const defaultConfig = {
         json: true, // parses the response body as json
         timeout: 2000 // sets timeout for each request
         compress: true // support gzip/deflate content encoding. false to disable
+        proxy: 'http://someproxyurl.co.uk'
     }
 };
 
