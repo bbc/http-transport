@@ -10,6 +10,7 @@ const FetchTransport = require('../../lib/transport/node-fetch');
 
 const url = 'http://www.example.com/';
 const httpsUrl = 'https://www.example.com/';
+const proxyUrl = 'http://forward-proxy.ibl.test.api.bbci.co.uk';
 const host = 'http://www.example.com';
 const httpsHost = 'https://www.example.com';
 
@@ -295,54 +296,106 @@ describe('Request HTTP transport', () => {
         });
     });
 
-    it('selects httpAgent when protocol is http and agent options have been provided', () => {
-      const ctx = createContext(url);
-      const options = {
-        agentOpts: {
-          keepAlive: true,
-          maxSockets: 1000
-        }
-      };
-
-      const fetchTransport = new FetchTransport(options);
-
-      const spy = sinon.spy(fetchTransport, '_fetch');
-
-      return fetchTransport
-        .execute(ctx)
-        .catch(assert.ifError)
-        .then(() => {
-          sinon.assert.calledWithMatch(spy, url, { agent: {
-            protocol: 'http:',
+    describe('HTTP Agent', () => {
+      it('selects httpAgent when protocol is http and agent options have been provided', () => {
+        const ctx = createContext(url);
+        const options = {
+          agentOpts: {
             keepAlive: true,
             maxSockets: 1000
-          } });
-        });
-    });
+          }
+        };
 
-    it('selects httpsAgent when protocol is https and agent options have been provided', () => {
-      const ctx = createContext(httpsUrl);
-      const options = {
-        agentOpts: {
-          keepAlive: true,
-          maxSockets: 1000
-        }
-      };
+        const fetchTransport = new FetchTransport(options);
 
-      const fetchTransport = new FetchTransport(options);
+        const spy = sinon.spy(fetchTransport, '_fetch');
 
-      const spy = sinon.spy(fetchTransport, '_fetch');
+        return fetchTransport
+          .execute(ctx)
+          .catch(assert.ifError)
+          .then(() => {
+            sinon.assert.calledWithMatch(spy, url, { agent: {
+              protocol: 'http:',
+              keepAlive: true,
+              maxSockets: 1000
+            } });
+          });
+      });
 
-      return fetchTransport
-        .execute(ctx)
-        .catch(assert.ifError)
-        .then(() => {
-          sinon.assert.calledWithMatch(spy, httpsUrl, { agent: {
-            protocol: 'https:',
+      it('selects httpsAgent when protocol is https and agent options have been provided', () => {
+        const ctx = createContext(httpsUrl);
+        const options = {
+          agentOpts: {
             keepAlive: true,
             maxSockets: 1000
-          } });
-        });
+          }
+        };
+
+        const fetchTransport = new FetchTransport(options);
+
+        const spy = sinon.spy(fetchTransport, '_fetch');
+
+        return fetchTransport
+          .execute(ctx)
+          .catch(assert.ifError)
+          .then(() => {
+            sinon.assert.calledWithMatch(spy, httpsUrl, { agent: {
+              protocol: 'https:',
+              keepAlive: true,
+              maxSockets: 1000
+            } });
+          });
+      });
+
+      it('selects proxy httpsAgent when protocol proxy has been provided', () => {
+        const ctx = createContext(url);
+        const options = {
+          defaults: {
+            proxy: proxyUrl
+          }
+        };
+
+        const fetchTransport = new FetchTransport(options);
+
+        const spy = sinon.spy(fetchTransport, '_fetch');
+
+        return fetchTransport
+          .execute(ctx)
+          .catch(assert.ifError)
+          .then(() => {
+            sinon.assert.calledWithMatch(spy, url, { agent: {
+              proxy: new URL(proxyUrl)
+            } });
+          });
+      });
+
+      it('selects proxy httpsAgent when protocol proxy has been provided and applies agent options', () => {
+        const ctx = createContext(url);
+        const options = {
+          agentOpts: {
+            keepAlive: true,
+            maxSockets: 1000
+          },
+          defaults: {
+            proxy: proxyUrl
+          }
+        };
+
+        const fetchTransport = new FetchTransport(options);
+
+        const spy = sinon.spy(fetchTransport, '_fetch');
+
+        return fetchTransport
+          .execute(ctx)
+          .catch(assert.ifError)
+          .then(() => {
+            sinon.assert.calledWithMatch(spy, url, { agent: {
+              proxy: new URL(proxyUrl),
+              keepAlive: true,
+              maxSockets: 1000
+            } });
+          });
+      });
     });
   });
 });

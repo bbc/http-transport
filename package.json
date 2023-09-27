@@ -48,6 +48,7 @@
     "sinon": "^1.15.3"
   },
   "dependencies": {
+    "https-proxy-agent": "^7.0.2",
     "koa-compose": "^4.0.0",
     "lodash": "^4.17.4",
     "node-fetch": "^2.7.0",

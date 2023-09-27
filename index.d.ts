@@ -146,11 +146,12 @@ declare class Context {
   addPlugin(plugin: Plugin): Context;
 }
 
-type TransportOptions = {
+export type TransportOptions = {
   agentOpts?: https.AgentOptions,
   defaults?: {
     timeout?: number
     compress?: boolean
+    proxy?: string
   }
 }
 
