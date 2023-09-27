@@ -1,6 +1,5 @@
 
 [![NPM downloads](https://img.shields.io/npm/dm/@bbc/http-transport.svg?style=flat)](https://npmjs.org/package/@bbc/http-transport)
-[![Build Status](https://api.travis-ci.org/bbc/http-transport.svg)](https://travis-ci.org/bbc/http-transport) 
 ![npm](https://img.shields.io/npm/v/@bbc/http-transport.svg)
 ![license](https://img.shields.io/badge/license-MIT-blue.svg) 
 ![github-issues](https://img.shields.io/github/issues/bbc/http-transport.svg)
