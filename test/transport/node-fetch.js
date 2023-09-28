@@ -7,6 +7,7 @@ const sinon = require('sinon');
 const sandbox = sinon.sandbox.create();
 
 const FetchTransport = require('../../lib/transport/node-fetch');
+// const setContextProperty
 
 const url = 'http://www.example.com/';
 const httpsUrl = 'https://www.example.com/';
@@ -245,55 +246,76 @@ describe('Request HTTP transport', () => {
         .catch(assert.ifError);
     });
 
-    it('if json true option is passed in, parse body as json', () => {
-      nock.cleanAll();
-      api.get(path).reply(200, JSONResponseBody);
+    describe('JSON parsing', () => {
+      it('if json default option is passed in as true, parse body as json', () => {
+        nock.cleanAll();
+        api.get(path).reply(200, JSONResponseBody);
 
-      const ctx = createContext(url);
-      const options = {
-        defaults: {
+        const ctx = createContext(url);
+        const options = {
+          defaults: {
+            json: true
+          }
+        };
+
+        const fetchTransport = new FetchTransport(options);
+
+        return fetchTransport
+          .execute(ctx)
+          .catch(assert.ifError)
+          .then(() => {
+            assert.typeOf(ctx.res.body, 'object', 'we have an object');
+          });
+      });
+
+      it('if there is no json default option passed in, but the content type header includes application/json, then parse body as json', () => {
+        nock.cleanAll();
+        api.get(path).reply(200, JSONResponseBody, jsonHeader);
+
+        const ctx = createContext(url);
+        const fetchTransport = new FetchTransport();
+
+        return fetchTransport
+          .execute(ctx)
+          .catch(assert.ifError)
+          .then(() => {
+            assert.typeOf(ctx.res.body, 'object', 'we have an object');
+          });
+      });
+
+      it('if there is no json default option passed in, and no content type application/json header, then parse body as text', () => {
+        nock.cleanAll();
+        api.get(path).reply(200, responseBody);
+
+        const ctx = createContext(url);
+        const fetchTransport = new FetchTransport();
+
+        return fetchTransport
+          .execute(ctx)
+          .catch(assert.ifError)
+          .then(() => {
+            assert.typeOf(ctx.res.body, 'string', 'we have text');
+          });
+      });
+
+      it('if the context options have json set to true, then parse the body as json', () => {
+        nock.cleanAll();
+        api.get(path).reply(200, JSONResponseBody);
+
+        const ctx = createContext(url);
+        const fetchTransport = new FetchTransport();
+
+        ctx.opts = {
           json: true
-        }
-      };
+        };
 
-      const fetchTransport = new FetchTransport(options);
-
-      return fetchTransport
-        .execute(ctx)
-        .catch(assert.ifError)
-        .then(() => {
-          assert.typeOf(ctx.res.body, 'object', 'we have an object');
-        });
-    });
-
-    it('if there is no json option passed, but the header includes json, then parse body as json', () => {
-      nock.cleanAll();
-      api.get(path).reply(200, JSONResponseBody, jsonHeader);
-
-      const ctx = createContext(url);
-      const fetchTransport = new FetchTransport();
-
-      return fetchTransport
-        .execute(ctx)
-        .catch(assert.ifError)
-        .then(() => {
-          assert.typeOf(ctx.res.body, 'object', 'we have an object');
-        });
-    });
-
-    it('if there is no json option passed, and no json header, then parse body as text', () => {
-      nock.cleanAll();
-      api.get(path).reply(200, responseBody);
-
-      const ctx = createContext(url);
-      const fetchTransport = new FetchTransport();
-
-      return fetchTransport
-        .execute(ctx)
-        .catch(assert.ifError)
-        .then(() => {
-          assert.typeOf(ctx.res.body, 'string', 'we have text');
-        });
+        return fetchTransport
+          .execute(ctx)
+          .catch(assert.ifError)
+          .then(() => {
+            assert.typeOf(ctx.res.body, 'object', 'we have an object');
+          });
+      });
     });
 
     describe('HTTP Agent', () => {
