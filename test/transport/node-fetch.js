@@ -369,7 +369,7 @@ describe('Request HTTP transport', () => {
           });
       });
 
-      it('selects proxy httpsAgent when protocol proxy has been provided', () => {
+      it('selects httpProxyAgent when proxy has been provided', () => {
         const ctx = createContext(url);
         const options = {
           defaults: {
@@ -386,12 +386,13 @@ describe('Request HTTP transport', () => {
           .catch(assert.ifError)
           .then(() => {
             sinon.assert.calledWithMatch(spy, url, { agent: {
-              proxy: new URL(proxyUrl)
+              proxy: new URL(proxyUrl),
+              protocol: 'http:'
             } });
           });
       });
 
-      it('selects proxy httpsAgent when protocol proxy has been provided and applies agent options', () => {
+      it('selects httpProxyAgent when proxy has been provided and applies agent options', () => {
         const ctx = createContext(url);
         const options = {
           agentOpts: {

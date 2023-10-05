@@ -83,7 +83,7 @@ describe('HttpTransportClient', () => {
         .get(url)
         .asResponse();
 
-      assert.deepEqual(res.body, '');
+      assert.deepEqual(res.body, undefined);
     });
 
     it('sets a default User-agent for every request', async () => {
@@ -554,22 +554,21 @@ describe('HttpTransportClient', () => {
     describe('setContextProperty', () => {
       it('sets an option in the context', async () => {
         nock.cleanAll();
-        api.get(path).reply(200, responseBody);
+        api.get(path).reply(200, '1234');
 
         const client = HttpTransport.createBuilder()
-          .use(toJson())
           .createClient();
 
         const res = await client
           .use(setContextProperty({
-            time: false
+            json: true
           },
           'opts'
           ))
           .get(url)
           .asResponse();
 
-        assert.isUndefined(res.elapsedTime);
+        assert.strictEqual(res.body, 1234);
       });
 
       it('sets an explict key on the context', async () => {
