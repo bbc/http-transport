@@ -246,6 +246,26 @@ describe('Request HTTP transport', () => {
         .catch(assert.ifError);
     });
 
+    it('allows disabling of  timing request', () => {
+      nock.cleanAll();
+      api.get('/').reply(200, responseBody);
+
+      const ctx = createContext(url);
+      const options = {
+        defaults: {
+          time: false
+        }
+      };
+
+      return new FetchTransport(options)
+        .execute(ctx)
+        .then((ctx) => {
+          const timeTaken = ctx.res.elapsedTime;
+          assert.isUndefined(timeTaken);
+        })
+        .catch(assert.ifError);
+    });
+
     describe('JSON parsing', () => {
       it('if json default option is passed in as true, parse body as json', () => {
         nock.cleanAll();
