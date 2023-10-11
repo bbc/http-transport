@@ -246,7 +246,7 @@ describe('Request HTTP transport', () => {
         .catch(assert.ifError);
     });
 
-    it('allows disabling of  timing request', () => {
+    it('allows disabling of timing request', () => {
       nock.cleanAll();
       api.get('/').reply(200, responseBody);
 
@@ -285,6 +285,32 @@ describe('Request HTTP transport', () => {
           .catch(assert.ifError)
           .then(() => {
             assert.typeOf(ctx.res.body, 'object', 'we have an object');
+          });
+      });
+
+      it('if json default option is passed in as true, send an accept: application/json header', () => {
+        nock.cleanAll();
+        nock(host, {
+          reqheaders: {
+            accept: 'application/json'
+          }
+        })
+          .get(path)
+          .reply(200, responseBody, header);
+
+        const ctx = createContext(url);
+        const options = {
+          defaults: {
+            json: true
+          }
+        };
+
+        const fetchTransport = new FetchTransport(options);
+        return fetchTransport
+          .execute(ctx)
+          .catch(assert.ifError)
+          .then((ctx) => {
+            assert.equal(ctx.res.statusCode, 200);
           });
       });
 
