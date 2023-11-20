@@ -56,7 +56,7 @@ declare enum Method {
   options
 }
 
-export declare function toJson(opts: ToJsonOpts): Plugin;
+export declare function toJson(opts?: ToJsonOpts): Plugin;
 export declare function logger(logger?: any): Plugin;
 export declare function setContextProperty(opts: any, path: string): Plugin;
 
@@ -130,7 +130,7 @@ export declare class HttpTransportClient<
   headers(headers: Header): HttpTransportClient<ContextCurrent>;
   query(query: Querystring): HttpTransportClient<ContextCurrent>;
   timeout(timeout: number): HttpTransportClient<ContextCurrent>;
-  retries(retries: number): HttpTransportClient<ContextCurrent>;
+  retry(retries: number): HttpTransportClient<ContextCurrent>;
   retryDelay(retryDelay: number): HttpTransportClient<ContextCurrent>;
   asBody(): Promise<ContextCurrent["res"]["body"]>;
   asResponse(): Promise<ContextCurrent["res"]>;
