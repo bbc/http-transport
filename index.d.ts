@@ -16,7 +16,7 @@ export declare type Plugin<
 ) => any;
 export declare type Header = Object;
 export declare type Querystring = Object;
-export declare type Body = string;
+export declare type Body = string | Object | null;
 export declare type RequestOptions = Object;
 export declare type ErrorObject = {
   message: string;
