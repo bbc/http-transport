@@ -1,9 +1,9 @@
 import * as fetch from 'node-fetch';
 import * as https from 'node:https';
 
-export declare function createBuilder(
+export declare function createBuilder<ContextCurrent extends Context>(
   transport?: Transport
-): HttpTransportBuilder;
+): HttpTransportBuilder<ContextCurrent>;
 export declare function createClient(): HttpTransportClient;
 
 declare type callbackFunction<T> = (err: any, value?: T) => void;
