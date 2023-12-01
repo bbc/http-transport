@@ -1,9 +1,9 @@
 import * as fetch from 'node-fetch';
 import * as https from 'node:https';
 
-export declare function createBuilder<ContextCurrent extends Context>(
+export declare function createBuilder(
   transport?: Transport
-): HttpTransportBuilder<ContextCurrent>;
+): HttpTransportBuilder;
 export declare function createClient(): HttpTransportClient;
 
 declare type callbackFunction<T> = (err: any, value?: T) => void;
@@ -106,6 +106,10 @@ export declare class HttpTransportBuilder<
   createClient(): HttpTransportClient<ContextCurrent>;
 }
 
+type ResponseWithGenericBodyType<ResponseType, BodyType> = ResponseType & {
+  body: BodyType
+}
+
 export declare class HttpTransportClient<
   ContextCurrent extends Context = Context
 > {
@@ -132,8 +136,8 @@ export declare class HttpTransportClient<
   timeout(timeout: number): HttpTransportClient<ContextCurrent>;
   retry(retries: number): HttpTransportClient<ContextCurrent>;
   retryDelay(retryDelay: number): HttpTransportClient<ContextCurrent>;
-  asBody(): Promise<ContextCurrent["res"]["body"]>;
-  asResponse(): Promise<ContextCurrent["res"]>;
+  asBody<ResponseBody = ContextCurrent["res"]["body"]>(): Promise<ResponseBody>;
+  asResponse<ResponseBody = ContextCurrent["res"]["body"]>(): Promise<ResponseWithGenericBodyType<ContextCurrent["res"], ResponseBody>>;
 }
 
 declare class Context {
