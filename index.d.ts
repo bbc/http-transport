@@ -107,8 +107,8 @@ export declare class HttpTransportBuilder<
 }
 
 type ResponseWithGenericBodyType<ResponseType, BodyType> = ResponseType & {
-  body: BodyType
-}
+  body: BodyType;
+};
 
 export declare class HttpTransportClient<
   ContextCurrent extends Context = Context
@@ -136,8 +136,16 @@ export declare class HttpTransportClient<
   timeout(timeout: number): HttpTransportClient<ContextCurrent>;
   retry(retries: number): HttpTransportClient<ContextCurrent>;
   retryDelay(retryDelay: number): HttpTransportClient<ContextCurrent>;
-  asBody<ResponseBody = ContextCurrent["res"]["body"]>(): Promise<ResponseBody>;
-  asResponse<ResponseBody = ContextCurrent["res"]["body"]>(): Promise<ResponseWithGenericBodyType<ContextCurrent["res"], ResponseBody>>;
+  asBody<GenericResponseBody = false>(): Promise<
+    GenericResponseBody extends false
+      ? ContextCurrent["res"]["body"]
+      : GenericResponseBody
+  >;
+  asResponse<GenericResponseBody = false>(): Promise<
+    GenericResponseBody extends false
+      ? ContextCurrent["res"]
+      : ResponseWithGenericBodyType<ContextCurrent["res"], GenericResponseBody>
+  >;
 }
 
 declare class Context {
