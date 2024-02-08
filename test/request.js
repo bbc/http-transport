@@ -65,10 +65,10 @@ describe('Request', () => {
       assert.equal(request.getUrl(), HOST + '?a=10&b=%23%3F%26%20%21');
     });
 
-    it('uri-encodes multi-parameter queries', () => {
+    it('adds multi-parameter queries correctly', () => {
       const request = Request.create();
       request.baseUrl(HOST).addQuery('a', [1, 2]);
-      assert.equal(request.getUrl(), HOST + '?a%5B0%5D=1&a%5B1%5D=2');
+      assert.equal(request.getUrl(), HOST + '?a=1&a=2');
     });
   });
 
