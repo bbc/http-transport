@@ -1,6 +1,7 @@
 'use strict';
 
 const assert = require('chai').assert;
+const expect = require('chai').expect;
 const nock = require('nock');
 const sinon = require('sinon');
 
@@ -474,6 +475,61 @@ describe('HttpTransportClient', () => {
         return assert.equal(err.message, 'Request failed for GET http://www.example.com/: ESOCKETTIMEDOUT');
       }
       assert.fail('Should have thrown');
+    });
+  });
+
+  describe('.redirect', () => {
+    describe('sets the type of redirect handling', async () => {
+      it('redirects automatically if value is not set', async () => {
+        nock.cleanAll();
+        api
+          .get('/')
+          .reply(303, '', { Location: `${url}new-path` });
+
+        api
+          .get('/new-path')
+          .reply(200, 'It works');
+
+        const client = HttpTransport.createClient()
+          .get(url);
+        const response = await client.asResponse();
+
+        assert(response.statusCode, 200);
+        assert(response.body, 'It works');
+      });
+
+      it('returns 303 and the location if value is `manual`', async () => {
+        nock.cleanAll();
+        api
+          .get('/')
+          .reply(303, '', { Location: `${url}new-path` });
+
+        const client = HttpTransport.createClient()
+          .redirect('manual')
+          .get(url);
+        const response = await client.asResponse();
+
+        assert(response.statusCode, 303);
+        assert(response.headers.location, `${url}new-path`);
+      });
+
+      it('throws error if value is `error`', async () => {
+        nock.cleanAll();
+        api
+          .get('/')
+          .reply(303, '', { Location: `${url}new-path` });
+
+        try {
+          const client = HttpTransport.createClient()
+            .redirect('error')
+            .get(url);
+          await client.asResponse();
+        } catch (err) {
+          expect(err.message).to.include('Request failed for GET http://www.example.com/');
+          return;
+        }
+        assert.fail('Should have thrown');
+      });
     });
   });
 
