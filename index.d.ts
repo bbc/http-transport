@@ -134,7 +134,7 @@ export declare class HttpTransportClient<
   headers(headers: Header): HttpTransportClient<ContextCurrent>;
   query(query: Querystring): HttpTransportClient<ContextCurrent>;
   timeout(timeout: number): HttpTransportClient<ContextCurrent>;
-  redirect(redirectType: 'follow'|'manual'|'error'): HttpTransportClient<ContextCurrent>;
+  redirect(redirectType: fetch.RequestRedirect): HttpTransportClient<ContextCurrent>;
   retry(retries: number): HttpTransportClient<ContextCurrent>;
   retryDelay(retryDelay: number): HttpTransportClient<ContextCurrent>;
   asBody<ResponseBody = ContextCurrent["res"]["body"]>(): Promise<
@@ -154,7 +154,7 @@ declare class Context {
   retryAttempts: Array<RetryAttempt>;
   addPlugin(plugin: Plugin): Context;
 
-  redirect?: 'follow'|'manual'|'error';
+  redirect?: fetch.RequestRedirect;
 }
 
 export type TransportOptions = {
@@ -164,6 +164,7 @@ export type TransportOptions = {
     timeout?: number
     compress?: boolean
     proxy?: string
+    redirect?: fetch.RequestRedirect
   }
 }
 
