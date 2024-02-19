@@ -6,6 +6,11 @@ const Request = require('../lib/request');
 const HOST = 'https://example.com';
 
 describe('Request', () => {
+  it('sets leave the redirect handling undefined', () => {
+    const request = Request.create();
+    assert.equal(request._redirect, undefined);
+  });
+
   describe('.baseUrl', () => {
     it('sets the base URL', () => {
       const request = Request.create();
@@ -84,6 +89,14 @@ describe('Request', () => {
 
       const key = `GET:${HOST}?a=1&b=2`;
       assert.equal(request.getRequestKey(), key);
+    });
+  });
+
+  describe('.redirect', () => {
+    it('sets the redirect handling', () => {
+      const request = Request.create();
+      request.redirect('manual');
+      assert.equal(request._redirect, 'manual');
     });
   });
 });

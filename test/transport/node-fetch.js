@@ -266,6 +266,23 @@ describe('Request HTTP transport', () => {
         .catch(assert.ifError);
     });
 
+    it('sets redirect', () => {
+      nock.cleanAll();
+      api
+        .get('/')
+        .reply(303, '', { Location: `${url}new-path` });
+
+      const ctx = createContext(url);
+      ctx.req.redirect('manual');
+
+      return new FetchTransport()
+        .execute(ctx)
+        .then((ctx) => {
+          assert.equal(ctx.res.statusCode, 303);
+          assert.equal(ctx.res.headers.location, `${url}new-path`);
+        });
+    });
+
     describe('JSON parsing', () => {
       it('if json default option is passed in as true, parse body as json', () => {
         nock.cleanAll();
