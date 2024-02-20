@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li><li><a href="HttpTransportClient.html">HttpTransportClient</a><ul class='methods'><li data-type='method'><a href="HttpTransportClient.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransportClient.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransportClient.html#delete">delete</a></li><li data-type='method'><a href="HttpTransportClient.html#get">get</a></li><li data-type='method'><a href="HttpTransportClient.html#head">head</a></li><li data-type='method'><a href="HttpTransportClient.html#headers">headers</a></li><li data-type='method'><a href="HttpTransportClient.html#patch">patch</a></li><li data-type='method'><a href="HttpTransportClient.html#post">post</a></li><li data-type='method'><a href="HttpTransportClient.html#put">put</a></li><li data-type='method'><a href="HttpTransportClient.html#query">query</a></li><li data-type='method'><a href="HttpTransportClient.html#retry">retry</a></li><li data-type='method'><a href="HttpTransportClient.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportClient.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransportClient.html#use">use</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li><li><a href="HttpTransportClient.html">HttpTransportClient</a><ul class='methods'><li data-type='method'><a href="HttpTransportClient.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransportClient.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransportClient.html#delete">delete</a></li><li data-type='method'><a href="HttpTransportClient.html#get">get</a></li><li data-type='method'><a href="HttpTransportClient.html#head">head</a></li><li data-type='method'><a href="HttpTransportClient.html#headers">headers</a></li><li data-type='method'><a href="HttpTransportClient.html#patch">patch</a></li><li data-type='method'><a href="HttpTransportClient.html#post">post</a></li><li data-type='method'><a href="HttpTransportClient.html#put">put</a></li><li data-type='method'><a href="HttpTransportClient.html#query">query</a></li><li data-type='method'><a href="HttpTransportClient.html#redirect">redirect</a></li><li data-type='method'><a href="HttpTransportClient.html#retry">retry</a></li><li data-type='method'><a href="HttpTransportClient.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportClient.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransportClient.html#use">use</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -244,7 +244,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line270">line 270</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line290">line 290</a>
     </li></ul></dd>
     
 
@@ -352,7 +352,7 @@ then the body type will be json.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line289">line 289</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line309">line 309</a>
     </li></ul></dd>
     
 
@@ -1792,6 +1792,167 @@ const response = await httpTransport.createClient()
 
     
 
+    <h4 class="name" id="redirect"><span class="type-signature"></span>redirect<span class="signature">(redirect)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line233">line 233</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Set the redirect handling:
+<code>follow</code> (default) to follow the redirects automatically,
+<code>manual</code> to extract redirect headers,
+<code>error</code> to reject redirect</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>const httpTransport = require('@bbc/http-transport');
+
+const response = await httpTransport.createClient()
+   .redirect('manual') // for this request only
+   .asResponse();</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>redirect</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">'follow'</span>
+|
+
+<span class="param-type">'manual'</span>
+|
+
+<span class="param-type">'error'</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>redirect handling</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>a HttpTransport instance</p>
+</div>
+
+
+
+    
+
+
+        
+            
+
+    
+
     <h4 class="name" id="retry"><span class="type-signature"></span>retry<span class="signature">(retries)</span><span class="type-signature"></span></h4>
 
     
@@ -1804,7 +1965,7 @@ const response = await httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line230">line 230</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line250">line 250</a>
     </li></ul></dd>
     
 
@@ -1956,7 +2117,7 @@ const response = await httpTransport.createClient()
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line248">line 248</a>
+        <a href="client.js.html">client.js</a>, <a href="client.js.html#line268">line 268</a>
     </li></ul></dd>
     
 
@@ -2414,7 +2575,7 @@ httpTransport.createClient()
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Fri Sep 22 2023 15:20:00 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Mon Feb 19 2024 16:02:59 GMT+0100 (Central European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

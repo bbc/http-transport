@@ -110,6 +110,17 @@ Convert `Internal Server` responses (500) to errors:
 `toError` is **only** required if the underlying client does not support HTTP error conversion. 
 The default transport is `node-fetch`, which does **not** convert errors. 
 
+#### Handling redirects
+
+Set the redirect handling to manual
+
+```js
+const body = await HttpTransport.createClient()
+      .redirect('manual')
+      .get(url)
+      .asBody();
+```
+
 #### Retries
 
 Make a HTTP GET and retry twice on error `.retry`

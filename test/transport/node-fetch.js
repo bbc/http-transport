@@ -231,6 +231,26 @@ describe('Request HTTP transport', () => {
         });
     });
 
+    it('sets a default redirect', () => {
+      nock.cleanAll();
+      api
+        .get('/')
+        .reply(303, '', { Location: `${url}new-path` });
+
+      const ctx = createContext(url);
+
+      return new FetchTransport({
+        defaults: {
+          redirect: 'manual'
+        }
+      })
+        .execute(ctx)
+        .then(() => {
+          assert.equal(ctx.res.statusCode, 303);
+          assert.equal(ctx.res.headers.location, `${url}new-path`);
+        });
+    });
+
     it('enables timing request by default', () => {
       nock.cleanAll();
       api.get('/').reply(200, responseBody);
@@ -264,6 +284,23 @@ describe('Request HTTP transport', () => {
           assert.isUndefined(timeTaken);
         })
         .catch(assert.ifError);
+    });
+
+    it('sets redirect', () => {
+      nock.cleanAll();
+      api
+        .get('/')
+        .reply(303, '', { Location: `${url}new-path` });
+
+      const ctx = createContext(url);
+      ctx.req.redirect('manual');
+
+      return new FetchTransport()
+        .execute(ctx)
+        .then((ctx) => {
+          assert.equal(ctx.res.statusCode, 303);
+          assert.equal(ctx.res.headers.location, `${url}new-path`);
+        });
     });
 
     describe('JSON parsing', () => {
