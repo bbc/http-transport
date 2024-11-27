@@ -141,6 +141,22 @@ describe('HttpTransportClient', () => {
       assert.equal(ctx.retries, 50);
       assert.equal(ctx.retryDelay, 2000);
     });
+
+    it('sets default criticalErrorDetector in the context', async () => {
+      const transport = new Transport();
+      sandbox.stub(transport, 'execute').returns(Promise.resolve());
+
+      const client = HttpTransport.createBuilder(transport)
+        .criticalErrorDetector(() => false)
+        .createClient();
+
+      await client
+        .get(url)
+        .asResponse();
+
+      const ctx = transport.execute.getCall(0).args[0];
+      assert.equal(ctx.criticalErrorDetector.toString(), (() => false).toString());
+    });
   });
 
   describe('.retries', () => {

@@ -100,6 +100,7 @@ export declare class HttpTransportBuilder<
   userAgent(userAgent: string): HttpTransportBuilder<ContextCurrent>;
   retries(retries: number): HttpTransportBuilder<ContextCurrent>;
   retryDelay(retryDelay: number): HttpTransportBuilder<ContextCurrent>;
+  criticalErrorDetector(criticalErrorDetector: (err, ctx: Context) => boolean);
   use<ContextExtra = {}>(
     fn: Plugin<ContextExtra, ContextCurrent>
   ): HttpTransportBuilder<ContextExtra & ContextCurrent>;
@@ -141,7 +142,7 @@ export declare class HttpTransportClient<
     ResponseBody
   >;
   asResponse<ResponseBody = ContextCurrent["res"]["body"]>(): Promise<
-    AsResponse<ContextCurrent["res"], ResponseBody>  
+    AsResponse<ContextCurrent["res"], ResponseBody>
   >;
 }
 
