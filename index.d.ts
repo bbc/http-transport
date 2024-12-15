@@ -100,7 +100,7 @@ export declare class HttpTransportBuilder<
   userAgent(userAgent: string): HttpTransportBuilder<ContextCurrent>;
   retries(retries: number): HttpTransportBuilder<ContextCurrent>;
   retryDelay(retryDelay: number): HttpTransportBuilder<ContextCurrent>;
-  criticalErrorDetector(criticalErrorDetector: (err, ctx: Context) => boolean);
+  criticalErrorDetector(criticalErrorDetector: (err, ctx: Context) => boolean): HttpTransportBuilder<ContextCurrent>;
   use<ContextExtra = {}>(
     fn: Plugin<ContextExtra, ContextCurrent>
   ): HttpTransportBuilder<ContextExtra & ContextCurrent>;
