@@ -1,6 +1,6 @@
 {
   "name": "@bbc/http-transport",
-  "version": "4.6.0",
+  "version": "4.6.1",
   "description": "A flexible, modular REST client built for ease-of-use and resilience.",
   "main": "index.js",
   "types": "index.d.ts",
