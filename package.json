@@ -5,11 +5,10 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha && npm run lint",
     "jsdoc": "jsdoc -c ./docconfig/jsdoc.json",
     "lint": "eslint ./lib ./test",
-    "coverage": "nyc mocha && nyc report --reporter=html && nyc report --reporter=json-summary",
-    "posttest": "npm run lint"
+    "coverage": "nyc mocha && nyc report --reporter=html && nyc report --reporter=json-summary"
   },
   "repository": {
     "type": "git",
