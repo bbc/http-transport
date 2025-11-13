@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "mocha && npm run lint",
+    "test": "mocha && pnpm run lint",
     "jsdoc": "jsdoc -c ./docconfig/jsdoc.json",
     "lint": "eslint ./lib ./test",
     "coverage": "nyc mocha && nyc report --reporter=html && nyc report --reporter=json-summary"
@@ -19,7 +19,8 @@
     "url": "https://github.com/bbc/http-transport/issues"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "pnpm": ">=10"
   },
   "keywords": [
     "https",

@@ -13,7 +13,7 @@
 ## Installation
 
 ```
-npm install @bbc/http-transport --save
+pnpm install @bbc/http-transport --save
 ```
 
 ## Usage
@@ -72,11 +72,11 @@ const myPlugin: Plugin<any> = (context, next) => {};
 ## Test
 
 ```
-npm test
+pnpm test
 ```
 
 To generate a test coverage report:
 
 ```
-npm run coverage
+pnpm run coverage
 ```
