@@ -23,7 +23,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li><li><a href="HttpTransportClient.html">HttpTransportClient</a><ul class='methods'><li data-type='method'><a href="HttpTransportClient.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransportClient.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransportClient.html#delete">delete</a></li><li data-type='method'><a href="HttpTransportClient.html#get">get</a></li><li data-type='method'><a href="HttpTransportClient.html#head">head</a></li><li data-type='method'><a href="HttpTransportClient.html#headers">headers</a></li><li data-type='method'><a href="HttpTransportClient.html#patch">patch</a></li><li data-type='method'><a href="HttpTransportClient.html#post">post</a></li><li data-type='method'><a href="HttpTransportClient.html#put">put</a></li><li data-type='method'><a href="HttpTransportClient.html#query">query</a></li><li data-type='method'><a href="HttpTransportClient.html#redirect">redirect</a></li><li data-type='method'><a href="HttpTransportClient.html#retry">retry</a></li><li data-type='method'><a href="HttpTransportClient.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportClient.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransportClient.html#use">use</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="HttpTransportBuilder.html">HttpTransportBuilder</a><ul class='methods'><li data-type='method'><a href="HttpTransportBuilder.html#createClient">createClient</a></li><li data-type='method'><a href="HttpTransportBuilder.html#criticalErrorDetector">criticalErrorDetector</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retries">retries</a></li><li data-type='method'><a href="HttpTransportBuilder.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportBuilder.html#use">use</a></li><li data-type='method'><a href="HttpTransportBuilder.html#userAgent">userAgent</a></li></ul></li><li><a href="HttpTransportClient.html">HttpTransportClient</a><ul class='methods'><li data-type='method'><a href="HttpTransportClient.html#asBody">asBody</a></li><li data-type='method'><a href="HttpTransportClient.html#asResponse">asResponse</a></li><li data-type='method'><a href="HttpTransportClient.html#delete">delete</a></li><li data-type='method'><a href="HttpTransportClient.html#get">get</a></li><li data-type='method'><a href="HttpTransportClient.html#head">head</a></li><li data-type='method'><a href="HttpTransportClient.html#headers">headers</a></li><li data-type='method'><a href="HttpTransportClient.html#patch">patch</a></li><li data-type='method'><a href="HttpTransportClient.html#post">post</a></li><li data-type='method'><a href="HttpTransportClient.html#put">put</a></li><li data-type='method'><a href="HttpTransportClient.html#query">query</a></li><li data-type='method'><a href="HttpTransportClient.html#redirect">redirect</a></li><li data-type='method'><a href="HttpTransportClient.html#retry">retry</a></li><li data-type='method'><a href="HttpTransportClient.html#retryDelay">retryDelay</a></li><li data-type='method'><a href="HttpTransportClient.html#timeout">timeout</a></li><li data-type='method'><a href="HttpTransportClient.html#use">use</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#retry">retry</a></li></ul>
 </nav>
 
 <div id="main">
@@ -379,7 +379,9 @@ class HttpTransportClient {
   }
 }
 
-function isCriticalError(err) {
+function isCriticalError(err, ctx) {
+  if (ctx.criticalErrorDetector) return ctx.criticalErrorDetector(err, ctx);
+
   if (err &amp;&amp; err.statusCode &lt; 500) {
     return false;
   }
@@ -393,6 +395,9 @@ function toRetry(err) {
   };
 }
 
+/**
+ * Retries only work on critical HTTP 5XX errors
+ */
 function retry(fn, ctx) {
   ctx.retryAttempts = [];
   const maxAttempts = ctx.retries;
@@ -400,14 +405,14 @@ function retry(fn, ctx) {
   function attempt(i) {
     return fn(ctx)
       .catch((err) => {
-        if (maxAttempts > 0) {
+        if (i &lt; maxAttempts &amp;&amp; isCriticalError(err, ctx) &amp;&amp; ctx.retryDelay &amp;&amp; ctx.retryDelay > 0) {
           const delayBy = rejectedPromise(ctx.retryDelay);
           return delayBy(err);
         }
         throw err;
       })
       .catch((err) => {
-        if (i &lt; maxAttempts &amp;&amp; isCriticalError(err)) {
+        if (i &lt; maxAttempts &amp;&amp; isCriticalError(err, ctx)) {
           ctx.retryAttempts.push(toRetry(err));
           return attempt(++i);
         }
@@ -454,7 +459,7 @@ module.exports = HttpTransportClient;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Mon Feb 19 2024 16:02:59 GMT+0100 (Central European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.11</a> on Mon Jun 08 2026 11:14:11 GMT+0100 (British Summer Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
