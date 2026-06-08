@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Global - Documentation</title>
+    <title>context.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -28,182 +28,73 @@
 
 <div id="main">
     
-    <h1 class="page-title">Global</h1>
+    <h1 class="page-title">context.js</h1>
     
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-        
-        </h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-        
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id="retry"><span class="type-signature"></span>retry<span class="signature">()</span><span class="type-signature"></span></h4>
-
-    
-
-
-
-
-<dl class="details">
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="client.js.html">client.js</a>, <a href="client.js.html#line361">line 361</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-<div class="description">
-    <p>Retries only work on critical HTTP 5XX errors</p>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-    
-
-    
-
-    
-</article>
-
-</section>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const Request = require('./request');
+const Response = require('./response');
+const packageInfo = require('../package');
+
+const RETRIES = 0;
+const RETRY_DELAY = 100;
+const USER_AGENT = `${packageInfo.name}/${packageInfo.version}`;
+
+class Context {
+  constructor(defaults) {
+    /**
+     * Retries only work on critical HTTP 5XX errors
+     */
+    this.retries = 0;
+    this.redirect = undefined;
+    this._retryAttempts = [];
+    this.plugins = [];
+    this.req = Request.create();
+    this.res = Response.create();
+    this.criticalErrorDetector = undefined;
+    if (defaults) this._applyDefaults(defaults);
+  }
+
+  get retryAttempts() {
+    return this._retryAttempts || [];
+  }
+
+  set retryAttempts(retryAttempts) {
+    if (!Array.isArray(retryAttempts)) {
+      retryAttempts = [];
+    }
+    this._retryAttempts = retryAttempts;
+  }
+
+  addPlugin(plugin) {
+    this.plugins.push(plugin);
+    return this;
+  }
+
+  _applyDefaults(defaults) {
+    this.userAgent = defaults.ctx?.userAgent || USER_AGENT;
+    this.retries = defaults.ctx?.retries || RETRIES;
+    this.retryDelay = defaults.ctx?.retryDelay || RETRY_DELAY;
+    this.criticalErrorDetector = defaults.ctx?.criticalErrorDetector;
+  }
+
+  static create(defaults) {
+    return new Context(defaults);
+  }
+}
+
+module.exports = Context;
+</code></pre>
+        </article>
+    </section>
 
 
 

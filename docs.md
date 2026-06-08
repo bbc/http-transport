@@ -236,8 +236,6 @@ See [Stats](https://github.com/bbc/http-transport-statsd)
 
 See [Ratelimiting](https://github.com/bbc/http-transport-rate-limiter)
 
-See [xray](https://github.com/bbc/http-transport-xray)
-
 #### Callback support
 HttpTransport does not support callbacks. However, to integrate with legacy code, use the [callback adapter](https://github.com/bbc/http-transport-callbacks)
 
