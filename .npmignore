@@ -1,0 +1,29 @@
+# Tests and coverage
+test/
+coverage/
+.nyc_output/
+
+# Documentation sources and generated docs
+docconfig/
+docs/
+docs.md
+
+# Dependency and workspace files
+node_modules/
+pnpm-lock.yaml
+pnpm-workspace.yaml
+
+# Repository and CI configuration
+.git/
+.github/
+.gitignore
+.eslintignore
+
+# Editor and local environment files
+.idea/
+.vscode/
+.env*
+.nvmrc
+
+# Logs
+*.log
