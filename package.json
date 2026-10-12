@@ -35,24 +35,24 @@
     "client"
   ],
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^6.3.0",
     "codeclimate-test-reporter": "^0.5.1",
     "coveralls": "^3.0.2",
-    "eslint": "^8.48.0",
-    "eslint-config-iplayer": "^8.0.0",
-    "eslint-plugin-mocha": "^10.1.0",
-    "jsdoc": "^3.5.5",
-    "mocha": "^7.2.0",
-    "nock": "^11.9.1",
-    "nyc": "^15.1.0",
-    "sinon": "^1.15.3"
+    "eslint": "^10.12.0",
+    "eslint-config-iplayer": "^11.0.20",
+    "eslint-plugin-mocha": "^12.0.2",
+    "jsdoc": "^4.0.5",
+    "mocha": "^12.0.3",
+    "nock": "^14.0.17",
+    "nyc": "^18.0.0",
+    "sinon": "^22.1.0"
   },
   "dependencies": {
     "@types/node-fetch": "^2.6.11",
-    "http-proxy-agent": "^7.0.0",
+    "http-proxy-agent": "^9.1.0",
     "koa-compose": "^4.0.0",
     "lodash": "^4.17.4",
-    "node-fetch": "^2.7.0",
+    "node-fetch": "^3.3.2",
     "qs": "^6.5.1"
   },
   "mocha": {
