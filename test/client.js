@@ -21,7 +21,7 @@ const path = '/';
 
 const simpleResponseBody = { blobbus: 'Illegitimi non carborundum' };
 const requestBody = {
-  foo: 'bar'
+  foo: 'bar',
 };
 const responseBody = requestBody;
 const defaultHeaders = { 'Content-Type': 'application/json' };
@@ -38,9 +38,7 @@ function nockRetries(retry, opts) {
   const successCode = opts?.successCode || 200;
 
   nock.cleanAll();
-  api[httpMethod](path)
-    .times(retry)
-    .reply(500);
+  api[httpMethod](path).times(retry).reply(500);
   api[httpMethod](path).reply(successCode, simpleResponseBody, defaultHeaders);
 }
 
@@ -49,10 +47,7 @@ function nockTimeouts(number, opts) {
   const successCode = opts?.successCode || 200;
 
   nock.cleanAll();
-  api[httpMethod](path)
-    .times(number)
-    .delay(10000)
-    .reply(200);
+  api[httpMethod](path).times(number).delay(10000).reply(200);
   api[httpMethod](path).reply(successCode, simpleResponseBody, defaultHeaders);
 }
 
@@ -69,9 +64,7 @@ describe('HttpTransportClient', () => {
 
   describe('.get', () => {
     it('returns a response', async () => {
-      const res = await HttpTransport.createClient()
-        .get(url)
-        .asResponse();
+      const res = await HttpTransport.createClient().get(url).asResponse();
 
       assert.deepEqual(res.body, simpleResponseBody);
     });
@@ -80,9 +73,7 @@ describe('HttpTransportClient', () => {
       nock.cleanAll();
       api.get(path).reply(200, undefined, defaultHeaders);
 
-      const res = await HttpTransport.createClient()
-        .get(url)
-        .asResponse();
+      const res = await HttpTransport.createClient().get(url).asResponse();
 
       assert.deepEqual(res.body, undefined);
     });
@@ -92,8 +83,8 @@ describe('HttpTransportClient', () => {
 
       nock(host, {
         reqheaders: {
-          'User-Agent': `${packageInfo.name}/${packageInfo.version}`
-        }
+          'User-Agent': `${packageInfo.name}/${packageInfo.version}`,
+        },
       })
         .get(path)
         .times(2)
@@ -108,8 +99,8 @@ describe('HttpTransportClient', () => {
 
       nock(host, {
         reqheaders: {
-          'User-Agent': 'some-new-user-agent'
-        }
+          'User-Agent': 'some-new-user-agent',
+        },
       })
         .get(path)
         .times(2)
@@ -133,9 +124,7 @@ describe('HttpTransportClient', () => {
         .retryDelay(2000)
         .createClient();
 
-      await client
-        .get(url)
-        .asResponse();
+      await client.get(url).asResponse();
 
       const ctx = transport.execute.getCall(0).args[0];
       assert.equal(ctx.retries, 50);
@@ -150,12 +139,13 @@ describe('HttpTransportClient', () => {
         .criticalErrorDetector(() => false)
         .createClient();
 
-      await client
-        .get(url)
-        .asResponse();
+      await client.get(url).asResponse();
 
       const ctx = transport.execute.getCall(0).args[0];
-      assert.equal(ctx.criticalErrorDetector.toString(), (() => false).toString());
+      assert.equal(
+        ctx.criticalErrorDetector.toString(),
+        (() => false).toString(),
+      );
     });
   });
 
@@ -167,10 +157,7 @@ describe('HttpTransportClient', () => {
         .use(toError())
         .createClient();
 
-      const res = await client
-        .get(url)
-        .retry(2)
-        .asResponse();
+      const res = await client.get(url).retry(2).asResponse();
 
       assert.equal(res.statusCode, 200);
     });
@@ -182,11 +169,7 @@ describe('HttpTransportClient', () => {
         .use(toError())
         .createClient();
 
-      const res = await client
-        .get(url)
-        .timeout(500)
-        .retry(2)
-        .asResponse();
+      const res = await client.get(url).timeout(500).retry(2).asResponse();
 
       assert.equal(res.statusCode, 200);
     });
@@ -199,10 +182,7 @@ describe('HttpTransportClient', () => {
         .use(toError())
         .createClient();
 
-      const res = await client
-        .get(url)
-        .retry(2)
-        .asResponse();
+      const res = await client.get(url).retry(2).asResponse();
 
       const timeTaken = Date.now() - startTime;
       assert(timeTaken > 100);
@@ -218,11 +198,7 @@ describe('HttpTransportClient', () => {
         .createClient();
 
       try {
-        await client
-          .get(url)
-          .retry(0)
-          .retryDelay(10000)
-          .asResponse();
+        await client.get(url).retry(0).retryDelay(10000).asResponse();
       } catch (e) {
         return assert.equal(e.message, 'something bad happened.');
       }
@@ -252,20 +228,14 @@ describe('HttpTransportClient', () => {
 
     it('does not retry 4XX errors', async () => {
       nock.cleanAll();
-      api
-        .get(path)
-        .once()
-        .reply(400);
+      api.get(path).once().reply(400);
 
       const client = HttpTransport.createBuilder()
         .use(toError())
         .createClient();
 
       try {
-        await client
-          .get(url)
-          .retry(1)
-          .asResponse();
+        await client.get(url).retry(1).asResponse();
       } catch (err) {
         return assert.equal(err.statusCode, 400);
       }
@@ -275,7 +245,9 @@ describe('HttpTransportClient', () => {
 
   describe('.post', () => {
     it('makes a POST request', async () => {
-      api.post(path, requestBody).reply(201, responseBody, { 'content-type': 'application/json' });
+      api
+        .post(path, requestBody)
+        .reply(201, responseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .post(url, requestBody)
@@ -302,7 +274,9 @@ describe('HttpTransportClient', () => {
 
   describe('.put', () => {
     it('makes a PUT request with a JSON body', async () => {
-      api.put(path, requestBody).reply(201, responseBody, { 'content-type': 'application/json' });
+      api
+        .put(path, requestBody)
+        .reply(201, responseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .put(url, requestBody)
@@ -352,9 +326,7 @@ describe('HttpTransportClient', () => {
   describe('.patch', () => {
     it('makes a PATCH request', async () => {
       api.patch(path).reply(204, simpleResponseBody);
-      await HttpTransport.createClient()
-        .patch(url)
-        .asResponse();
+      await HttpTransport.createClient().patch(url).asResponse();
     });
 
     it('returns an error when the API returns a 5XX statusCode code', async () => {
@@ -376,9 +348,7 @@ describe('HttpTransportClient', () => {
     it('makes a HEAD request', async () => {
       api.head(path).reply(200, simpleResponseBody);
 
-      const res = await HttpTransport.createClient()
-        .head(url)
-        .asResponse();
+      const res = await HttpTransport.createClient().head(url).asResponse();
 
       assert.strictEqual(res.statusCode, 200);
     });
@@ -406,8 +376,8 @@ describe('HttpTransportClient', () => {
       nock(host, {
         reqheaders: {
           'User-Agent': HeaderValue,
-          foo: 'bar'
-        }
+          foo: 'bar',
+        },
       })
         .get(path)
         .reply(200, responseBody);
@@ -416,7 +386,7 @@ describe('HttpTransportClient', () => {
         .get(url)
         .headers({
           'User-Agent': HeaderValue,
-          foo: 'bar'
+          foo: 'bar',
         })
         .asResponse();
 
@@ -425,7 +395,9 @@ describe('HttpTransportClient', () => {
 
     it('ignores an empty header object', async () => {
       nock.cleanAll();
-      api.get(path).reply(200, simpleResponseBody, { 'content-type': 'application/json' });
+      api
+        .get(path)
+        .reply(200, simpleResponseBody, { 'content-type': 'application/json' });
 
       const res = await HttpTransport.createClient()
         .headers({})
@@ -438,7 +410,9 @@ describe('HttpTransportClient', () => {
 
   describe('query strings', () => {
     it('supports adding a query string', async () => {
-      api.get('/?a=1').reply(200, simpleResponseBody, { 'content-type': 'application/json' });
+      api
+        .get('/?a=1')
+        .reply(200, simpleResponseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .get(url)
@@ -450,14 +424,16 @@ describe('HttpTransportClient', () => {
 
     it('supports multiple query strings', async () => {
       nock.cleanAll();
-      api.get('/?a=1&b=2&c=3').reply(200, simpleResponseBody, { 'content-type': 'application/json' });
+      api
+        .get('/?a=1&b=2&c=3')
+        .reply(200, simpleResponseBody, { 'content-type': 'application/json' });
 
       const body = await HttpTransport.createClient()
         .get(url)
         .query({
           a: 1,
           b: 2,
-          c: 3
+          c: 3,
         })
         .asBody();
 
@@ -477,18 +453,15 @@ describe('HttpTransportClient', () => {
   describe('.timeout', () => {
     it('sets the a timeout', async () => {
       nock.cleanAll();
-      api
-        .get('/')
-        .delay(1000)
-        .reply(200, simpleResponseBody);
+      api.get('/').delay(1000).reply(200, simpleResponseBody);
 
       try {
-        await HttpTransport.createClient()
-          .get(url)
-          .timeout(20)
-          .asBody();
+        await HttpTransport.createClient().get(url).timeout(20).asBody();
       } catch (err) {
-        return assert.equal(err.message, 'Request failed for GET http://www.example.com/: ESOCKETTIMEDOUT');
+        return assert.equal(
+          err.message,
+          'Request failed for GET http://www.example.com/: ESOCKETTIMEDOUT',
+        );
       }
       assert.fail('Should have thrown');
     });
@@ -498,16 +471,11 @@ describe('HttpTransportClient', () => {
     describe('sets the type of redirect handling', async () => {
       it('redirects automatically if value is not set', async () => {
         nock.cleanAll();
-        api
-          .get('/')
-          .reply(303, '', { Location: `${url}new-path` });
+        api.get('/').reply(303, '', { Location: `${url}new-path` });
 
-        api
-          .get('/new-path')
-          .reply(200, 'It works');
+        api.get('/new-path').reply(200, 'It works');
 
-        const client = HttpTransport.createClient()
-          .get(url);
+        const client = HttpTransport.createClient().get(url);
         const response = await client.asResponse();
 
         assert(response.statusCode, 200);
@@ -516,13 +484,9 @@ describe('HttpTransportClient', () => {
 
       it('returns 303 and the location if value is `manual`', async () => {
         nock.cleanAll();
-        api
-          .get('/')
-          .reply(303, '', { Location: `${url}new-path` });
+        api.get('/').reply(303, '', { Location: `${url}new-path` });
 
-        const client = HttpTransport.createClient()
-          .redirect('manual')
-          .get(url);
+        const client = HttpTransport.createClient().redirect('manual').get(url);
         const response = await client.asResponse();
 
         assert(response.statusCode, 303);
@@ -531,9 +495,7 @@ describe('HttpTransportClient', () => {
 
       it('throws error if value is `error`', async () => {
         nock.cleanAll();
-        api
-          .get('/')
-          .reply(303, '', { Location: `${url}new-path` });
+        api.get('/').reply(303, '', { Location: `${url}new-path` });
 
         try {
           const client = HttpTransport.createClient()
@@ -541,7 +503,9 @@ describe('HttpTransportClient', () => {
             .get(url);
           await client.asResponse();
         } catch (err) {
-          expect(err.message).to.include('Request failed for GET http://www.example.com/');
+          expect(err.message).to.include(
+            'Request failed for GET http://www.example.com/',
+          );
           return;
         }
         assert.fail('Should have thrown');
@@ -552,10 +516,7 @@ describe('HttpTransportClient', () => {
   describe('plugins', () => {
     it('supports a per request plugin', async () => {
       nock.cleanAll();
-      api
-        .get(path)
-        .times(2)
-        .reply(200, simpleResponseBody);
+      api.get(path).times(2).reply(200, simpleResponseBody);
 
       const client = HttpTransport.createClient();
 
@@ -564,9 +525,7 @@ describe('HttpTransportClient', () => {
         .get(url)
         .asBody();
 
-      const lowerCaseResponse = await client
-        .get(url)
-        .asBody();
+      const lowerCaseResponse = await client.get(url).asBody();
 
       assert.equal(upperCaseResponse.blobbus, 'ILLEGITIMI NON CARBORUNDUM');
       assert.equal(lowerCaseResponse.blobbus, 'Illegitimi non carborundum');
@@ -594,10 +553,7 @@ describe('HttpTransportClient', () => {
         .use(appendTagGlobally())
         .createClient();
 
-      const body = await client
-        .use(appendTagPerRequestTag())
-        .get(url)
-        .asBody();
+      const body = await client.use(appendTagPerRequestTag()).get(url).asBody();
 
       assert.equal(body, 'global request');
     });
@@ -608,7 +564,7 @@ describe('HttpTransportClient', () => {
           HttpTransport.createBuilder().use('bad plugin');
         },
         TypeError,
-        'Plugin is not a function'
+        'Plugin is not a function',
       );
     });
 
@@ -619,7 +575,7 @@ describe('HttpTransportClient', () => {
           client.use('bad plugin').get(url);
         },
         TypeError,
-        'Plugin is not a function'
+        'Plugin is not a function',
       );
     });
 
@@ -628,15 +584,17 @@ describe('HttpTransportClient', () => {
         nock.cleanAll();
         api.get(path).reply(200, '1234');
 
-        const client = HttpTransport.createBuilder()
-          .createClient();
+        const client = HttpTransport.createBuilder().createClient();
 
         const res = await client
-          .use(setContextProperty({
-            json: true
-          },
-          'opts'
-          ))
+          .use(
+            setContextProperty(
+              {
+                json: true,
+              },
+              'opts',
+            ),
+          )
           .get(url)
           .asResponse();
 
@@ -645,10 +603,7 @@ describe('HttpTransportClient', () => {
 
       it('sets an explict key on the context', async () => {
         nock.cleanAll();
-        api
-          .get(path)
-          .delay(1000)
-          .reply(200, responseBody);
+        api.get(path).delay(1000).reply(200, responseBody);
 
         const client = HttpTransport.createBuilder()
           .use(toJson())
@@ -660,7 +615,10 @@ describe('HttpTransportClient', () => {
             .get(url)
             .asResponse();
         } catch (err) {
-          return assert.equal(err.message, 'Request failed for GET http://www.example.com/: ESOCKETTIMEDOUT');
+          return assert.equal(
+            err.message,
+            'Request failed for GET http://www.example.com/: ESOCKETTIMEDOUT',
+          );
         }
         assert.fail('Should have thrown');
       });
@@ -675,9 +633,7 @@ describe('HttpTransportClient', () => {
           .use(toJson())
           .createClient();
 
-        const body = await client
-          .get(url)
-          .asBody();
+        const body = await client.get(url).asBody();
 
         assert.equal(body.foo, 'bar');
       });
@@ -689,16 +645,14 @@ describe('HttpTransportClient', () => {
 
         const stubbedLogger = {
           info: sandbox.stub(),
-          warn: sandbox.stub()
+          warn: sandbox.stub(),
         };
 
         const client = HttpTransport.createBuilder()
           .use(log(stubbedLogger))
           .createClient();
 
-        await client
-          .get(url)
-          .asBody();
+        await client.get(url).asBody();
 
         const message = stubbedLogger.info.getCall(0).args[0];
         assert.match(message, /GET http:\/\/www.example.com\/ 200 \d+ ms/);
@@ -707,15 +661,10 @@ describe('HttpTransportClient', () => {
       it('uses default logger', async () => {
         sandbox.stub(console, 'info');
 
-        const client = HttpTransport.createBuilder()
-          .use(log())
-          .createClient();
+        const client = HttpTransport.createBuilder().use(log()).createClient();
 
-        await client
-          .get(url)
-          .asBody();
+        await client.get(url).asBody();
 
-        /*eslint no-console: ["error", { allow: ["info"] }] */
         const message = console.info.getCall(0).args[0];
         assert.match(message, /GET http:\/\/www.example.com\/ 200 \d+ ms/);
       });
@@ -731,17 +680,16 @@ describe('HttpTransportClient', () => {
           .use(log())
           .createClient();
 
-        await client
-          .retry(2)
-          .get(url)
-          .asBody();
+        await client.retry(2).get(url).asBody();
 
-        /*eslint no-console: ["error", { allow: ["info", "warn"] }] */
         sinon.assert.calledOnce(console.warn);
         const intial = console.info.getCall(0).args[0];
         const attempt1 = console.warn.getCall(0).args[0];
         assert.match(intial, /GET http:\/\/www.example.com\/ 500 \d+ ms/);
-        assert.match(attempt1, /Attempt 1 GET http:\/\/www.example.com\/ 500 \d+ ms/);
+        assert.match(
+          attempt1,
+          /Attempt 1 GET http:\/\/www.example.com\/ 500 \d+ ms/,
+        );
       });
     });
   });

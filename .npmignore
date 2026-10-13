@@ -17,7 +17,7 @@ pnpm-workspace.yaml
 .git/
 .github/
 .gitignore
-.eslintignore
+biome.json
 
 # Editor and local environment files
 .idea/

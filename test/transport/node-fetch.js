@@ -22,13 +22,13 @@ const path = '/';
 const responseBody = 'Illegitimi non carborundum';
 const JSONResponseBody = { body: 'Illegitimi non carborundum' };
 const requestBody = {
-  foo: 'bar'
+  foo: 'bar',
 };
 const header = {
-  'Content-Type': 'text/html'
+  'Content-Type': 'text/html',
 };
 const jsonHeader = {
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
 };
 const postResponseBody = requestBody;
 
@@ -69,8 +69,8 @@ describe('Request HTTP transport', () => {
       nock.cleanAll();
       nock(host, {
         reqheaders: {
-          test: 'qui curat'
-        }
+          test: 'qui curat',
+        },
       })
         .get(path)
         .reply(200, responseBody, header);
@@ -188,10 +188,7 @@ describe('Request HTTP transport', () => {
 
     it('sets a timeout', () => {
       nock.cleanAll();
-      api
-        .get('/')
-        .delay(500)
-        .reply(200, responseBody);
+      api.get('/').delay(500).reply(200, responseBody);
 
       const ctx = createContext(url);
       ctx.req.timeout(20);
@@ -203,23 +200,23 @@ describe('Request HTTP transport', () => {
         })
         .catch((e) => {
           assert.ok(e);
-          assert.equal(e.message, 'Request failed for get http://www.example.com/: ESOCKETTIMEDOUT');
+          assert.equal(
+            e.message,
+            'Request failed for get http://www.example.com/: ESOCKETTIMEDOUT',
+          );
         });
     });
 
     it('sets a default timeout', () => {
       nock.cleanAll();
-      api
-        .get('/')
-        .delay(500)
-        .reply(200, responseBody);
+      api.get('/').delay(500).reply(200, responseBody);
 
       const ctx = createContext(url);
 
       return new FetchTransport({
         defaults: {
-          timeout: 50
-        }
+          timeout: 50,
+        },
       })
         .execute(ctx)
         .then(() => {
@@ -227,22 +224,23 @@ describe('Request HTTP transport', () => {
         })
         .catch((e) => {
           assert.ok(e);
-          assert.equal(e.message, 'Request failed for get http://www.example.com/: ESOCKETTIMEDOUT');
+          assert.equal(
+            e.message,
+            'Request failed for get http://www.example.com/: ESOCKETTIMEDOUT',
+          );
         });
     });
 
     it('sets a default redirect', () => {
       nock.cleanAll();
-      api
-        .get('/')
-        .reply(303, '', { Location: `${url}new-path` });
+      api.get('/').reply(303, '', { Location: `${url}new-path` });
 
       const ctx = createContext(url);
 
       return new FetchTransport({
         defaults: {
-          redirect: 'manual'
-        }
+          redirect: 'manual',
+        },
       })
         .execute(ctx)
         .then(() => {
@@ -273,8 +271,8 @@ describe('Request HTTP transport', () => {
       const ctx = createContext(url);
       const options = {
         defaults: {
-          time: false
-        }
+          time: false,
+        },
       };
 
       return new FetchTransport(options)
@@ -288,19 +286,15 @@ describe('Request HTTP transport', () => {
 
     it('sets redirect', () => {
       nock.cleanAll();
-      api
-        .get('/')
-        .reply(303, '', { Location: `${url}new-path` });
+      api.get('/').reply(303, '', { Location: `${url}new-path` });
 
       const ctx = createContext(url);
       ctx.req.redirect('manual');
 
-      return new FetchTransport()
-        .execute(ctx)
-        .then((ctx) => {
-          assert.equal(ctx.res.statusCode, 303);
-          assert.equal(ctx.res.headers.location, `${url}new-path`);
-        });
+      return new FetchTransport().execute(ctx).then((ctx) => {
+        assert.equal(ctx.res.statusCode, 303);
+        assert.equal(ctx.res.headers.location, `${url}new-path`);
+      });
     });
 
     describe('JSON parsing', () => {
@@ -311,8 +305,8 @@ describe('Request HTTP transport', () => {
         const ctx = createContext(url);
         const options = {
           defaults: {
-            json: true
-          }
+            json: true,
+          },
         };
 
         const fetchTransport = new FetchTransport(options);
@@ -329,8 +323,8 @@ describe('Request HTTP transport', () => {
         nock.cleanAll();
         nock(host, {
           reqheaders: {
-            accept: 'application/json'
-          }
+            accept: 'application/json',
+          },
         })
           .get(path)
           .reply(200, responseBody, header);
@@ -338,8 +332,8 @@ describe('Request HTTP transport', () => {
         const ctx = createContext(url);
         const options = {
           defaults: {
-            json: true
-          }
+            json: true,
+          },
         };
 
         const fetchTransport = new FetchTransport(options);
@@ -389,7 +383,7 @@ describe('Request HTTP transport', () => {
         const fetchTransport = new FetchTransport();
 
         ctx.opts = {
-          json: true
+          json: true,
         };
 
         return fetchTransport
@@ -407,8 +401,8 @@ describe('Request HTTP transport', () => {
         const options = {
           agentOpts: {
             keepAlive: true,
-            maxSockets: 1000
-          }
+            maxSockets: 1000,
+          },
         };
 
         const fetchTransport = new FetchTransport(options);
@@ -419,11 +413,13 @@ describe('Request HTTP transport', () => {
           .execute(ctx)
           .catch(assert.ifError)
           .then(() => {
-            sinon.assert.calledWithMatch(spy, url, { agent: {
-              protocol: 'http:',
-              keepAlive: true,
-              maxSockets: 1000
-            } });
+            sinon.assert.calledWithMatch(spy, url, {
+              agent: {
+                protocol: 'http:',
+                keepAlive: true,
+                maxSockets: 1000,
+              },
+            });
           });
       });
 
@@ -432,8 +428,8 @@ describe('Request HTTP transport', () => {
         const options = {
           agentOpts: {
             keepAlive: true,
-            maxSockets: 1000
-          }
+            maxSockets: 1000,
+          },
         };
 
         const fetchTransport = new FetchTransport(options);
@@ -444,11 +440,13 @@ describe('Request HTTP transport', () => {
           .execute(ctx)
           .catch(assert.ifError)
           .then(() => {
-            sinon.assert.calledWithMatch(spy, httpsUrl, { agent: {
-              protocol: 'https:',
-              keepAlive: true,
-              maxSockets: 1000
-            } });
+            sinon.assert.calledWithMatch(spy, httpsUrl, {
+              agent: {
+                protocol: 'https:',
+                keepAlive: true,
+                maxSockets: 1000,
+              },
+            });
           });
       });
 
@@ -456,8 +454,8 @@ describe('Request HTTP transport', () => {
         const ctx = createContext(url);
         const options = {
           defaults: {
-            proxy: proxyUrl
-          }
+            proxy: proxyUrl,
+          },
         };
 
         const fetchTransport = new FetchTransport(options);
@@ -468,10 +466,12 @@ describe('Request HTTP transport', () => {
           .execute(ctx)
           .catch(assert.ifError)
           .then(() => {
-            sinon.assert.calledWithMatch(spy, url, { agent: {
-              proxy: new URL(proxyUrl),
-              protocol: 'http:'
-            } });
+            sinon.assert.calledWithMatch(spy, url, {
+              agent: {
+                proxy: new URL(proxyUrl),
+                protocol: 'http:',
+              },
+            });
           });
       });
 
@@ -480,11 +480,11 @@ describe('Request HTTP transport', () => {
         const options = {
           agentOpts: {
             keepAlive: true,
-            maxSockets: 1000
+            maxSockets: 1000,
           },
           defaults: {
-            proxy: proxyUrl
-          }
+            proxy: proxyUrl,
+          },
         };
 
         const fetchTransport = new FetchTransport(options);
@@ -495,11 +495,13 @@ describe('Request HTTP transport', () => {
           .execute(ctx)
           .catch(assert.ifError)
           .then(() => {
-            sinon.assert.calledWithMatch(spy, url, { agent: {
-              proxy: new URL(proxyUrl),
-              keepAlive: true,
-              maxSockets: 1000
-            } });
+            sinon.assert.calledWithMatch(spy, url, {
+              agent: {
+                proxy: new URL(proxyUrl),
+                keepAlive: true,
+                maxSockets: 1000,
+              },
+            });
           });
       });
     });

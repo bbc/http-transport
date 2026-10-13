@@ -9,9 +9,9 @@ const ctx = {
   res: {
     body: '{}',
     headers: {
-      'content-type': 'application/json'
-    }
-  }
+      'content-type': 'application/json',
+    },
+  },
 };
 
 function stubPromise() {
@@ -38,7 +38,8 @@ describe('asJson', () => {
     const asJson = asJsonPlugin();
 
     const ctxAlternativeContentType = Object.assign({}, ctx);
-    ctxAlternativeContentType.res.headers['content-type'] = 'application/other+json';
+    ctxAlternativeContentType.res.headers['content-type'] =
+      'application/other+json';
 
     await asJson(ctxAlternativeContentType, stubPromise());
     assert.deepEqual(ctxAlternativeContentType.res.body, {});
@@ -46,14 +47,14 @@ describe('asJson', () => {
 
   it('always parses response when force is set true', async () => {
     const asJson = asJsonPlugin({
-      force: true
+      force: true,
     });
 
     const ctxSimpleBody = {
       res: {
         body: 'a simple string',
-        headers: {}
-      }
+        headers: {},
+      },
     };
 
     try {
@@ -70,8 +71,8 @@ describe('asJson', () => {
     const ctxSimpleBody = {
       res: {
         body: 'a simple string',
-        headers: {}
-      }
+        headers: {},
+      },
     };
 
     await asJson(ctxSimpleBody, stubPromise());
@@ -86,8 +87,8 @@ describe('asJson', () => {
     const ctxWithJsonBody = {
       res: {
         body: {},
-        headers: {}
-      }
+        headers: {},
+      },
     };
 
     await asJson(ctxWithJsonBody, stubPromise());
@@ -104,9 +105,9 @@ describe('asJson', () => {
       res: {
         body: undefined,
         headers: {
-          'content-type': 'application/json'
-        }
-      }
+          'content-type': 'application/json',
+        },
+      },
     };
 
     await asJson(ctxWithJsonBody, stubPromise());
@@ -123,9 +124,9 @@ describe('asJson', () => {
       res: {
         body: '',
         headers: {
-          'content-type': 'application/json'
-        }
-      }
+          'content-type': 'application/json',
+        },
+      },
     };
 
     await asJson(ctxWithJsonBody, stubPromise());
@@ -135,22 +136,25 @@ describe('asJson', () => {
 
   it('throws an error when throw property is set true', async () => {
     const asJson = asJsonPlugin({
-      throwOnConflict: true
+      throwOnConflict: true,
     });
 
     const ctxWithSimpleBody = {
       res: {
         body: 'some string',
         headers: {
-          'content-type': 'text/html'
-        }
-      }
+          'content-type': 'text/html',
+        },
+      },
     };
 
     try {
       await asJson(ctxWithSimpleBody, stubPromise());
     } catch (err) {
-      return assert.equal(err.message, 'expected a json content type got text/html');
+      return assert.equal(
+        err.message,
+        'expected a json content type got text/html',
+      );
     }
     assert.fail('Expected to throw!');
   });

@@ -8,7 +8,7 @@ describe('Response', () => {
     const properties = {
       url: 'https://www.example.com',
       body: 'body content',
-      statusCode: 200
+      statusCode: 200,
     };
 
     const response = Response.create(properties);
@@ -21,7 +21,7 @@ describe('Response', () => {
     const response = Response.create();
     response.headers = {
       a: 1,
-      b: 2
+      b: 2,
     };
 
     assert.equal(response.getHeader('a'), 1);
@@ -38,7 +38,7 @@ describe('Response', () => {
     const response = Response.create();
     response.addHeader({
       a: 1,
-      b: 2
+      b: 2,
     });
 
     assert.equal(response.getHeader('a'), 1);
@@ -49,7 +49,7 @@ describe('Response', () => {
     const response = Response.create();
     const headers = {
       a: 1,
-      b: 2
+      b: 2,
     };
     response.addHeader(headers).addHeader('c', 3);
 
@@ -61,7 +61,7 @@ describe('Response', () => {
   it('returns the body length using the Content-Length header', () => {
     const response = Response.create();
     response.headers = {
-      'Content-Length': 7
+      'Content-Length': 7,
     };
 
     assert.equal(response.length, 7);
@@ -80,7 +80,7 @@ describe('Response', () => {
     response.body = {
       x: 1,
       y: 2,
-      z: 3
+      z: 3,
     };
 
     assert.equal(response.length, 19);
@@ -91,7 +91,7 @@ describe('Response', () => {
       url: 'https://www.example.com',
       body: 'body content',
       statusCode: 200,
-      elapsedTime: 10
+      elapsedTime: 10,
     };
 
     const response = Response.create(state);
