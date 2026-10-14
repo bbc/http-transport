@@ -1,18 +1,18 @@
-import * as fetch from 'node-fetch';
 import * as https from 'node:https';
+import * as fetch from 'node-fetch';
 
 export declare function createBuilder(
-  transport?: Transport
+  transport?: Transport,
 ): HttpTransportBuilder;
 export declare function createClient(): HttpTransportClient;
 
 declare type callbackFunction<T> = (err: any, value?: T) => void;
 export declare type Plugin<
   ContextExtra = {},
-  ContextCurrent extends Context = Context
+  ContextCurrent extends Context = Context,
 > = (
   ctx: ContextCurrent & ContextExtra,
-  next: () => (void | Promise<void>)
+  next: () => void | Promise<void>,
 ) => any;
 export declare type Header = Object;
 export declare type Querystring = Object;
@@ -53,7 +53,7 @@ declare enum Method {
   patch,
   delete,
   head,
-  options
+  options,
 }
 
 export declare function toJson(opts?: ToJsonOpts): Plugin;
@@ -95,54 +95,56 @@ export declare class Response {
 }
 
 export declare class HttpTransportBuilder<
-  ContextCurrent extends Context = Context
+  ContextCurrent extends Context = Context,
 > {
   userAgent(userAgent: string): HttpTransportBuilder<ContextCurrent>;
   retries(retries: number): HttpTransportBuilder<ContextCurrent>;
   retryDelay(retryDelay: number): HttpTransportBuilder<ContextCurrent>;
-  criticalErrorDetector(criticalErrorDetector: (err: any, ctx: Context) => boolean): HttpTransportBuilder<ContextCurrent>;
+  criticalErrorDetector(
+    criticalErrorDetector: (err: any, ctx: Context) => boolean,
+  ): HttpTransportBuilder<ContextCurrent>;
   use<ContextExtra = {}>(
-    fn: Plugin<ContextExtra, ContextCurrent>
+    fn: Plugin<ContextExtra, ContextCurrent>,
   ): HttpTransportBuilder<ContextExtra & ContextCurrent>;
   createClient(): HttpTransportClient<ContextCurrent>;
 }
 
 type AsResponse<ResponseType, BodyType> = ResponseType & {
-  body: BodyType
-}
+  body: BodyType;
+};
 
 export declare class HttpTransportClient<
-  ContextCurrent extends Context = Context
+  ContextCurrent extends Context = Context,
 > {
   use<ContextExtra = {}>(
-    fn: Plugin<ContextExtra & ContextCurrent>
+    fn: Plugin<ContextExtra & ContextCurrent>,
   ): HttpTransportClient<ContextExtra & ContextCurrent>;
   get(baseUrl: string): HttpTransportClient<ContextCurrent>;
   post(
     baseUrl: string,
-    body: string | object
+    body: string | object,
   ): HttpTransportClient<ContextCurrent>;
   patch(
     baseUrl: string,
-    body: string | object
+    body: string | object,
   ): HttpTransportClient<ContextCurrent>;
   put(
     baseUrl: string,
-    body: string | object
+    body: string | object,
   ): HttpTransportClient<ContextCurrent>;
   delete(baseUrl: string): HttpTransportClient<ContextCurrent>;
   head(baseUrl: string): HttpTransportClient<ContextCurrent>;
   headers(headers: Header): HttpTransportClient<ContextCurrent>;
   query(query: Querystring): HttpTransportClient<ContextCurrent>;
   timeout(timeout: number): HttpTransportClient<ContextCurrent>;
-  redirect(redirectType: fetch.RequestRedirect): HttpTransportClient<ContextCurrent>;
+  redirect(
+    redirectType: fetch.RequestRedirect,
+  ): HttpTransportClient<ContextCurrent>;
   retry(retries: number): HttpTransportClient<ContextCurrent>;
   retryDelay(retryDelay: number): HttpTransportClient<ContextCurrent>;
-  asBody<ResponseBody = ContextCurrent["res"]["body"]>(): Promise<
-    ResponseBody
-  >;
-  asResponse<ResponseBody = ContextCurrent["res"]["body"]>(): Promise<
-    AsResponse<ContextCurrent["res"], ResponseBody>
+  asBody<ResponseBody = ContextCurrent['res']['body']>(): Promise<ResponseBody>;
+  asResponse<ResponseBody = ContextCurrent['res']['body']>(): Promise<
+    AsResponse<ContextCurrent['res'], ResponseBody>
   >;
 }
 
@@ -159,15 +161,15 @@ declare class Context {
 }
 
 export type TransportOptions = {
-  agentOpts?: https.AgentOptions,
+  agentOpts?: https.AgentOptions;
   defaults?: {
-    json?: boolean
-    timeout?: number
-    compress?: boolean
-    proxy?: string
-    redirect?: fetch.RequestRedirect
-  }
-}
+    json?: boolean;
+    timeout?: number;
+    compress?: boolean;
+    proxy?: string;
+    redirect?: fetch.RequestRedirect;
+  };
+};
 
 export declare class defaultTransport extends FetchTransport {
   constructor(options: TransportOptions);
@@ -186,6 +188,6 @@ export declare class Transport {
   makeRequest(ctx: Context, opts: RequestOptions): Promise<Response>;
 }
 
-export declare var builder: HttpTransportBuilder;
-export declare var transport: Transport;
-export declare var context: Context;
+export declare let builder: HttpTransportBuilder;
+export declare let transport: Transport;
+export declare let context: Context;

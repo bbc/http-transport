@@ -7,7 +7,8 @@
   "scripts": {
     "test": "mocha && pnpm run lint",
     "jsdoc": "jsdoc -c ./docconfig/jsdoc.json",
-    "lint": "eslint ./lib ./test",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
     "coverage": "nyc mocha && nyc report --reporter=html && nyc report --reporter=json-summary"
   },
   "repository": {
@@ -35,12 +36,8 @@
     "client"
   ],
   "devDependencies": {
+    "@biomejs/biome": "2.5.15",
     "chai": "^3.5.0",
-    "codeclimate-test-reporter": "^0.5.1",
-    "coveralls": "^3.0.2",
-    "eslint": "^8.48.0",
-    "eslint-config-iplayer": "^8.0.0",
-    "eslint-plugin-mocha": "^10.1.0",
     "jsdoc": "^3.5.5",
     "mocha": "^7.2.0",
     "nock": "^11.9.1",
@@ -51,21 +48,11 @@
     "@types/node-fetch": "^2.6.11",
     "http-proxy-agent": "^7.0.0",
     "koa-compose": "^4.0.0",
-    "lodash": "^4.17.4",
     "node-fetch": "^2.7.0",
-    "qs": "^6.5.1"
+    "qs": "^6.16.0"
   },
   "mocha": {
     "recursive": true,
     "exit": true
-  },
-  "eslintConfig": {
-    "extends": "iplayer",
-    "parserOptions": {
-      "ecmaVersion": "latest"
-    },
-    "rules": {
-      "space-before-function-paren": 0
-    }
   }
 }
